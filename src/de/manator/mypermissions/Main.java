@@ -16,64 +16,64 @@ import de.manator.mypermissions.groups.GroupHandler;
 import de.manator.mypermissions.players.PlayerHandler;
 
 public class Main extends JavaPlugin {
-	
+
 	private ArrayList<String> commands;
 	private GroupHandler gh;
 	private PlayerHandler ph;
-	
+
 	@Override
 	public void onEnable() {
 		getLogger().info("Loading files...");
-		if(!getDataFolder().exists()) {
+		if (!getDataFolder().exists()) {
 			getDataFolder().mkdirs();
 		}
 		getLogger().info("Files loaded!");
-		
+
 		getLogger().info("Loading commands...");
 		registerCommands();
 		getLogger().info("Commands loaded!");
-		
+
 		getLogger().info("Registering listeners...");
 		registerListeners();
 		getLogger().info("Listeners registered!");
-		
+
 		getLogger().info("Loading groups...");
 		gh = new GroupHandler(getDataFolder());
-		if(gh.loadGroups()) {
+		if (gh.loadGroups()) {
 			getLogger().info("Loaded groups!");
 		} else {
 			getLogger().info("Loading groups failed!");
 		}
-		
+
 		getLogger().info("Loading players...");
 		ph = new PlayerHandler(getDataFolder());
 	}
 
 	@Override
 	public void onDisable() {
-		
+
 	}
-	
+
 	private void registerListeners() {
 		Bukkit.getPluginManager().registerEvents(new PlayerJoin(), this);
 	}
-	
+
 	private void registerCommands() {
 		commands = new ArrayList<String>();
-		
+
 		commands.add("mp");
 		getCommand("mp").setExecutor(new MP(this));
 		getCommand("mp").setTabCompleter(new MPTab());
-		
+
 		commands.add("group");
 		getCommand("group").setExecutor(new GroupCMD(this));
-		getCommand("group").setTabCompleter(new GroupTab());
-		
+		getCommand("group").setTabCompleter(new GroupTab(gh, ph));
+
 		commands.add("permissions");
 		getCommand("permissions").setExecutor(new Permissions(this));
 		getCommand("permissions").setTabCompleter(new PermissionsTab());
 	}
-	
+
 	public ArrayList<String> getCommands() {
 		return commands;
 	}
@@ -85,5 +85,5 @@ public class Main extends JavaPlugin {
 	public PlayerHandler getPlayerHandler() {
 		return ph;
 	}
-	
+
 }
