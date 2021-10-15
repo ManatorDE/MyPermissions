@@ -1,0 +1,14 @@
+package de.manator.mypermissions.events;
+
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+
+public class CommandPreprocess implements Listener {
+	
+	@EventHandler
+	public void commandPreprecess(PlayerCommandPreprocessEvent e) {
+		
+	}
+	
+}
