@@ -13,11 +13,13 @@ import de.manator.mypermissions.commands.Permissions;
 import de.manator.mypermissions.commands.PermissionsTab;
 import de.manator.mypermissions.events.PlayerJoin;
 import de.manator.mypermissions.groups.GroupHandler;
+import de.manator.mypermissions.players.PlayerHandler;
 
 public class Main extends JavaPlugin {
 	
 	private ArrayList<String> commands;
 	private GroupHandler gh;
+	private PlayerHandler ph;
 	
 	@Override
 	public void onEnable() {
@@ -35,7 +37,16 @@ public class Main extends JavaPlugin {
 		registerListeners();
 		getLogger().info("Listeners registered!");
 		
+		getLogger().info("Loading groups...");
 		gh = new GroupHandler(getDataFolder());
+		if(gh.loadGroups()) {
+			getLogger().info("Loaded groups!");
+		} else {
+			getLogger().info("Loading groups failed!");
+		}
+		
+		getLogger().info("Loading players...");
+		ph = new PlayerHandler(getDataFolder());
 	}
 
 	@Override
@@ -49,6 +60,7 @@ public class Main extends JavaPlugin {
 	
 	private void registerCommands() {
 		commands = new ArrayList<String>();
+		
 		commands.add("mp");
 		getCommand("mp").setExecutor(new MP(this));
 		getCommand("mp").setTabCompleter(new MPTab());
@@ -68,6 +80,10 @@ public class Main extends JavaPlugin {
 
 	public GroupHandler getGroupHandler() {
 		return gh;
+	}
+
+	public PlayerHandler getPlayerHandler() {
+		return ph;
 	}
 	
 }

@@ -17,9 +17,6 @@ commands:
   permissions:
     description: The Base-Command for managing player-permissions
     permission: mypermissions.admin
-  getgroups:
-    description: This command is used to list all groups of a player
-    permission: mypermissions.admin
   op:
     description: Sets a player as Operator
   deop:
