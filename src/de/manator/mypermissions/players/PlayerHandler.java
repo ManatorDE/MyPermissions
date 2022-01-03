@@ -11,7 +11,6 @@ import java.util.ArrayList;
 
 import de.manator.mypermissions.groups.Group;
 
-// ToDo's: Adding permission
 public class PlayerHandler {
 	
 	private File playersFolder;
@@ -28,8 +27,8 @@ public class PlayerHandler {
 			return false;
 		} else {
 			File player = new File(playersFolder.getAbsolutePath() + "/" + name);
-			File perms = new File(player.getAbsolutePath() + "permissions.yml");
-			File groups = new File(player.getAbsolutePath() + "groups.yml");
+			File perms = new File(player.getAbsolutePath() + "/permissions.yml");
+			File groups = new File(player.getAbsolutePath() + "/groups.yml");
 			if(!player.exists()) {
 				player.mkdirs();
 			} else {
@@ -142,6 +141,57 @@ public class PlayerHandler {
 	public boolean isInGroup(String player, Group g) {
 		if(getGroups(player).contains(g.getName().toUpperCase())) {
 			return true;
+		}
+		return false;
+	}
+	
+	public boolean addPermission(String player, String perm) {
+		File perms = new File(playersFolder.getAbsolutePath() + "/" + player + "/permissions.yml");
+		try {
+			BufferedWriter bw = new BufferedWriter(new FileWriter(perms));
+			bw.append("\n" + perm);
+			bw.close();
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public ArrayList<String> getPermissions(String player) {
+		File perms = new File(playersFolder.getAbsolutePath() + "/" + player + "/permissions.yml");
+		ArrayList<String> list = new ArrayList<String>();
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(perms));
+			while(br.ready()) {
+				list.add(br.readLine());
+			}
+			br.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	public boolean reamovePermission(String player, String perm) {
+		File perms = new File(playersFolder.getAbsolutePath() + "/" + player + "/permissions.yml");
+		ArrayList<String> list = new ArrayList<String>();
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(perms));
+			while(br.ready()) {
+				String s = br.readLine();
+				if(!s.equalsIgnoreCase(perm)) {
+					list.add(s);
+				}
+			}
+			br.close();
+			return true;
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		return false;
 	}

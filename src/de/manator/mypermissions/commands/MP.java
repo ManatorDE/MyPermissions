@@ -33,7 +33,7 @@ public class MP implements CommandExecutor {
 
 				} else if (args.length == 1) {
 					if (args[0].equalsIgnoreCase("rl")) {
-						reloadPlayers();
+						main.reloadPlayers();
 						CMD.sendMessage(p, "§aPlugin was reloaded!");
 					} else if (args[0].equalsIgnoreCase("help")) {
 						this.commands = main.getCommands();
@@ -57,7 +57,7 @@ public class MP implements CommandExecutor {
 
 				} else if (args.length == 1) {
 					if (args[0].equalsIgnoreCase("rl")) {
-						reloadPlayers();
+						main.reloadPlayers();
 						CMD.sendMessage(p, "§aPlugin was reloaded!");
 					} else if (args[0].equalsIgnoreCase("help")) {
 						this.commands = main.getCommands();
@@ -80,7 +80,7 @@ public class MP implements CommandExecutor {
 
 				} else if (args.length == 1) {
 					if (args[0].equalsIgnoreCase("rl")) {
-						reloadPlayers();
+						main.reloadPlayers();
 						CMD.sendMessage(p, "§aPlugin was reloaded!");
 					} else if (args[0].equalsIgnoreCase("help")) {
 						this.commands = main.getCommands();
@@ -100,9 +100,5 @@ public class MP implements CommandExecutor {
 			}
 		}
 		return false;
-	}
-
-	private void reloadPlayers() {
-		//main.getGroupHandler().getGroup(name);
 	}
 }

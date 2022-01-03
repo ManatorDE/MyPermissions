@@ -5,13 +5,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import de.manator.mypermissions.Main;
+import de.manator.mypermissions.players.PlayerHandler;
 
 public class Permissions implements CommandExecutor {
 	
-	private Main main;
+	private PlayerHandler ph;
 	
 	public Permissions(Main main) {
-		this.main = main;
+		this.ph = main.getPlayerHandler();
 	}
 	
 	@Override

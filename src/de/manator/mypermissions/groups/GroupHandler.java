@@ -416,8 +416,8 @@ public class GroupHandler {
 
 	private boolean createGroupFile(Group g) {
 		File folder = new File(groupFolder.getAbsolutePath() + "/" + g.getName());
-		File groupDataFile = new File(folder + "data.yml");
-		File groupPermissionsFile = new File(folder + "permissions.yml");
+		File groupDataFile = new File(folder + "/data.yml");
+		File groupPermissionsFile = new File(folder + "/permissions.yml");
 		if (folder.exists()) {
 			return false;
 		} else {

@@ -3,6 +3,8 @@ package de.manator.mypermissions;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.manator.mypermissions.commands.GroupCMD;
@@ -11,7 +13,9 @@ import de.manator.mypermissions.commands.MP;
 import de.manator.mypermissions.commands.MPTab;
 import de.manator.mypermissions.commands.Permissions;
 import de.manator.mypermissions.commands.PermissionsTab;
+import de.manator.mypermissions.events.CommandPreprocess;
 import de.manator.mypermissions.events.PlayerJoin;
+import de.manator.mypermissions.groups.Group;
 import de.manator.mypermissions.groups.GroupHandler;
 import de.manator.mypermissions.players.PlayerHandler;
 
@@ -29,10 +33,6 @@ public class Main extends JavaPlugin {
 		}
 		getLogger().info("Files loaded!");
 
-		getLogger().info("Loading commands...");
-		registerCommands();
-		getLogger().info("Commands loaded!");
-
 		getLogger().info("Registering listeners...");
 		registerListeners();
 		getLogger().info("Listeners registered!");
@@ -47,6 +47,11 @@ public class Main extends JavaPlugin {
 
 		getLogger().info("Loading players...");
 		ph = new PlayerHandler(getDataFolder());
+		getLogger().info("Players loeaded!");
+		
+		getLogger().info("Loading commands...");
+		registerCommands();
+		getLogger().info("Commands loaded!");
 	}
 
 	@Override
@@ -55,7 +60,8 @@ public class Main extends JavaPlugin {
 	}
 
 	private void registerListeners() {
-		Bukkit.getPluginManager().registerEvents(new PlayerJoin(), this);
+		Bukkit.getPluginManager().registerEvents(new PlayerJoin(this), this);
+		Bukkit.getPluginManager().registerEvents(new CommandPreprocess(), this);
 	}
 
 	private void registerCommands() {
@@ -84,6 +90,38 @@ public class Main extends JavaPlugin {
 
 	public PlayerHandler getPlayerHandler() {
 		return ph;
+	}
+	
+	public void reloadPlayers() {
+		for(Player p : Bukkit.getOnlinePlayers()) {
+			if(ph.getPlayers().contains(p.getName())) {
+				Group prefix = null;
+				for(String gr : ph.getGroups(p.getName())) {
+					Group g = gh.getGroup(gr);
+					if(g != null) {
+						if(prefix == null || prefix.getRank() < g.getRank()) {
+							prefix = g;
+						}
+						
+						if(g.isOp()) {
+							p.setOp(true);
+						}
+						for(String perm : gh.getPermissions(gh.getGroup(gr))) {
+							p.addAttachment(this).setPermission(perm, true);
+						}
+					}
+				}
+				for(String perm : ph.getPermissions(p.getName())) {
+					p.addAttachment(this).setPermission(perm, true);
+				}
+				if(prefix != null) {
+					p.setCustomName(prefix.getPrefix() + " " + ChatColor.WHITE + p.getName() + " " + prefix.getSuffix());
+					p.setDisplayName(prefix.getPrefix() + " " + ChatColor.WHITE + p.getName() + " " + prefix.getSuffix());
+					p.setPlayerListName(prefix.getPrefix() + " " + ChatColor.WHITE + p.getName() + " " + prefix.getSuffix());
+					p.setCustomNameVisible(true);
+				}
+			}
+		}
 	}
 
 }
