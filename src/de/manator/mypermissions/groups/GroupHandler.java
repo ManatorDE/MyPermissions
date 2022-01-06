@@ -201,14 +201,6 @@ public class GroupHandler {
 		}
 	}
 
-	public String getSuffix(Group g) {
-		if (groupExists(g)) {
-			return getGroup(g.getName()).getSuffix();
-		} else {
-			return null;
-		}
-	}
-
 	public boolean deleteSuffix(Group g) {
 		if (groupExists(g)) {
 			File groupDataFile = new File(groupFolder.getAbsolutePath() + "/" + g.getName() + "/data.yml");
@@ -522,6 +514,14 @@ public class GroupHandler {
 				e.printStackTrace();
 				return null;
 			}
+		}
+	}
+
+	public String getSuffix(Group g) {
+		if (groupExists(g)) {
+			return getGroup(g.getName()).getSuffix();
+		} else {
+			return null;
 		}
 	}
 
