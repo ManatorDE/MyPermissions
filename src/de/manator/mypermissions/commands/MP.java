@@ -99,6 +99,8 @@ public class MP implements CommandExecutor {
 				}
 			}
 		}
+		
+		main.reloadPlayers();
 		return false;
 	}
 }

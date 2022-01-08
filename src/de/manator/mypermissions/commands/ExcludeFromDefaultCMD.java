@@ -34,6 +34,7 @@ public class ExcludeFromDefaultCMD implements CommandExecutor {
 			}
 		}
 		
+		main.reloadPlayers();
 		return false;
 	}
 
