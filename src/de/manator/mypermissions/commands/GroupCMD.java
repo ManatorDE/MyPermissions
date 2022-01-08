@@ -2,6 +2,8 @@ package de.manator.mypermissions.commands;
 
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -125,7 +127,26 @@ public class GroupCMD implements CommandExecutor {
 						}
 					} else if (args[0].equalsIgnoreCase("removeplayer")) {
 						if (ph.removeGroup(gh.getGroup(args[2]), args[1])) {
-							CMD.sendMessage(p, "§Removed §6" + args[1] + "§a from the group §6" + args[2] + "§a!");
+							if(gh.getGroup(args[2]).isOp()) {
+								boolean deopped = false;
+								for(Player pl : Bukkit.getOnlinePlayers()) {
+									if(pl.getName().equalsIgnoreCase(args[1])) {
+										pl.setOp(false);
+										deopped = true;
+										break;
+									}
+								}
+								if(!deopped) {
+									for(OfflinePlayer pl : Bukkit.getOfflinePlayers()) {
+										if(pl.getName().equalsIgnoreCase(args[1])) {
+											pl.setOp(false);
+											deopped = true;
+											break;
+										}
+									}
+								}
+							}
+							CMD.sendMessage(p, "§aRemoved §6" + args[1] + "§a from the group §6" + args[2] + "§a!");
 						} else {
 							CMD.sendMessage(p, "§cRemoving the player failed!");
 						}
@@ -159,6 +180,26 @@ public class GroupCMD implements CommandExecutor {
 							CMD.sendMessage(p, "§aThe group §6" + args[1] + "§a was created!");
 						} else {
 							CMD.sendMessage(p, "§cThe group already exists!");
+						}
+					} else if(args[0].equalsIgnoreCase("negate")) {
+						if(gh.negatePermission(gh.getGroup(args[1]), args[2])) {
+							CMD.sendMessage(p,
+									"§aThe negated permission §6" + args[2] + "§a was added to the group §6" + args[1] + "§a!");
+						} else {
+							CMD.sendMessage(p, "§cNegating the permission failed!");
+						}
+					} else if(args[0].equalsIgnoreCase("removenegation")) {
+						if(gh.removeNegatedPermission(gh.getGroup(args[1]), args[2])) {
+							CMD.sendMessage(p,
+									"§aThe negated permission §6" + args[2] + "§a was removed from the group §6" + args[1] + "§a!");
+						} else {
+							CMD.sendMessage(p, "§cRemoving the negated permission failed!");
+						}
+					} else if(args[0].equalsIgnoreCase("setrank")) {
+						if(gh.setRank(gh.getGroup(args[1]), Integer.parseInt(args[2]))) {
+							CMD.sendMessage(p, "§aSet the rank of the group §6" + args[1] + " §ato §6" + args[2] + "§a!");
+						} else {
+							CMD.sendMessage(p, "§cCouldn't set the rank!");
 						}
 					}
 				}
@@ -256,7 +297,26 @@ public class GroupCMD implements CommandExecutor {
 						}
 					} else if (args[0].equalsIgnoreCase("removeplayer")) {
 						if (ph.removeGroup(gh.getGroup(args[2]), args[1])) {
-							CMD.sendMessage(p, "§Removed §6" + args[1] + "§a from the group §6" + args[2] + "§a!");
+							if(gh.getGroup(args[2]).isOp()) {
+								boolean deopped = false;
+								for(Player pl : Bukkit.getOnlinePlayers()) {
+									if(pl.getName().equalsIgnoreCase(args[1])) {
+										pl.setOp(false);
+										deopped = true;
+										break;
+									}
+								}
+								if(!deopped) {
+									for(OfflinePlayer pl : Bukkit.getOfflinePlayers()) {
+										if(pl.getName().equalsIgnoreCase(args[1])) {
+											pl.setOp(false);
+											deopped = true;
+											break;
+										}
+									}
+								}
+							}
+							CMD.sendMessage(p, "§aRemoved §6" + args[1] + "§a from the group §6" + args[2] + "§a!");
 						} else {
 							CMD.sendMessage(p, "§cRemoving the player failed!");
 						}
@@ -290,6 +350,26 @@ public class GroupCMD implements CommandExecutor {
 							CMD.sendMessage(p, "§aThe group §6" + args[1] + "§a was created!");
 						} else {
 							CMD.sendMessage(p, "§cThe group already exists!");
+						}
+					} else if(args[0].equalsIgnoreCase("negate")) {
+						if(gh.negatePermission(gh.getGroup(args[1]), args[2])) {
+							CMD.sendMessage(p,
+									"§aThe negated permission §6" + args[2] + "§a was added to the group §6" + args[1] + "§a!");
+						} else {
+							CMD.sendMessage(p, "§cNegating the permission failed!");
+						}
+					} else if(args[0].equalsIgnoreCase("removenegation")) {
+						if(gh.removeNegatedPermission(gh.getGroup(args[1]), args[2])) {
+							CMD.sendMessage(p,
+									"§aThe negated permission §6" + args[2] + "§a was removed from the group §6" + args[1] + "§a!");
+						} else {
+							CMD.sendMessage(p, "§cRemoving the negated permission failed!");
+						}
+					} else if(args[0].equalsIgnoreCase("setrank")) {
+						if(gh.setRank(gh.getGroup(args[1]), Integer.parseInt(args[2]))) {
+							CMD.sendMessage(p, "§aSet the rank of the group §6" + args[1] + " §ato §6" + args[2] + "§a!");
+						} else {
+							CMD.sendMessage(p, "§cCouldn't set the rank!");
 						}
 					}
 				}
@@ -386,7 +466,26 @@ public class GroupCMD implements CommandExecutor {
 						}
 					} else if (args[0].equalsIgnoreCase("removeplayer")) {
 						if (ph.removeGroup(gh.getGroup(args[2]), args[1])) {
-							CMD.sendMessage(p, "§Removed §6" + args[1] + "§a from the group §6" + args[2] + "§a!");
+							if(gh.getGroup(args[2]).isOp()) {
+								boolean deopped = false;
+								for(Player pl : Bukkit.getOnlinePlayers()) {
+									if(pl.getName().equalsIgnoreCase(args[1])) {
+										pl.setOp(false);
+										deopped = true;
+										break;
+									}
+								}
+								if(!deopped) {
+									for(OfflinePlayer pl : Bukkit.getOfflinePlayers()) {
+										if(pl.getName().equalsIgnoreCase(args[1])) {
+											pl.setOp(false);
+											deopped = true;
+											break;
+										}
+									}
+								}
+							}
+							CMD.sendMessage(p, "§aRemoved §6" + args[1] + "§a from the group §6" + args[2] + "§a!");
 						} else {
 							CMD.sendMessage(p, "§cRemoving the player failed!");
 						}
@@ -421,11 +520,33 @@ public class GroupCMD implements CommandExecutor {
 						} else {
 							CMD.sendMessage(p, "§cThe group already exists!");
 						}
+					} else if(args[0].equalsIgnoreCase("negate")) {
+						if(gh.negatePermission(gh.getGroup(args[1]), args[2])) {
+							CMD.sendMessage(p,
+									"§aThe negated permission §6" + args[2] + "§a was added to the group §6" + args[1] + "§a!");
+						} else {
+							CMD.sendMessage(p, "§cNegating the permission failed!");
+						}
+					} else if(args[0].equalsIgnoreCase("removenegation")) {
+						if(gh.removeNegatedPermission(gh.getGroup(args[1]), args[2])) {
+							CMD.sendMessage(p,
+									"§aThe negated permission §6" + args[2] + "§a was removed from the group §6" + args[1] + "§a!");
+						} else {
+							CMD.sendMessage(p, "§cRemoving the negated permission failed!");
+						}
+					} else if(args[0].equalsIgnoreCase("setrank")) {
+						if(gh.setRank(gh.getGroup(args[1]), Integer.parseInt(args[2]))) {
+							CMD.sendMessage(p, "§aSet the rank of the group §6" + args[1] + " §ato §6" + args[2] + "§a!");
+						} else {
+							CMD.sendMessage(p, "§cCouldn't set the rank!");
+						}
 					}
 				}
 			}
 		}
-
+		
+		main.reloadPlayers();
+		
 		return false;
 	}
 

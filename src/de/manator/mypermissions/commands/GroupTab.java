@@ -36,12 +36,15 @@ public class GroupTab implements TabCompleter {
 			list.add("getdefault");
 			list.add("getplayers");
 			list.add("getgroups");
+			list.add("negate");
+			list.add("removenegation");
 			list.add("remove");
 			list.add("removeplayer");
 			list.add("setprefix");
 			list.add("setsuffix");
 			list.add("setdefault");
 			list.add("setop");
+			list.add("setrank");
 			for (int i = 0; i < list.size(); i++) {
 				if (!list.get(i).startsWith(args[0])) {
 					list.remove(i);
@@ -50,7 +53,9 @@ public class GroupTab implements TabCompleter {
 		} else if (args.length == 2) {
 			if (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("remove")) {
 				for (Group g : gh.getGroups()) {
-					list.add(g.getName());
+					if(g != null) {
+						list.add(g.getName());
+					}
 				}
 			} else if (args[0].equalsIgnoreCase("addplayer") || args[0].equalsIgnoreCase("removeplayer")) {
 				list = ph.getPlayers();
@@ -58,40 +63,66 @@ public class GroupTab implements TabCompleter {
 				list.add("<groupname>");
 			} else if (args[0].equalsIgnoreCase("delete")) {
 				for (Group g : gh.getGroups()) {
-					list.add(g.getName());
+					if(g != null) {
+						list.add(g.getName());
+					}
 				}
 			} else if (args[0].equalsIgnoreCase("deleteprefix") || args[0].equalsIgnoreCase("deletesuffix")) {
 				for (Group g : gh.getGroups()) {
-					list.add(g.getName());
+					if(g != null) {
+						list.add(g.getName());
+					}
 				}
 			} else if (args[0].equalsIgnoreCase("getprefix") || args[0].equalsIgnoreCase("getsuffix")
 					|| args[0].equalsIgnoreCase("getplayers")) {
 				for (Group g : gh.getGroups()) {
-					list.add(g.getName());
+					if(g != null) {
+						list.add(g.getName());
+					}
 				}
 			} else if (args[0].equalsIgnoreCase("getgroups")) {
 				list = ph.getPlayers();
 			} else if (args[0].equalsIgnoreCase("setprefix") || args[0].equalsIgnoreCase("setsufix")
 					|| args[0].equalsIgnoreCase("setdefault")) {
 				for (Group g : gh.getGroups()) {
-					list.add(g.getName());
+					if(g != null) {
+						list.add(g.getName());
+					}
 				}
 			} else if (args[0].equalsIgnoreCase("setop")) {
 				for (Group g : gh.getGroups()) {
-					list.add(g.getName());
+					if(g != null) {
+						list.add(g.getName());
+					}
+				}
+			} else if(args[0].equalsIgnoreCase("removenegation")) {
+				for(Group g : gh.getGroups()) {
+					if(g != null) {
+						list.add(g.getName());
+					}
+				}
+			} else if(args[0].equalsIgnoreCase("setrank")) {
+				for(Group g : gh.getGroups()) {
+					if(g != null) {
+						list.add(g.getName());
+					}
 				}
 			}
 		} else if (args.length == 3) {
 			if (args[0].equalsIgnoreCase("addplayer")) {
 				for (Group g : gh.getGroups()) {
 					if (!ph.isInGroup(args[1], g)) {
-						list.add(g.getName());
+						if(g != null) {
+							list.add(g.getName());
+						}
 					}
 				}
 			} else if (args[0].equalsIgnoreCase("removeplayer")) {
 				for (Group g : gh.getGroups()) {
 					if (ph.isInGroup(args[1], g)) {
-						list.add(g.getName());
+						if(g != null) {
+							list.add(g.getName());
+						}
 					}
 				}
 			} else if (args[0].equalsIgnoreCase("remove")) {
@@ -107,6 +138,8 @@ public class GroupTab implements TabCompleter {
 			} else if (args[0].equalsIgnoreCase("setop")) {
 				list.add("true");
 				list.add("false");
+			} else if(args[0].equalsIgnoreCase("removenegation")) {
+				list = gh.getNegatedPermissions(gh.getGroup(args[1]));
 			}
 		}
 		return list;

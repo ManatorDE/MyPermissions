@@ -17,11 +17,7 @@ commands:
   permissions:
     description: The Base-Command for managing player-permissions
     permission: mypermissions.admin
-  op:
-    description: Sets a player as Operator
-  deop:
-    description: Removes a player as Operator
-  exludefromdefault:
+  excludefromdefault:
     description: Exludes one or more players from being added to the default group
     permission: mypermissions.admin
 permissions:
