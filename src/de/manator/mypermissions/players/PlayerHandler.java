@@ -75,7 +75,7 @@ public class PlayerHandler {
 	}
 
 	public boolean addGroup(Group g, String player) {
-		if (playerExists(player)) {
+		if (playerExists(player) && g != null) {
 			File groups = new File(playersFolder.getAbsolutePath() + "/" + player + "/groups.yml");
 			try {
 				BufferedWriter bw = new BufferedWriter(new FileWriter(groups));
@@ -93,7 +93,7 @@ public class PlayerHandler {
 	}
 
 	public boolean removeGroup(Group g, String player) {
-		if (playerExists(player)) {
+		if (playerExists(player) && g != null) {
 			File groups = new File(playersFolder.getAbsolutePath() + "/" + player + "/groups.yml");
 			try {
 				BufferedReader br = new BufferedReader(new FileReader(groups));
