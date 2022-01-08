@@ -163,14 +163,14 @@ public class GroupCMD implements CommandExecutor {
 						}
 					} else if (args[0].equalsIgnoreCase("setprefix")) {
 						if (gh.setPrefix(gh.getGroup(args[1]), args[2].replace('&', '§'))) {
-							CMD.sendMessage(p, "§aThe prefix of the group §6" + args[1] + "§a was set to §r + "
+							CMD.sendMessage(p, "§aThe prefix of the group §6" + args[1] + "§a was set to §r"
 									+ gh.getGroup(args[1]).getPrefix());
 						} else {
 							CMD.sendMessage(p, "§cFailed to set the prefix!");
 						}
 					} else if (args[0].equalsIgnoreCase("setsuffix")) {
 						if (gh.setSuffix(gh.getGroup(args[1]), args[2].replace('&', '§'))) {
-							CMD.sendMessage(p, "§aThe suffix of the group §6" + args[1] + "§a was set to §r + "
+							CMD.sendMessage(p, "§aThe suffix of the group §6" + args[1] + "§a was set to §r"
 									+ gh.getGroup(args[1]).getSuffix());
 						} else {
 							CMD.sendMessage(p, "§cFailed to set the suffix!");
@@ -333,14 +333,14 @@ public class GroupCMD implements CommandExecutor {
 						}
 					} else if (args[0].equalsIgnoreCase("setprefix")) {
 						if (gh.setPrefix(gh.getGroup(args[1]), args[2].replace('&', '§'))) {
-							CMD.sendMessage(p, "§aThe prefix of the group §6" + args[1] + "§a was set to §r + "
+							CMD.sendMessage(p, "§aThe prefix of the group §6" + args[1] + "§a was set to §r"
 									+ gh.getGroup(args[1]).getPrefix());
 						} else {
 							CMD.sendMessage(p, "§cFailed to set the prefix!");
 						}
 					} else if (args[0].equalsIgnoreCase("setsuffix")) {
 						if (gh.setSuffix(gh.getGroup(args[1]), args[2].replace('&', '§'))) {
-							CMD.sendMessage(p, "§aThe suffix of the group §6" + args[1] + "§a was set to §r + "
+							CMD.sendMessage(p, "§aThe suffix of the group §6" + args[1] + "§a was set to §r"
 									+ gh.getGroup(args[1]).getSuffix());
 						} else {
 							CMD.sendMessage(p, "§cFailed to set the suffix!");
@@ -502,14 +502,14 @@ public class GroupCMD implements CommandExecutor {
 						}
 					} else if (args[0].equalsIgnoreCase("setprefix")) {
 						if (gh.setPrefix(gh.getGroup(args[1]), args[2].replace('&', '§'))) {
-							CMD.sendMessage(p, "§aThe prefix of the group §6" + args[1] + "§a was set to §r + "
+							CMD.sendMessage(p, "§aThe prefix of the group §6" + args[1] + "§a was set to §r"
 									+ gh.getGroup(args[1]).getPrefix());
 						} else {
 							CMD.sendMessage(p, "§cFailed to set the prefix!");
 						}
 					} else if (args[0].equalsIgnoreCase("setsuffix")) {
 						if (gh.setSuffix(gh.getGroup(args[1]), args[2].replace('&', '§'))) {
-							CMD.sendMessage(p, "§aThe suffix of the group §6" + args[1] + "§a was set to §r + "
+							CMD.sendMessage(p, "§aThe suffix of the group §6" + args[1] + "§a was set to §r"
 									+ gh.getGroup(args[1]).getSuffix());
 						} else {
 							CMD.sendMessage(p, "§cFailed to set the suffix!");
