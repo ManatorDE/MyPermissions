@@ -23,7 +23,11 @@ public class ExcludeFromDefaultCMD implements CommandExecutor {
 		if(cmd.getName().equalsIgnoreCase("excludefromdefault")) {
 			if(args.length == 2) {
 				if(ph.excludeFromDefault(args[0], Boolean.parseBoolean(args[1]))) {
-					CMD.sendMessage(sender, "§aThe player §6" + args[0] + " §awas excluded from the default group!");
+					if(Boolean.parseBoolean(args[1])) {
+						CMD.sendMessage(sender, "§aThe player §6" + args[0] + " §awas excluded from the default group!");
+					} else {
+						CMD.sendMessage(sender, "§aThe player §6" + args[0] + " §acan join the default group now!");
+					}
 				} else {
 					CMD.sendMessage(sender, "§cPlayer couldn't be exluded from the default group!");
 				}
