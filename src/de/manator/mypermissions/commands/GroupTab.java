@@ -107,6 +107,12 @@ public class GroupTab implements TabCompleter {
 						list.add(g.getName());
 					}
 				}
+			} else if(args[0].equalsIgnoreCase("negate")) {
+				for(Group g : gh.getGroups()) {
+					if(g != null) {
+						list.add(g.getName());
+					}
+				}
 			}
 		} else if (args.length == 3) {
 			if (args[0].equalsIgnoreCase("addplayer")) {
