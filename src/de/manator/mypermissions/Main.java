@@ -103,8 +103,6 @@ public class Main extends JavaPlugin {
 				for(String gr : ph.getGroups(p.getName())) {
 					Group g = gh.getGroup(gr);
 					if(g != null) {
-						if(prefix!=null)System.out.println(prefix.getRank());
-						System.out.println(g.getRank());
 						if(prefix == null || prefix.getRank() < g.getRank()) {
 							prefix = g;
 						}
