@@ -296,9 +296,18 @@ public class GroupHandler {
 			File groupPermissionsFile = new File(
 					groupFolder.getAbsolutePath() + "/" + g.getName() + "/permissions.yml");
 			try {
+				BufferedReader br = new BufferedReader(new FileReader(groupPermissionsFile));
+				ArrayList<String> perms = new ArrayList<>();
+				while(br.ready()) {
+					perms.add(br.readLine());
+				}
+				br.close();
 				BufferedWriter bw = new BufferedWriter(new FileWriter(groupPermissionsFile));
-				bw.append(perm);
-				bw.newLine();
+				for(String s : perms) {
+					bw.write(s);
+					bw.newLine();
+				}
+				bw.write(perm);
 				bw.close();
 				return true;
 			} catch (IOException e) {
@@ -348,9 +357,18 @@ public class GroupHandler {
 			File groupNegatedPermissionsFile = new File(
 					groupFolder.getAbsolutePath() + "/" + g.getName() + "/negated_permissions.yml");
 			try {
+				BufferedReader br = new BufferedReader(new FileReader(groupNegatedPermissionsFile));
+				ArrayList<String> nperms = new ArrayList<>();
+				while(br.ready()) {
+					nperms.add(br.readLine());
+				}
+				br.close();
 				BufferedWriter bw = new BufferedWriter(new FileWriter(groupNegatedPermissionsFile));
-				bw.append(nperm);
-				bw.newLine();
+				for(String s : nperms) {
+					bw.write(s);
+					bw.newLine();
+				}
+				bw.write(nperm);
 				bw.close();
 				return true;
 			} catch (IOException e) {
@@ -483,10 +501,12 @@ public class GroupHandler {
 
 	private boolean groupExists(Group g) {
 		boolean exists = false;
-		for (Group gr : groups) {
-			if (gr.getName().equalsIgnoreCase(g.getName())) {
-				exists = true;
-				break;
+		if(g!=null) {
+			for (Group gr : groups) {
+				if (gr.getName().equalsIgnoreCase(g.getName())) {
+					exists = true;
+					break;
+				}
 			}
 		}
 		return exists;

@@ -78,9 +78,18 @@ public class PlayerHandler {
 		if (playerExists(player) && g != null) {
 			File groups = new File(playersFolder.getAbsolutePath() + "/" + player + "/groups.yml");
 			try {
+				BufferedReader br = new BufferedReader(new FileReader(groups));
+				ArrayList<String> players = new ArrayList<>();
+				while(br.ready()) {
+					players.add(br.readLine());
+				}
+				br.close();
 				BufferedWriter bw = new BufferedWriter(new FileWriter(groups));
-				bw.newLine();
-				bw.append(g.getName());
+				for(String s : players) {
+					bw.write(s);
+					bw.newLine();
+				}
+				bw.write(player);
 				bw.close();
 				return true;
 			} catch (IOException e) {
@@ -168,8 +177,18 @@ public class PlayerHandler {
 	public boolean addPermission(String player, String perm) {
 		File perms = new File(playersFolder.getAbsolutePath() + "/" + player + "/permissions.yml");
 		try {
+			BufferedReader br = new BufferedReader(new FileReader(perms));
+			ArrayList<String> permissions = new ArrayList<>();
+			while(br.ready()) {
+				permissions.add(br.readLine());
+			}
+			br.close();
 			BufferedWriter bw = new BufferedWriter(new FileWriter(perms));
-			bw.append("\n" + perm);
+			for(String s : permissions) {
+				bw.write(s);
+				bw.newLine();
+			}
+			bw.write(perm);
 			bw.close();
 			return true;
 		} catch (IOException e) {
@@ -219,8 +238,18 @@ public class PlayerHandler {
 	public boolean negatePermission(String player, String nperm) {
 		File nperms = new File(playersFolder.getAbsolutePath() + "/" + player + "/negated_permissions.yml");
 		try {
+			BufferedReader br = new BufferedReader(new FileReader(nperms));
+			ArrayList<String> permissions = new ArrayList<>();
+			while(br.ready()) {
+				permissions.add(br.readLine());
+			}
+			br.close();
 			BufferedWriter bw = new BufferedWriter(new FileWriter(nperms));
-			bw.append("\n" + nperm);
+			for(String s : permissions) {
+				bw.write(s);
+				bw.newLine();
+			}
+			bw.write(nperm);
 			bw.close();
 			return true;
 		} catch (IOException e) {
