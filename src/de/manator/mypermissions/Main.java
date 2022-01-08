@@ -123,9 +123,7 @@ public class Main extends JavaPlugin {
 					p.addAttachment(this).setPermission(perm, true);
 				}
 				for(String nperm : ph.getNegatedPermissions(p.getName())) {
-					if(p.addAttachment(this).getPermissions().containsKey(nperm)) {
-						p.addAttachment(this).getPermissions().remove(nperm);
-					}
+					p.addAttachment(this).setPermission(nperm, false);
 				}
 				String name = "";
 				if(prefix != null) {
