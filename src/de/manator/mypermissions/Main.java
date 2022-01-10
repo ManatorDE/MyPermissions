@@ -1,10 +1,13 @@
 package de.manator.mypermissions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.manator.mypermissions.commands.ExcludeFromDefaultCMD;
@@ -25,6 +28,7 @@ public class Main extends JavaPlugin {
 	private ArrayList<String> commands;
 	private GroupHandler gh;
 	private PlayerHandler ph;
+	private HashMap<UUID, PermissionAttachment> perms;
 
 	@Override
 	public void onEnable() {
@@ -53,6 +57,8 @@ public class Main extends JavaPlugin {
 		getLogger().info("Loading commands...");
 		registerCommands();
 		getLogger().info("Commands loaded!");
+		
+		perms = new HashMap<>();
 	}
 
 	@Override
@@ -73,11 +79,11 @@ public class Main extends JavaPlugin {
 
 		commands.add("group");
 		getCommand("group").setExecutor(new GroupCMD(this));
-		getCommand("group").setTabCompleter(new GroupTab(gh, ph));
+		getCommand("group").setTabCompleter(new GroupTab(this));
 
 		commands.add("permissions");
 		getCommand("permissions").setExecutor(new Permissions(this));
-		getCommand("permissions").setTabCompleter(new PermissionsTab());
+		getCommand("permissions").setTabCompleter(new PermissionsTab(this));
 		
 		commands.add("excludefromdefault");
 		getCommand("excludefromdefault").setExecutor(new ExcludeFromDefaultCMD(this));
@@ -98,6 +104,11 @@ public class Main extends JavaPlugin {
 	
 	public void reloadPlayers() {
 		for(Player p : Bukkit.getOnlinePlayers()) {
+			PermissionAttachment attachment = perms.get(p.getUniqueId());
+			if(attachment == null) {
+				attachment = p.addAttachment(this);
+				perms.put(p.getUniqueId(), attachment);
+			}
 			if(ph.getPlayers().contains(p.getName())) {
 				Group prefix = null;
 				for(String gr : ph.getGroups(p.getName())) {
@@ -111,19 +122,19 @@ public class Main extends JavaPlugin {
 							p.setOp(true);
 						}
 						for(String perm : gh.getPermissions(gh.getGroup(gr))) {
-							p.addAttachment(this).setPermission(perm, true);
+							attachment.setPermission(perm, true);
 						}
 						for(String nperm : gh.getNegatedPermissions(gh.getGroup(gr))) {
-							p.addAttachment(this).setPermission(nperm, false);
+							attachment.unsetPermission(nperm);
 						}
 					}
 				}
 				
 				for(String perm : ph.getPermissions(p.getName())) {
-					p.addAttachment(this).setPermission(perm, true);
+					attachment.setPermission(perm, true);
 				}
 				for(String nperm : ph.getNegatedPermissions(p.getName())) {
-					p.addAttachment(this).setPermission(nperm, false);
+					attachment.unsetPermission(nperm);
 				}
 				String name = "";
 				if(prefix != null) {
