@@ -53,11 +53,11 @@ public class Main extends JavaPlugin {
 		getLogger().info("Loading players...");
 		ph = new PlayerHandler(getDataFolder());
 		getLogger().info("Players loeaded!");
-		
+
 		getLogger().info("Loading commands...");
 		registerCommands();
 		getLogger().info("Commands loaded!");
-		
+
 		perms = new HashMap<>();
 	}
 
@@ -84,7 +84,7 @@ public class Main extends JavaPlugin {
 		commands.add("permissions");
 		getCommand("permissions").setExecutor(new Permissions(this));
 		getCommand("permissions").setTabCompleter(new PermissionsTab(this));
-		
+
 		commands.add("excludefromdefault");
 		getCommand("excludefromdefault").setExecutor(new ExcludeFromDefaultCMD(this));
 		getCommand("excludefromdefault").setTabCompleter(new ExcludeTab(this));
@@ -101,55 +101,56 @@ public class Main extends JavaPlugin {
 	public PlayerHandler getPlayerHandler() {
 		return ph;
 	}
-	
+
 	public void reloadPlayers() {
-		for(Player p : Bukkit.getOnlinePlayers()) {
+		for (Player p : Bukkit.getOnlinePlayers()) {
 			PermissionAttachment attachment = perms.get(p.getUniqueId());
-			if(attachment == null) {
+			if (attachment == null) {
 				attachment = p.addAttachment(this);
 				perms.put(p.getUniqueId(), attachment);
 			}
-			if(ph.getPlayers().contains(p.getName())) {
+			if (ph.getPlayers().contains(p.getName())) {
 				Group prefix = null;
-				for(String gr : ph.getGroups(p.getName())) {
+				for (String gr : ph.getGroups(p.getName())) {
 					Group g = gh.getGroup(gr);
-					if(g != null) {
-						if(prefix == null || prefix.getRank() < g.getRank()) {
+					if (g != null) {
+						if (prefix == null || prefix.getRank() < g.getRank()) {
 							prefix = g;
 						}
-						
-						if(g.isOp()) {
+
+						if (g.isOp()) {
 							p.setOp(true);
 						}
-						for(String perm : gh.getPermissions(gh.getGroup(gr))) {
+						for (String perm : gh.getPermissions(gh.getGroup(gr))) {
 							attachment.setPermission(perm, true);
 						}
-						for(String nperm : gh.getNegatedPermissions(gh.getGroup(gr))) {
-							attachment.unsetPermission(nperm);
+						for (String nperm : gh.getNegatedPermissions(gh.getGroup(gr))) {
+							attachment.setPermission(nperm, false);
 						}
 					}
 				}
-				
-				for(String perm : ph.getPermissions(p.getName())) {
+
+				for (String perm : ph.getPermissions(p.getName())) {
 					attachment.setPermission(perm, true);
 				}
-				for(String nperm : ph.getNegatedPermissions(p.getName())) {
-					attachment.unsetPermission(nperm);
+				for (String nperm : ph.getNegatedPermissions(p.getName())) {
+					attachment.setPermission(nperm, false);
 				}
 				String name = "";
-				if(prefix != null) {
-					if(prefix.getPrefix() != null) {
-						name += prefix.getPrefix() + " ";
+				if (prefix != null) {
+					if (prefix.getPrefix() != null) {
+						name += prefix.getPrefix();
 					}
 					name += ChatColor.WHITE + p.getName();
-					if(prefix.getSuffix() != null) {
-						name += " " + prefix.getSuffix();
+					if (prefix.getSuffix() != null) {
+						name += prefix.getSuffix();
 					}
 				}
 				p.setCustomName(name);
 				p.setDisplayName(name);
 				p.setPlayerListName(name);
 				p.setCustomNameVisible(true);
+				Bukkit.reloadData();
 			}
 		}
 	}
