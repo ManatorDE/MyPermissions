@@ -108,6 +108,9 @@ public class Main extends JavaPlugin {
 			if (attachment == null) {
 				attachment = p.addAttachment(this);
 				perms.put(p.getUniqueId(), attachment);
+			} else {
+				attachment = p.addAttachment(this);
+				perms.replace(p.getUniqueId(), attachment);
 			}
 			if (ph.getPlayers().contains(p.getName())) {
 				Group prefix = null;
@@ -117,7 +120,6 @@ public class Main extends JavaPlugin {
 						if (prefix == null || prefix.getRank() < g.getRank()) {
 							prefix = g;
 						}
-
 						if (g.isOp()) {
 							p.setOp(true);
 						}
@@ -150,9 +152,61 @@ public class Main extends JavaPlugin {
 				p.setDisplayName(name);
 				p.setPlayerListName(name);
 				p.setCustomNameVisible(true);
-				Bukkit.reloadData();
+				p.updateCommands();
 			}
 		}
 	}
 
+	public void reloadPlayer(Player p) {
+		PermissionAttachment attachment = perms.get(p.getUniqueId());
+		if (attachment == null) {
+			attachment = p.addAttachment(this);
+			perms.put(p.getUniqueId(), attachment);
+		} else {
+			attachment = p.addAttachment(this);
+			perms.replace(p.getUniqueId(), attachment);
+		}
+		if (ph.getPlayers().contains(p.getName())) {
+			Group prefix = null;
+			for (String gr : ph.getGroups(p.getName())) {
+				Group g = gh.getGroup(gr);
+				if (g != null) {
+					if (prefix == null || prefix.getRank() < g.getRank()) {
+						prefix = g;
+					}
+					if (g.isOp()) {
+						p.setOp(true);
+					}
+					for (String perm : gh.getPermissions(gh.getGroup(gr))) {
+						attachment.setPermission(perm, true);
+					}
+					for (String nperm : gh.getNegatedPermissions(gh.getGroup(gr))) {
+						attachment.setPermission(nperm, false);
+					}
+				}
+			}
+
+			for (String perm : ph.getPermissions(p.getName())) {
+				attachment.setPermission(perm, true);
+			}
+			for (String nperm : ph.getNegatedPermissions(p.getName())) {
+				attachment.setPermission(nperm, false);
+			}
+			String name = "";
+			if (prefix != null) {
+				if (prefix.getPrefix() != null) {
+					name += prefix.getPrefix();
+				}
+				name += ChatColor.WHITE + p.getName();
+				if (prefix.getSuffix() != null) {
+					name += prefix.getSuffix();
+				}
+			}
+			p.setCustomName(name);
+			p.setDisplayName(name);
+			p.setPlayerListName(name);
+			p.setCustomNameVisible(true);
+			p.updateCommands();
+		}
+	}
 }

@@ -24,8 +24,7 @@ public class PlayerJoin implements Listener {
 				&& !main.getPlayerHandler().isExcluded(e.getPlayer().getName())) {
 			main.getPlayerHandler().addGroup(main.getGroupHandler().getDefault(), e.getPlayer().getName());
 		}
-
-		main.reloadPlayers();
+		main.reloadPlayer(e.getPlayer());
 	}
 	
 	@EventHandler
@@ -37,7 +36,7 @@ public class PlayerJoin implements Listener {
 				&& !main.getPlayerHandler().isExcluded(e.getPlayer().getName())) {
 			main.getPlayerHandler().addGroup(main.getGroupHandler().getDefault(), e.getPlayer().getName());
 		}
-		main.reloadPlayers();
+		main.reloadPlayer(e.getPlayer());
 	}
 
 }
