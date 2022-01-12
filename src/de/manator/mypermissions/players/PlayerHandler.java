@@ -89,7 +89,7 @@ public class PlayerHandler {
 					bw.write(s);
 					bw.newLine();
 				}
-				bw.write(player);
+				bw.write(g.getName());
 				bw.close();
 				return true;
 			} catch (IOException e) {

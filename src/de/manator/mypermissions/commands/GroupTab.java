@@ -7,6 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
+import de.manator.mypermissions.Main;
 import de.manator.mypermissions.groups.Group;
 import de.manator.mypermissions.groups.GroupHandler;
 import de.manator.mypermissions.players.PlayerHandler;
@@ -16,9 +17,9 @@ public class GroupTab implements TabCompleter {
 	private GroupHandler gh;
 	private PlayerHandler ph;
 
-	public GroupTab(GroupHandler gh, PlayerHandler ph) {
-		this.gh = gh;
-		this.ph = ph;
+	public GroupTab(Main main) {
+		this.gh = main.getGroupHandler();
+		this.ph = main.getPlayerHandler();
 	}
 
 	@Override

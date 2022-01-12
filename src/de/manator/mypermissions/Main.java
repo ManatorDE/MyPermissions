@@ -1,11 +1,16 @@
 package de.manator.mypermissions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import de.manator.mypermissions.commands.ExcludeFromDefaultCMD;
 import de.manator.mypermissions.commands.ExcludeTab;
@@ -25,6 +30,7 @@ public class Main extends JavaPlugin {
 	private ArrayList<String> commands;
 	private GroupHandler gh;
 	private PlayerHandler ph;
+	private HashMap<UUID, PermissionAttachment> perms;
 
 	@Override
 	public void onEnable() {
@@ -49,10 +55,12 @@ public class Main extends JavaPlugin {
 		getLogger().info("Loading players...");
 		ph = new PlayerHandler(getDataFolder());
 		getLogger().info("Players loeaded!");
-		
+
 		getLogger().info("Loading commands...");
 		registerCommands();
 		getLogger().info("Commands loaded!");
+
+		perms = new HashMap<>();
 	}
 
 	@Override
@@ -73,12 +81,12 @@ public class Main extends JavaPlugin {
 
 		commands.add("group");
 		getCommand("group").setExecutor(new GroupCMD(this));
-		getCommand("group").setTabCompleter(new GroupTab(gh, ph));
+		getCommand("group").setTabCompleter(new GroupTab(this));
 
 		commands.add("permissions");
 		getCommand("permissions").setExecutor(new Permissions(this));
-		getCommand("permissions").setTabCompleter(new PermissionsTab());
-		
+		getCommand("permissions").setTabCompleter(new PermissionsTab(this));
+
 		commands.add("excludefromdefault");
 		getCommand("excludefromdefault").setExecutor(new ExcludeFromDefaultCMD(this));
 		getCommand("excludefromdefault").setTabCompleter(new ExcludeTab(this));
@@ -95,52 +103,139 @@ public class Main extends JavaPlugin {
 	public PlayerHandler getPlayerHandler() {
 		return ph;
 	}
-	
+
 	public void reloadPlayers() {
-		for(Player p : Bukkit.getOnlinePlayers()) {
-			if(ph.getPlayers().contains(p.getName())) {
+		for (Player p : Bukkit.getOnlinePlayers()) {
+			PermissionAttachment attachment = perms.get(p.getUniqueId());
+			if (attachment == null) {
+				attachment = p.addAttachment(this);
+				perms.put(p.getUniqueId(), attachment);
+			} else {
+				attachment = p.addAttachment(this);
+				perms.replace(p.getUniqueId(), attachment);
+			}
+			if (ph.getPlayers().contains(p.getName())) {
 				Group prefix = null;
-				for(String gr : ph.getGroups(p.getName())) {
+				for (String gr : ph.getGroups(p.getName())) {
 					Group g = gh.getGroup(gr);
-					if(g != null) {
-						if(prefix == null || prefix.getRank() < g.getRank()) {
+					if (g != null) {
+						if (prefix == null || prefix.getRank() < g.getRank()) {
 							prefix = g;
 						}
-						
-						if(g.isOp()) {
+						if (g.isOp()) {
 							p.setOp(true);
 						}
-						for(String perm : gh.getPermissions(gh.getGroup(gr))) {
-							p.addAttachment(this).setPermission(perm, true);
+						for (String perm : gh.getPermissions(gh.getGroup(gr))) {
+							attachment.setPermission(perm, true);
 						}
-						for(String nperm : gh.getNegatedPermissions(gh.getGroup(gr))) {
-							p.addAttachment(this).setPermission(nperm, false);
+						for (String nperm : gh.getNegatedPermissions(gh.getGroup(gr))) {
+							attachment.setPermission(nperm, false);
 						}
 					}
 				}
 				
-				for(String perm : ph.getPermissions(p.getName())) {
-					p.addAttachment(this).setPermission(perm, true);
+				for (String perm : ph.getPermissions(p.getName())) {
+					attachment.setPermission(perm, true);
 				}
-				for(String nperm : ph.getNegatedPermissions(p.getName())) {
-					p.addAttachment(this).setPermission(nperm, false);
+				for (String nperm : ph.getNegatedPermissions(p.getName())) {
+					attachment.setPermission(nperm, false);
 				}
 				String name = "";
-				if(prefix != null) {
-					if(prefix.getPrefix() != null) {
-						name += prefix.getPrefix() + " ";
+				Team t = null;
+				if (prefix != null) {
+					Scoreboard s = Bukkit.getScoreboardManager().getMainScoreboard();
+					
+					if(s.getTeam(prefix.getName()) == null) {
+						t = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(prefix.getName());
+					} else {
+						t = s.getTeam(prefix.getName());
+					}
+					
+					if (prefix.getPrefix() != null) {
+						t.setPrefix(prefix.getPrefix());
+						name += prefix.getPrefix();
 					}
 					name += ChatColor.WHITE + p.getName();
-					if(prefix.getSuffix() != null) {
-						name += " " + prefix.getSuffix();
+					if (prefix.getSuffix() != null) {
+						t.setPrefix(prefix.getSuffix());
+						name += prefix.getSuffix();
 					}
 				}
+				
+				
+				t.addEntry(p.getName());
 				p.setCustomName(name);
 				p.setDisplayName(name);
 				p.setPlayerListName(name);
 				p.setCustomNameVisible(true);
+				p.updateCommands();
 			}
 		}
 	}
 
+	public void reloadPlayer(Player p) {
+		PermissionAttachment attachment = perms.get(p.getUniqueId());
+		if (attachment == null) {
+			attachment = p.addAttachment(this);
+			perms.put(p.getUniqueId(), attachment);
+		} else {
+			attachment = p.addAttachment(this);
+			perms.replace(p.getUniqueId(), attachment);
+		}
+		if (ph.getPlayers().contains(p.getName())) {
+			Group prefix = null;
+			for (String gr : ph.getGroups(p.getName())) {
+				Group g = gh.getGroup(gr);
+				if (g != null) {
+					if (prefix == null || prefix.getRank() < g.getRank()) {
+						prefix = g;
+					}
+					if (g.isOp()) {
+						p.setOp(true);
+					}
+					for (String perm : gh.getPermissions(gh.getGroup(gr))) {
+						attachment.setPermission(perm, true);
+					}
+					for (String nperm : gh.getNegatedPermissions(gh.getGroup(gr))) {
+						attachment.setPermission(nperm, false);
+					}
+				}
+			}
+
+			for (String perm : ph.getPermissions(p.getName())) {
+				attachment.setPermission(perm, true);
+			}
+			for (String nperm : ph.getNegatedPermissions(p.getName())) {
+				attachment.setPermission(nperm, false);
+			}
+			String name = "";
+			Team t = null;
+			if (prefix != null) {
+				Scoreboard s = Bukkit.getScoreboardManager().getMainScoreboard();
+				
+				if(s.getTeam(prefix.getName()) == null) {
+					t = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(prefix.getName());
+				} else {
+					t = s.getTeam(prefix.getName());
+				}
+				if (prefix.getPrefix() != null) {
+					t.setPrefix(prefix.getPrefix());
+					name += prefix.getPrefix();
+				}
+				name += ChatColor.WHITE + p.getName();
+				if (prefix.getSuffix() != null) {
+					t.setPrefix(prefix.getSuffix());
+					name += prefix.getSuffix();
+				}
+			}
+			
+			
+			t.addEntry(p.getName());
+			p.setCustomName(name);
+			p.setDisplayName(name);
+			p.setPlayerListName(name);
+			p.setCustomNameVisible(true);
+			p.updateCommands();
+		}
+	}
 }
