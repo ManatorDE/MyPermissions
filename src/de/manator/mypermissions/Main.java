@@ -9,6 +9,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import de.manator.mypermissions.commands.ExcludeFromDefaultCMD;
 import de.manator.mypermissions.commands.ExcludeTab;
@@ -131,7 +133,7 @@ public class Main extends JavaPlugin {
 						}
 					}
 				}
-
+				
 				for (String perm : ph.getPermissions(p.getName())) {
 					attachment.setPermission(perm, true);
 				}
@@ -139,15 +141,29 @@ public class Main extends JavaPlugin {
 					attachment.setPermission(nperm, false);
 				}
 				String name = "";
+				Team t = null;
 				if (prefix != null) {
+					Scoreboard s = Bukkit.getScoreboardManager().getMainScoreboard();
+					
+					if(s.getTeam(prefix.getName()) == null) {
+						t = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(prefix.getName());
+					} else {
+						t = s.getTeam(prefix.getName());
+					}
+					
 					if (prefix.getPrefix() != null) {
+						t.setPrefix(prefix.getPrefix());
 						name += prefix.getPrefix();
 					}
 					name += ChatColor.WHITE + p.getName();
 					if (prefix.getSuffix() != null) {
+						t.setPrefix(prefix.getSuffix());
 						name += prefix.getSuffix();
 					}
 				}
+				
+				
+				t.addEntry(p.getName());
 				p.setCustomName(name);
 				p.setDisplayName(name);
 				p.setPlayerListName(name);
@@ -193,15 +209,28 @@ public class Main extends JavaPlugin {
 				attachment.setPermission(nperm, false);
 			}
 			String name = "";
+			Team t = null;
 			if (prefix != null) {
+				Scoreboard s = Bukkit.getScoreboardManager().getMainScoreboard();
+				
+				if(s.getTeam(prefix.getName()) == null) {
+					t = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(prefix.getName());
+				} else {
+					t = s.getTeam(prefix.getName());
+				}
 				if (prefix.getPrefix() != null) {
+					t.setPrefix(prefix.getPrefix());
 					name += prefix.getPrefix();
 				}
 				name += ChatColor.WHITE + p.getName();
 				if (prefix.getSuffix() != null) {
+					t.setPrefix(prefix.getSuffix());
 					name += prefix.getSuffix();
 				}
 			}
+			
+			
+			t.addEntry(p.getName());
 			p.setCustomName(name);
 			p.setDisplayName(name);
 			p.setPlayerListName(name);

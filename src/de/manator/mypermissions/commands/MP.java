@@ -34,6 +34,7 @@ public class MP implements CommandExecutor {
 				} else if (args.length == 1) {
 					if (args[0].equalsIgnoreCase("rl")) {
 						main.reloadPlayers();
+						main.getGroupHandler().loadGroups();
 						CMD.sendMessage(p, "§aPlugin was reloaded!");
 					} else if (args[0].equalsIgnoreCase("help")) {
 						this.commands = main.getCommands();
