@@ -52,9 +52,18 @@ public class Main extends JavaPlugin {
 			getLogger().info("Loading groups failed!");
 		}
 
+		getLogger().info("Resetting scoreboard...");
+		Scoreboard sb = Bukkit.getScoreboardManager().getMainScoreboard();
+		for (Group g : gh.getGroups()) {
+			if (g != null && sb.getTeam(g.getName()) != null) {
+				sb.getTeam(g.getName()).unregister();
+			}
+		}
+		getLogger().info("Scoreboard reset!");
+
 		getLogger().info("Loading players...");
 		ph = new PlayerHandler(getDataFolder());
-		getLogger().info("Players loeaded!");
+		getLogger().info("Players loaded!");
 
 		getLogger().info("Loading commands...");
 		registerCommands();
@@ -133,7 +142,7 @@ public class Main extends JavaPlugin {
 						}
 					}
 				}
-				
+
 				for (String perm : ph.getPermissions(p.getName())) {
 					attachment.setPermission(perm, true);
 				}
@@ -144,13 +153,13 @@ public class Main extends JavaPlugin {
 				Team t = null;
 				if (prefix != null) {
 					Scoreboard s = Bukkit.getScoreboardManager().getMainScoreboard();
-					
-					if(s.getTeam(prefix.getName()) == null) {
+
+					if (s.getTeam(prefix.getName()) == null) {
 						t = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(prefix.getName());
 					} else {
 						t = s.getTeam(prefix.getName());
 					}
-					
+
 					if (prefix.getPrefix() != null) {
 						t.setPrefix(prefix.getPrefix());
 						name += prefix.getPrefix();
@@ -161,8 +170,7 @@ public class Main extends JavaPlugin {
 						name += prefix.getSuffix();
 					}
 				}
-				
-				
+
 				t.addEntry(p.getName());
 				p.setCustomName(name);
 				p.setDisplayName(name);
@@ -212,8 +220,8 @@ public class Main extends JavaPlugin {
 			Team t = null;
 			if (prefix != null) {
 				Scoreboard s = Bukkit.getScoreboardManager().getMainScoreboard();
-				
-				if(s.getTeam(prefix.getName()) == null) {
+
+				if (s.getTeam(prefix.getName()) == null) {
 					t = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(prefix.getName());
 				} else {
 					t = s.getTeam(prefix.getName());
@@ -228,8 +236,7 @@ public class Main extends JavaPlugin {
 					name += prefix.getSuffix();
 				}
 			}
-			
-			
+
 			t.addEntry(p.getName());
 			p.setCustomName(name);
 			p.setDisplayName(name);

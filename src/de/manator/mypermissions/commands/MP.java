@@ -42,12 +42,14 @@ public class MP implements CommandExecutor {
 						if (commands.size() > 5) {
 							for(int i = 0; i < 5; i++) {
 								String s = commands.get(i);
-								CMD.sendMessage(p, main.getCommand(s).getDescription());
+								CMD.sendMessage(p, "§6/" + s + " - " +  main.getCommand(s).getDescription());
 							}
+							CMD.sendMessage(p, "§6Visit https://manatorde.github.io/mypermissions/ for more information!");
 						} else {
 							for (String s : commands) {
-								CMD.sendMessage(p, main.getCommand(s).getDescription());
+								CMD.sendMessage(p, "§6/" + s + " - " +  main.getCommand(s).getDescription());
 							}
+							CMD.sendMessage(p, "§6Visit https://manatorde.github.io/mypermissions/ for more information!");
 						}
 					}
 				}
@@ -59,6 +61,7 @@ public class MP implements CommandExecutor {
 				} else if (args.length == 1) {
 					if (args[0].equalsIgnoreCase("rl")) {
 						main.reloadPlayers();
+						main.getGroupHandler().loadGroups();
 						CMD.sendMessage(p, "§aPlugin was reloaded!");
 					} else if (args[0].equalsIgnoreCase("help")) {
 						this.commands = main.getCommands();
@@ -66,12 +69,14 @@ public class MP implements CommandExecutor {
 						if (commands.size() > 5) {
 							for(int i = 0; i < 5; i++) {
 								String s = commands.get(i);
-								CMD.sendMessage(p, main.getCommand(s).getDescription());
+								CMD.sendMessage(p, "§6/" + s + " - " +  main.getCommand(s).getDescription());
 							}
+							CMD.sendMessage(p, "§6Visit https://manatorde.github.io/mypermissions/ for more information!");
 						} else {
 							for (String s : commands) {
-								CMD.sendMessage(p, main.getCommand(s).getDescription());
+								CMD.sendMessage(p, "§6/" + s + " - " +  main.getCommand(s).getDescription());
 							}
+							CMD.sendMessage(p, "§6Visit https://manatorde.github.io/mypermissions/ for more information!");
 						}
 					}
 				}
@@ -82,6 +87,7 @@ public class MP implements CommandExecutor {
 				} else if (args.length == 1) {
 					if (args[0].equalsIgnoreCase("rl")) {
 						main.reloadPlayers();
+						main.getGroupHandler().loadGroups();
 						CMD.sendMessage(p, "§aPlugin was reloaded!");
 					} else if (args[0].equalsIgnoreCase("help")) {
 						this.commands = main.getCommands();
@@ -89,12 +95,14 @@ public class MP implements CommandExecutor {
 						if (commands.size() > 5) {
 							for(int i = 0; i < 5; i++) {
 								String s = commands.get(i);
-								CMD.sendMessage(p, main.getCommand(s).getDescription());
+								CMD.sendMessage(p, "§6/" + s + " - " +  main.getCommand(s).getDescription());
 							}
+							CMD.sendMessage(p, "§6Visit https://manatorde.github.io/mypermissions/ for more information!");
 						} else {
 							for (String s : commands) {
-								CMD.sendMessage(p, main.getCommand(s).getDescription());
+								CMD.sendMessage(p, "§6/" + s + " - " +  main.getCommand(s).getDescription());
 							}
+							CMD.sendMessage(p, "§6Visit https://manatorde.github.io/mypermissions/ for more information!");
 						}
 					}
 				}
