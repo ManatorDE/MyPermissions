@@ -1,5 +1,8 @@
-# MyPermissions
-ToDo's:
-- Permission handling needs to be implemented
-- All commands need to be finished
-- The ranking system, as well as prefixes and suffixes need to be implemented for groups
+MyPermissions:
+Version 1.2.4 upcoming!
+Changes:
+- Scoreboard gets reset on enabling AND disabling the plugin
+
+Ideas for additions:
+- Permission can be granted by /group add <groupname> <command>
+- Same with the /permissions command 
