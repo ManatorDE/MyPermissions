@@ -1,5 +1,5 @@
-MyPermissions:
-Version 1.2.4 upcoming!
+MyPermissions:<br>
+Version 1.2.4 upcoming!<br>
 Changes:
 - Scoreboard gets reset on enabling AND disabling the plugin
 
