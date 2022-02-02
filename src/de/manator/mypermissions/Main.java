@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.help.HelpTopic;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
@@ -26,11 +27,16 @@ import de.manator.mypermissions.groups.GroupHandler;
 import de.manator.mypermissions.players.PlayerHandler;
 
 public class Main extends JavaPlugin {
-
+	
+	// Add permission by given command
+	
+	
 	private ArrayList<String> commands;
 	private GroupHandler gh;
 	private PlayerHandler ph;
 	private HashMap<UUID, PermissionAttachment> perms;
+	
+	private ArrayList<String> allCommands;
 
 	@Override
 	public void onEnable() {
@@ -70,11 +76,24 @@ public class Main extends JavaPlugin {
 		getLogger().info("Commands loaded!");
 
 		perms = new HashMap<>();
+		
+		allCommands = new ArrayList<>();
+		
+		for(HelpTopic cmd : getServer().getHelpMap().getHelpTopics()) {
+			allCommands.add(cmd.getName());
+		}
 	}
 
 	@Override
 	public void onDisable() {
-
+		getLogger().info("Resetting scoreboard...");
+		Scoreboard sb = Bukkit.getScoreboardManager().getMainScoreboard();
+		for (Group g : gh.getGroups()) {
+			if (g != null && sb.getTeam(g.getName()) != null) {
+				sb.getTeam(g.getName()).unregister();
+			}
+		}
+		getLogger().info("Scoreboard reset!");
 	}
 
 	private void registerListeners() {
@@ -244,5 +263,9 @@ public class Main extends JavaPlugin {
 			p.setCustomNameVisible(true);
 			p.updateCommands();
 		}
+	}
+	
+	public boolean commandExists(String command) {
+		return allCommands.contains(command);
 	}
 }
