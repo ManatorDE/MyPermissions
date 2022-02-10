@@ -27,15 +27,14 @@ import de.manator.mypermissions.groups.GroupHandler;
 import de.manator.mypermissions.players.PlayerHandler;
 
 public class Main extends JavaPlugin {
-	
+
 	// Add permission by given command
-	
-	
+
 	private ArrayList<String> commands;
 	private GroupHandler gh;
 	private PlayerHandler ph;
 	private HashMap<UUID, PermissionAttachment> perms;
-	
+
 	private ArrayList<String> allCommands;
 
 	@Override
@@ -76,10 +75,10 @@ public class Main extends JavaPlugin {
 		getLogger().info("Commands loaded!");
 
 		perms = new HashMap<>();
-		
+
 		allCommands = new ArrayList<>();
-		
-		for(HelpTopic cmd : getServer().getHelpMap().getHelpTopics()) {
+
+		for (HelpTopic cmd : getServer().getHelpMap().getHelpTopics()) {
 			allCommands.add(cmd.getName());
 		}
 	}
@@ -190,7 +189,8 @@ public class Main extends JavaPlugin {
 					}
 				}
 
-				t.addEntry(p.getName());
+				if (t != null)
+					t.addEntry(p.getName());
 				p.setCustomName(name);
 				p.setDisplayName(name);
 				p.setPlayerListName(name);
@@ -256,7 +256,8 @@ public class Main extends JavaPlugin {
 				}
 			}
 
-			t.addEntry(p.getName());
+			if (t != null)
+				t.addEntry(p.getName());
 			p.setCustomName(name);
 			p.setDisplayName(name);
 			p.setPlayerListName(name);
@@ -264,7 +265,7 @@ public class Main extends JavaPlugin {
 			p.updateCommands();
 		}
 	}
-	
+
 	public boolean commandExists(String command) {
 		return allCommands.contains(command);
 	}
