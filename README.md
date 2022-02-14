@@ -10,4 +10,5 @@
 <li>Playernames can be coloured</li>
 <li>Toggle space between prefix and username</li>
 <li>Toggle space between suffix and username</li>
+<li>Adding gui menus</li>
 </article>
