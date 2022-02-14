@@ -1,5 +1,4 @@
 <h1>MyPermissions:</h1>
-<a href="https://dev.bukkit.org/projects/my-permissions">Download here!</a>
 <article>
 <h3>Version 1.2.4 upcoming!</h3>
 <h3>Changes:</h3>
