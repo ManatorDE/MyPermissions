@@ -46,11 +46,7 @@ public class GroupTab implements TabCompleter {
 			list.add("setdefault");
 			list.add("setop");
 			list.add("setrank");
-			for (int i = 0; i < list.size(); i++) {
-				if (!list.get(i).startsWith(args[0])) {
-					list.remove(i);
-				}
-			}
+			list = cleanUp(list, args[0]);
 		} else if (args.length == 2) {
 			if (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("remove")) {
 				for (Group g : gh.getGroups()) {
@@ -115,6 +111,7 @@ public class GroupTab implements TabCompleter {
 					}
 				}
 			}
+			list = cleanUp(list, args[1]);
 		} else if (args.length == 3) {
 			if (args[0].equalsIgnoreCase("addplayer")) {
 				for (Group g : gh.getGroups()) {
@@ -148,8 +145,18 @@ public class GroupTab implements TabCompleter {
 			} else if(args[0].equalsIgnoreCase("removenegation")) {
 				list = gh.getNegatedPermissions(gh.getGroup(args[1]));
 			}
+			list = cleanUp(list, args[2]);
 		}
 		return list;
 	}
-
+	
+	private ArrayList<String> cleanUp(ArrayList<String> list, String arg) {
+		for (int i = 0; i < list.size(); i++) {
+			if (!list.get(i).startsWith(arg)) {
+				list.remove(i);
+			}
+		}
+		return list;
+	}
+	
 }
