@@ -189,12 +189,13 @@ public class Main extends JavaPlugin {
 					}
 				}
 
-				if (t != null)
+				if (t != null) {
 					t.addEntry(p.getName());
-				p.setCustomName(name);
-				p.setDisplayName(name);
-				p.setPlayerListName(name);
-				p.setCustomNameVisible(true);
+					p.setCustomName(name);
+					p.setDisplayName(name);
+					p.setPlayerListName(name);
+					p.setCustomNameVisible(true);
+				}
 				p.updateCommands();
 			}
 		}
@@ -256,12 +257,13 @@ public class Main extends JavaPlugin {
 				}
 			}
 
-			if (t != null)
+			if (t != null) {
 				t.addEntry(p.getName());
-			p.setCustomName(name);
-			p.setDisplayName(name);
-			p.setPlayerListName(name);
-			p.setCustomNameVisible(true);
+				p.setCustomName(name);
+				p.setDisplayName(name);
+				p.setPlayerListName(name);
+				p.setCustomNameVisible(true);
+			}
 			p.updateCommands();
 		}
 	}
