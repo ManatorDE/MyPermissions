@@ -20,6 +20,7 @@ import de.manator.mypermissions.commands.MP;
 import de.manator.mypermissions.commands.MPTab;
 import de.manator.mypermissions.commands.Permissions;
 import de.manator.mypermissions.commands.PermissionsTab;
+import de.manator.mypermissions.events.ConfigEvents;
 import de.manator.mypermissions.events.PlayerJoin;
 import de.manator.mypermissions.groups.Group;
 import de.manator.mypermissions.groups.GroupHandler;
@@ -33,6 +34,7 @@ public class Main extends JavaPlugin {
 	private GroupHandler gh;
 	private PlayerHandler ph;
 	private HashMap<UUID, PermissionAttachment> perms;
+	private ConfigEvents configs;
 
 	@Override
 	public void onEnable() {
@@ -41,10 +43,6 @@ public class Main extends JavaPlugin {
 			getDataFolder().mkdirs();
 		}
 		getLogger().info("Files loaded!");
-
-		getLogger().info("Registering listeners...");
-		registerListeners();
-		getLogger().info("Listeners registered!");
 
 		getLogger().info("Loading groups...");
 		gh = new GroupHandler(getDataFolder());
@@ -72,6 +70,10 @@ public class Main extends JavaPlugin {
 		getLogger().info("Commands loaded!");
 
 		perms = new HashMap<>();
+		
+		getLogger().info("Registering listeners...");
+		registerListeners();
+		getLogger().info("Listeners registered!");
 	}
 
 	@Override
@@ -88,6 +90,9 @@ public class Main extends JavaPlugin {
 
 	private void registerListeners() {
 		Bukkit.getPluginManager().registerEvents(new PlayerJoin(this), this);
+		
+		configs = new ConfigEvents(this);
+		Bukkit.getPluginManager().registerEvents(configs, this);
 	}
 
 	private void registerCommands() {
@@ -257,5 +262,9 @@ public class Main extends JavaPlugin {
 			}
 			p.updateCommands();
 		}
+	}
+	
+	public ConfigEvents getConfigs() {
+		return configs;
 	}
 }

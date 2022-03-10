@@ -43,6 +43,7 @@ public class GroupCMD implements CommandExecutor {
 					if (args[0].equalsIgnoreCase("create")) {
 						if (gh.addGroup(args[1])) {
 							CMD.sendMessage(p, "§aThe group §6" + args[1] + "§a was created!");
+							main.getConfigs().updateGroups();
 						} else {
 							CMD.sendMessage(p, "§cThe group already exists!");
 						}
@@ -102,6 +103,12 @@ public class GroupCMD implements CommandExecutor {
 							}
 						} else {
 							CMD.sendMessage(p, "§cFailed to list the players groups!");
+						}
+					} else if(args[0].equalsIgnoreCase("config")) {
+						if(gh.getGroup(args[1]) != null && main.getConfigs().getGroupConfig(args[1]) != null) {
+							p.openInventory(main.getConfigs().getGroupConfig(args[1]));
+						} else {
+							CMD.sendMessage(p, "§cFailed to open the config!");
 						}
 					}
 				} else if (args.length == 3) {
@@ -178,6 +185,7 @@ public class GroupCMD implements CommandExecutor {
 					} else if (args[0].equalsIgnoreCase("create")) {
 						if (gh.addGroup(args[1], gh.getGroup(args[2]))) {
 							CMD.sendMessage(p, "§aThe group §6" + args[1] + "§a was created!");
+							main.getConfigs().updateGroups();
 						} else {
 							CMD.sendMessage(p, "§cThe group already exists!");
 						}
@@ -213,6 +221,7 @@ public class GroupCMD implements CommandExecutor {
 					if (args[0].equalsIgnoreCase("create")) {
 						if (gh.addGroup(args[1])) {
 							CMD.sendMessage(p, "§aThe group §6" + args[1] + "§a was created!");
+							main.getConfigs().updateGroups();
 						} else {
 							CMD.sendMessage(p, "§cThe group already exists!");
 						}
@@ -348,6 +357,7 @@ public class GroupCMD implements CommandExecutor {
 					} else if (args[0].equalsIgnoreCase("create")) {
 						if (gh.addGroup(args[1], gh.getGroup(args[2]))) {
 							CMD.sendMessage(p, "§aThe group §6" + args[1] + "§a was created!");
+							main.getConfigs().updateGroups();
 						} else {
 							CMD.sendMessage(p, "§cThe group already exists!");
 						}
@@ -382,6 +392,7 @@ public class GroupCMD implements CommandExecutor {
 					if (args[0].equalsIgnoreCase("create")) {
 						if (gh.addGroup(args[1])) {
 							CMD.sendMessage(p, "§aThe group §6" + args[1] + "§a was created!");
+							main.getConfigs().updateGroups();
 						} else {
 							CMD.sendMessage(p, "§cThe group already exists!");
 						}
@@ -517,6 +528,7 @@ public class GroupCMD implements CommandExecutor {
 					} else if (args[0].equalsIgnoreCase("create")) {
 						if (gh.addGroup(args[1], gh.getGroup(args[2]))) {
 							CMD.sendMessage(p, "§aThe group §6" + args[1] + "§a was created!");
+							main.getConfigs().updateGroups();
 						} else {
 							CMD.sendMessage(p, "§cThe group already exists!");
 						}

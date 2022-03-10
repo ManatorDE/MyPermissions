@@ -29,6 +29,7 @@ public class GroupTab implements TabCompleter {
 			list.add("add");
 			list.add("addplayer");
 			list.add("create");
+			list.add("config");
 			list.add("delete");
 			list.add("deleteprefix");
 			list.add("deletesuffix");
@@ -58,7 +59,7 @@ public class GroupTab implements TabCompleter {
 				list = ph.getPlayers();
 			} else if (args[0].equalsIgnoreCase("create")) {
 				list.add("<groupname>");
-			} else if (args[0].equalsIgnoreCase("delete")) {
+			} else if (args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("config")) {
 				for (Group g : gh.getGroups()) {
 					if(g != null) {
 						list.add(g.getName());
