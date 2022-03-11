@@ -31,6 +31,8 @@ public class GroupConfig {
 	private ItemStack rank;
 	private ItemStack op;
 	private ItemStack def;
+	private ItemStack next;
+	private ItemStack last;
 
 	public static final int PREFIX = 0;
 	public static final int SUFFIX = 1;
@@ -43,6 +45,8 @@ public class GroupConfig {
 	public static final int RANK = 8;
 	public static final int OP = 9;
 	public static final int DEFAULT = 10;
+	public static final int NEXT = 100;
+	public static final int LAST = 101;
 
 	public GroupConfig(Group group) {
 		g = group;
@@ -85,8 +89,12 @@ public class GroupConfig {
 			return rank;
 		case OP:
 			return op;
-		case DEFAULT: 
+		case DEFAULT:
 			return def;
+		case NEXT:
+			return next;
+		case LAST:
+			return last;
 		default:
 			return null;
 		}
@@ -188,11 +196,26 @@ public class GroupConfig {
 		def.setItemMeta(defMeta);
 
 		inv.setItem(10, def);
+
+		next = new ItemStack(Material.WARPED_STEM);
+		ItemMeta nextMeta = next.getItemMeta();
+		nextMeta.setDisplayName("Next Page");
+		nextMeta.setLore(Arrays.asList("Next Page"));
+		next.setItemMeta(nextMeta);
+
+		last = new ItemStack(Material.CRIMSON_STEM);
+		ItemMeta lastMeta = last.getItemMeta();
+		lastMeta.setDisplayName("Last Page");
+		lastMeta.setLore(Arrays.asList("Last Page"));
+		last.setItemMeta(lastMeta);
 	}
 
 	public void setMenu(ArrayList<String> settings, int menuType) {
 		int size = settings.size() / 9;
 		size++;
+		if (size > 6) {
+			size = 6;
+		}
 		Material mat = null;
 		if (menuType == ADD_PLAYER) {
 			menu = Bukkit.createInventory(null, size * 9, "Add Player");
@@ -219,11 +242,18 @@ public class GroupConfig {
 		this.menuType = menuType;
 
 		for (int i = 0; i < settings.size(); i++) {
-			ItemStack item = new ItemStack(mat);
-			ItemMeta meta = item.getItemMeta();
-			meta.setDisplayName(settings.get(i));
-			item.setItemMeta(meta);
-			menu.addItem(item);
+			if (i == 53) {
+				if (settings.size() > 54) {
+					menu.addItem(next);
+					break;
+				}
+			} else {
+				ItemStack item = new ItemStack(mat);
+				ItemMeta meta = item.getItemMeta();
+				meta.setDisplayName(settings.get(i));
+				item.setItemMeta(meta);
+				menu.addItem(item);
+			}
 		}
 	}
 
@@ -234,8 +264,100 @@ public class GroupConfig {
 	public int getMenuType() {
 		return menuType;
 	}
-	
+
 	public void setOP(ItemStack op) {
 		this.op = op;
+	}
+
+	public void nextPage(ArrayList<String> settings) {
+		if (settings.size() > 54) {
+			Material mat = null;
+			ItemStack lastItem = null;
+			if (menu.getItem(53).equals(next)) {
+				lastItem = menu.getItem(51);
+			} else {
+				lastItem = menu.getItem(52);
+			}
+			int it = 0;
+			while (settings.get(it) != null && !lastItem.getItemMeta().getDisplayName().equals(settings.get(it))) {
+				it++;
+			}
+			if (settings.get(it) != null) {
+				if (menuType == ADD_PLAYER) {
+					mat = Material.PLAYER_HEAD;
+				} else if (menuType == REMOVE_PLAYER) {
+					mat = Material.PLAYER_HEAD;
+				} else if (menuType == ADD_PERMISSION) {
+					mat = Material.GREEN_BANNER;
+				} else if (menuType == REMOVE_PERMISSION) {
+					mat = Material.RED_BANNER;
+				} else if (menuType == NEGATE) {
+					mat = Material.BARRIER;
+				} else if (menuType == REMOVE_NEGATION) {
+					mat = Material.BARRIER;
+				} else if (menuType == RANK) {
+					mat = Material.BELL;
+				}
+				menu.clear();
+				for (int i = it; i < settings.size(); i++) {
+					ItemStack item = new ItemStack(mat);
+					ItemMeta meta = item.getItemMeta();
+					meta.setDisplayName(settings.get(i));
+					item.setItemMeta(meta);
+					menu.addItem(item);
+				}
+				menu.setItem(53, next);
+				menu.setItem(52, last);
+			}
+		}
+
+	}
+
+	public void previousPage(ArrayList<String> settings) {
+		if (settings.size() > 54) {
+			Material mat = null;
+
+			ItemStack lastItem = null;
+			int it = 0;
+			int amount = 0;
+			for (int i = 0; i < 54; i++) {
+				if (menu.getItem(i) == null) {
+					lastItem = menu.getItem(i - 1);
+					amount = i - 1;
+					break;
+				}
+			}
+
+			while (!lastItem.getItemMeta().getDisplayName().equals(settings.get(it))) {
+				it++;
+			}
+
+			if (menuType == ADD_PLAYER) {
+				mat = Material.PLAYER_HEAD;
+			} else if (menuType == REMOVE_PLAYER) {
+				mat = Material.PLAYER_HEAD;
+			} else if (menuType == ADD_PERMISSION) {
+				mat = Material.GREEN_BANNER;
+			} else if (menuType == REMOVE_PERMISSION) {
+				mat = Material.RED_BANNER;
+			} else if (menuType == NEGATE) {
+				mat = Material.BARRIER;
+			} else if (menuType == REMOVE_NEGATION) {
+				mat = Material.BARRIER;
+			} else if (menuType == RANK) {
+				mat = Material.BELL;
+			}
+			menu.clear();
+			for (int i = it - 51 - amount; i < settings.size(); i++) {
+				ItemStack item = new ItemStack(mat);
+				ItemMeta meta = item.getItemMeta();
+				meta.setDisplayName(settings.get(i));
+				item.setItemMeta(meta);
+				menu.addItem(item);
+			}
+			menu.setItem(52, last);
+			menu.setItem(53, next);
+		}
+
 	}
 }
