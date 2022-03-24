@@ -15,6 +15,7 @@ import de.manator.mypermissions.Main;
 import de.manator.mypermissions.groups.Group;
 import de.manator.mypermissions.groups.GroupHandler;
 import de.manator.mypermissions.players.PlayerHandler;
+import net.md_5.bungee.api.ChatColor;
 
 public class GroupCMD implements CommandExecutor {
 
@@ -169,14 +170,14 @@ public class GroupCMD implements CommandExecutor {
 							CMD.sendMessage(p, "§cFailed to op/deop the group!");
 						}
 					} else if (args[0].equalsIgnoreCase("setprefix")) {
-						if (gh.setPrefix(gh.getGroup(args[1]), args[2].replace('&', '§'))) {
+						if (gh.setPrefix(gh.getGroup(args[1]), ChatColor.translateAlternateColorCodes('&', args[2]))) {
 							CMD.sendMessage(p, "§aThe prefix of the group §6" + args[1] + "§a was set to §r"
 									+ gh.getGroup(args[1]).getPrefix());
 						} else {
 							CMD.sendMessage(p, "§cFailed to set the prefix!");
 						}
 					} else if (args[0].equalsIgnoreCase("setsuffix")) {
-						if (gh.setSuffix(gh.getGroup(args[1]), args[2].replace('&', '§'))) {
+						if (gh.setSuffix(gh.getGroup(args[1]), ChatColor.translateAlternateColorCodes('&', args[2]))) {
 							CMD.sendMessage(p, "§aThe suffix of the group §6" + args[1] + "§a was set to §r"
 									+ gh.getGroup(args[1]).getSuffix());
 						} else {
@@ -341,14 +342,14 @@ public class GroupCMD implements CommandExecutor {
 							CMD.sendMessage(p, "§cFailed to op/deop the group!");
 						}
 					} else if (args[0].equalsIgnoreCase("setprefix")) {
-						if (gh.setPrefix(gh.getGroup(args[1]), args[2].replace('&', '§'))) {
+						if (gh.setPrefix(gh.getGroup(args[1]), ChatColor.translateAlternateColorCodes('&', args[2]))) {
 							CMD.sendMessage(p, "§aThe prefix of the group §6" + args[1] + "§a was set to §r"
 									+ gh.getGroup(args[1]).getPrefix());
 						} else {
 							CMD.sendMessage(p, "§cFailed to set the prefix!");
 						}
 					} else if (args[0].equalsIgnoreCase("setsuffix")) {
-						if (gh.setSuffix(gh.getGroup(args[1]), args[2].replace('&', '§'))) {
+						if (gh.setSuffix(gh.getGroup(args[1]), ChatColor.translateAlternateColorCodes('&', args[2]))) {
 							CMD.sendMessage(p, "§aThe suffix of the group §6" + args[1] + "§a was set to §r"
 									+ gh.getGroup(args[1]).getSuffix());
 						} else {
@@ -512,14 +513,14 @@ public class GroupCMD implements CommandExecutor {
 							CMD.sendMessage(p, "§cFailed to op/deop the group!");
 						}
 					} else if (args[0].equalsIgnoreCase("setprefix")) {
-						if (gh.setPrefix(gh.getGroup(args[1]), args[2].replace('&', '§'))) {
+						if (gh.setPrefix(gh.getGroup(args[1]), ChatColor.translateAlternateColorCodes('&', args[2]))) {
 							CMD.sendMessage(p, "§aThe prefix of the group §6" + args[1] + "§a was set to §r"
 									+ gh.getGroup(args[1]).getPrefix());
 						} else {
 							CMD.sendMessage(p, "§cFailed to set the prefix!");
 						}
 					} else if (args[0].equalsIgnoreCase("setsuffix")) {
-						if (gh.setSuffix(gh.getGroup(args[1]), args[2].replace('&', '§'))) {
+						if (gh.setSuffix(gh.getGroup(args[1]), ChatColor.translateAlternateColorCodes('&', args[2]))) {
 							CMD.sendMessage(p, "§aThe suffix of the group §6" + args[1] + "§a was set to §r"
 									+ gh.getGroup(args[1]).getSuffix());
 						} else {

@@ -242,11 +242,9 @@ public class GroupConfig {
 		this.menuType = menuType;
 
 		for (int i = 0; i < settings.size(); i++) {
-			if (i == 53) {
-				if (settings.size() > 54) {
-					menu.addItem(next);
-					break;
-				}
+			if (i == 53 && settings.size() > 54) {
+				menu.addItem(next);
+				break;
 			} else {
 				ItemStack item = new ItemStack(mat);
 				ItemMeta meta = item.getItemMeta();
@@ -279,7 +277,11 @@ public class GroupConfig {
 				lastItem = menu.getItem(52);
 			}
 			int it = 0;
-			while (settings.get(it) != null && !lastItem.getItemMeta().getDisplayName().equals(settings.get(it))) {
+			while (it < settings.size() && settings.get(it) != null
+					&& !lastItem.getItemMeta().getDisplayName().equals(settings.get(it))) {
+				it++;
+			}
+			if(lastItem.getItemMeta().getDisplayName().equals(settings.get(it))) {
 				it++;
 			}
 			if (settings.get(it) != null) {
@@ -328,10 +330,14 @@ public class GroupConfig {
 				}
 			}
 
-			while (!lastItem.getItemMeta().getDisplayName().equals(settings.get(it))) {
+			while (it < settings.size() && !lastItem.getItemMeta().getDisplayName().equals(settings.get(it))) {
 				it++;
 			}
-
+			
+			if(lastItem.getItemMeta().getDisplayName().equals(settings.get(it))) {
+				it++;
+			}
+			
 			if (menuType == ADD_PLAYER) {
 				mat = Material.PLAYER_HEAD;
 			} else if (menuType == REMOVE_PLAYER) {
