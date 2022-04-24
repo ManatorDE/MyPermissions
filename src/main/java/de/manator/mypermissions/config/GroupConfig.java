@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import de.manator.mypermissions.groups.Group;
 
@@ -246,11 +247,20 @@ public class GroupConfig {
 				menu.addItem(next);
 				break;
 			} else {
-				ItemStack item = new ItemStack(mat);
-				ItemMeta meta = item.getItemMeta();
-				meta.setDisplayName(settings.get(i));
-				item.setItemMeta(meta);
-				menu.addItem(item);
+				if (mat == Material.PLAYER_HEAD) {
+					ItemStack item = new ItemStack(mat);
+					SkullMeta meta = (SkullMeta) item.getItemMeta();
+					meta.setDisplayName(settings.get(i));
+					meta.setOwnerProfile(Bukkit.getServer().createPlayerProfile(settings.get(i)));
+					item.setItemMeta(meta);
+					menu.addItem(item);
+				} else {
+					ItemStack item = new ItemStack(mat);
+					ItemMeta meta = item.getItemMeta();
+					meta.setDisplayName(settings.get(i));
+					item.setItemMeta(meta);
+					menu.addItem(item);
+				}
 			}
 		}
 	}
@@ -281,7 +291,7 @@ public class GroupConfig {
 					&& !lastItem.getItemMeta().getDisplayName().equals(settings.get(it))) {
 				it++;
 			}
-			if(lastItem.getItemMeta().getDisplayName().equals(settings.get(it))) {
+			if (lastItem.getItemMeta().getDisplayName().equals(settings.get(it))) {
 				it++;
 			}
 			if (settings.get(it) != null) {
@@ -302,11 +312,21 @@ public class GroupConfig {
 				}
 				menu.clear();
 				for (int i = it; i < settings.size(); i++) {
-					ItemStack item = new ItemStack(mat);
-					ItemMeta meta = item.getItemMeta();
-					meta.setDisplayName(settings.get(i));
-					item.setItemMeta(meta);
-					menu.addItem(item);
+
+					if (mat == Material.PLAYER_HEAD) {
+						ItemStack item = new ItemStack(mat);
+						SkullMeta meta = (SkullMeta) item.getItemMeta();
+						meta.setDisplayName(settings.get(i));
+						meta.setOwnerProfile(Bukkit.getServer().createPlayerProfile(settings.get(i)));
+						item.setItemMeta(meta);
+						menu.addItem(item);
+					} else {
+						ItemStack item = new ItemStack(mat);
+						ItemMeta meta = item.getItemMeta();
+						meta.setDisplayName(settings.get(i));
+						item.setItemMeta(meta);
+						menu.addItem(item);
+					}
 				}
 				menu.setItem(53, next);
 				menu.setItem(52, last);
@@ -333,11 +353,11 @@ public class GroupConfig {
 			while (it < settings.size() && !lastItem.getItemMeta().getDisplayName().equals(settings.get(it))) {
 				it++;
 			}
-			
-			if(lastItem.getItemMeta().getDisplayName().equals(settings.get(it))) {
+
+			if (lastItem.getItemMeta().getDisplayName().equals(settings.get(it))) {
 				it++;
 			}
-			
+
 			if (menuType == ADD_PLAYER) {
 				mat = Material.PLAYER_HEAD;
 			} else if (menuType == REMOVE_PLAYER) {
