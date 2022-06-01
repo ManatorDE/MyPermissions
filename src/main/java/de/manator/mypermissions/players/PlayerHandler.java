@@ -1,15 +1,14 @@
 package de.manator.mypermissions.players;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 import de.manator.mypermissions.groups.Group;
+import de.manator.mypermissions.io.FileHandler;
 
 public class PlayerHandler {
 
@@ -44,7 +43,7 @@ public class PlayerHandler {
 					return false;
 				}
 			}
-			if(!nperms.exists()) {
+			if (!nperms.exists()) {
 				try {
 					nperms.createNewFile();
 				} catch (IOException e) {
@@ -60,12 +59,10 @@ public class PlayerHandler {
 					return false;
 				}
 			}
-			if(!cfg.exists()) {
+			if (!cfg.exists()) {
 				try {
 					cfg.createNewFile();
-					BufferedWriter bw = new BufferedWriter(new FileWriter(cfg));
-					bw.write("ExcludeFromDefault: false");
-					bw.close();
+					FileHandler.writeLine("ExcludeFromDefault: false", cfg);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -77,25 +74,13 @@ public class PlayerHandler {
 	public boolean addGroup(Group g, String player) {
 		if (playerExists(player) && g != null) {
 			File groups = new File(playersFolder.getAbsolutePath() + "/" + player + "/groups.yml");
-			try {
-				BufferedReader br = new BufferedReader(new FileReader(groups));
-				ArrayList<String> players = new ArrayList<>();
-				while(br.ready()) {
-					players.add(br.readLine());
-				}
-				br.close();
-				BufferedWriter bw = new BufferedWriter(new FileWriter(groups));
-				for(String s : players) {
-					bw.write(s);
-					bw.newLine();
-				}
-				bw.write(g.getName());
-				bw.close();
+			LinkedList<String> lines = FileHandler.getLines(groups);
+			if (!lines.contains(g.getName())) {
+				lines.add(g.getName());
+				FileHandler.writeLines(lines, groups);
 				return true;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
 			}
+			return false;
 		} else {
 			return false;
 		}
@@ -104,49 +89,24 @@ public class PlayerHandler {
 	public boolean removeGroup(Group g, String player) {
 		if (playerExists(player) && g != null) {
 			File groups = new File(playersFolder.getAbsolutePath() + "/" + player + "/groups.yml");
-			try {
-				BufferedReader br = new BufferedReader(new FileReader(groups));
-				ArrayList<String> lines = new ArrayList<String>();
-				while (br.ready()) {
-					String l = br.readLine();
-					if (!l.equalsIgnoreCase(g.getName())) {
-						lines.add(l);
-					}
-				}
-				br.close();
-				BufferedWriter bw = new BufferedWriter(new FileWriter(groups));
-				for (String l : lines) {
-					bw.write(l);
-					bw.newLine();
-				}
-				bw.close();
+			LinkedList<String> lines = FileHandler.getLines(groups);
+			if (lines.remove(g.getName())) {
+				FileHandler.writeLines(lines, groups);
 				return true;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
 			}
+			return false;
 		} else {
 			return false;
 		}
 	}
 
-	public ArrayList<String> getGroups(String player) {
-		ArrayList<String> groupsList = new ArrayList<String>();
+	public LinkedList<String> getGroups(String player) {
 		File groups = new File(playersFolder.getAbsolutePath() + "/" + player + "/groups.yml");
-
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(groups));
-			while (br.ready()) {
-				groupsList.add(br.readLine().toUpperCase());
-			}
-			br.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		LinkedList<String> list = FileHandler.getUpperCaseLines(groups);
+		if (list != null) {
+			return list;
 		}
-
-		return groupsList;
+		return new LinkedList<>();
 	}
 
 	private boolean playerExists(String name) {
@@ -158,8 +118,8 @@ public class PlayerHandler {
 		return false;
 	}
 
-	public ArrayList<String> getPlayers() {
-		ArrayList<String> players = new ArrayList<String>();
+	public LinkedList<String> getPlayers() {
+		LinkedList<String> players = new LinkedList<String>();
 		for (String s : playersFolder.list()) {
 			players.add(s);
 		}
@@ -176,112 +136,61 @@ public class PlayerHandler {
 
 	public boolean addPermission(String player, String perm) {
 		File perms = new File(playersFolder.getAbsolutePath() + "/" + player + "/permissions.yml");
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(perms));
-			ArrayList<String> permissions = new ArrayList<>();
-			while(br.ready()) {
-				permissions.add(br.readLine());
-			}
-			br.close();
-			BufferedWriter bw = new BufferedWriter(new FileWriter(perms));
-			for(String s : permissions) {
-				bw.write(s);
-				bw.newLine();
-			}
-			bw.write(perm);
-			bw.close();
+		LinkedList<String> lines = FileHandler.getLines(perms);
+		if (!lines.contains(perm)) {
+			lines.add(perm);
+			FileHandler.writeLines(lines, perms);
 			return true;
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 		return false;
 	}
 
-	public ArrayList<String> getPermissions(String player) {
+	public LinkedList<String> getPermissions(String player) {
 		File perms = new File(playersFolder.getAbsolutePath() + "/" + player + "/permissions.yml");
-		ArrayList<String> list = new ArrayList<String>();
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(perms));
-			while (br.ready()) {
-				list.add(br.readLine());
-			}
-			br.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		LinkedList<String> list = FileHandler.getLines(perms);
+
+		if (list != null) {
+			return list;
 		}
-		return list;
+
+		return new LinkedList<>();
 	}
 
 	public boolean removePermission(String player, String perm) {
 		File perms = new File(playersFolder.getAbsolutePath() + "/" + player + "/permissions.yml");
-		ArrayList<String> list = new ArrayList<String>();
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(perms));
-			while (br.ready()) {
-				String s = br.readLine();
-				if (!s.equalsIgnoreCase(perm)) {
-					list.add(s);
-				}
-			}
-			br.close();
+		LinkedList<String> list = FileHandler.getLines(perms);
+
+		if (list.remove(perm)) {
+			FileHandler.writeLines(list, perms);
 			return true;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 		return false;
 	}
 
 	public boolean negatePermission(String player, String nperm) {
 		File nperms = new File(playersFolder.getAbsolutePath() + "/" + player + "/negated_permissions.yml");
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(nperms));
-			ArrayList<String> permissions = new ArrayList<>();
-			while(br.ready()) {
-				permissions.add(br.readLine());
-			}
-			br.close();
-			BufferedWriter bw = new BufferedWriter(new FileWriter(nperms));
-			for(String s : permissions) {
-				bw.write(s);
-				bw.newLine();
-			}
-			bw.write(nperm);
-			bw.close();
+		LinkedList<String> lines = FileHandler.getLines(nperms);
+		if (!lines.contains(nperm)) {
+			lines.add(nperm);
+			FileHandler.writeLines(lines, nperms);
 			return true;
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 		return false;
 	}
 
 	public boolean removeNegatedPermission(String player, String nperm) {
 		File nperms = new File(playersFolder.getAbsolutePath() + "/" + player + "/negated_permissions.yml");
-		ArrayList<String> list = new ArrayList<String>();
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(nperms));
-			while (br.ready()) {
-				String s = br.readLine();
-				if (!s.equalsIgnoreCase(nperm)) {
-					list.add(s);
-				}
-			}
-			br.close();
+		LinkedList<String> list = FileHandler.getLines(nperms);
+		if (list.remove(nperm)) {
+			FileHandler.writeLines(list, nperms);
 			return true;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 		return false;
 	}
-	
-	public ArrayList<String> getNegatedPermissions(String player) {
+
+	public LinkedList<String> getNegatedPermissions(String player) {
 		File nperms = new File(playersFolder.getAbsolutePath() + "/" + player + "/negated_permissions.yml");
-		ArrayList<String> list = new ArrayList<String>();
+		LinkedList<String> list = new LinkedList<String>();
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(nperms));
 			while (br.ready()) {
@@ -298,36 +207,21 @@ public class PlayerHandler {
 
 	public boolean excludeFromDefault(String player, boolean excluded) {
 		File cfg = new File(playersFolder.getAbsolutePath() + "/" + player + "/config.yml");
-		try {
-			BufferedWriter bw = new BufferedWriter(new FileWriter(cfg));
-			if(excluded) {
-				bw.write("ExcludeFromDefault: true");
-			} else {
-				bw.write("ExcludeFromDefault: false");
-			}
-			bw.close();
-			return true;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
+		if (excluded) {
+			FileHandler.writeLine("ExcludeFromDefault: true", cfg);
+		} else {
+			FileHandler.writeLine("ExcludeFromDefault: false", cfg);
 		}
+		return true;
 	}
 
 	public boolean isExcluded(String player) {
 		File cfg = new File(playersFolder.getAbsolutePath() + "/" + player + "/config.yml");
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(cfg));
-			String line = br.readLine();
-			br.close();
-			if(line.endsWith("true")) {
-				return true;
-			} else if(line.endsWith("false")) {
-				return false;
-			}
-			return true;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
+		
+		LinkedList<String> lines = FileHandler.getLines(cfg);
+		if(lines != null && !lines.isEmpty()) {
+			return lines.get(0).endsWith("true");
 		}
+		return false;
 	}
 }

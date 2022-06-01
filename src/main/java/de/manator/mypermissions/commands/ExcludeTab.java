@@ -1,6 +1,6 @@
 package de.manator.mypermissions.commands;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.bukkit.command.Command;
@@ -20,7 +20,7 @@ public class ExcludeTab implements TabCompleter {
 	
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-		ArrayList<String> list = new ArrayList<>();
+		LinkedList<String> list = new LinkedList<>();
 		
 		if(cmd.getName().equalsIgnoreCase("excludefromdefault")) {
 			if(args.length == 1) {

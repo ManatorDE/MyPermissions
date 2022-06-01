@@ -1,6 +1,6 @@
 package de.manator.mypermissions.commands;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.bukkit.command.Command;
@@ -11,9 +11,9 @@ public class MPTab implements TabCompleter {
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-		ArrayList<String> list = new ArrayList<String>();
+		LinkedList<String> list = new LinkedList<String>();
 		if (command.getName().equalsIgnoreCase("mp")) {
-			list = new ArrayList<String>();
+			list = new LinkedList<String>();
 			if (args.length == 1) {
 				if(args[0].toLowerCase().startsWith("r")) {
 					list.add("rl");

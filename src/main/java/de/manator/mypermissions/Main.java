@@ -1,6 +1,6 @@
 package de.manator.mypermissions;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -30,7 +30,7 @@ public class Main extends JavaPlugin {
 
 	// Add permission by given command
 
-	private ArrayList<String> commands;
+	private LinkedList<String> commands;
 	private GroupHandler gh;
 	private PlayerHandler ph;
 	private HashMap<UUID, PermissionAttachment> perms;
@@ -96,7 +96,7 @@ public class Main extends JavaPlugin {
 	}
 
 	private void registerCommands() {
-		commands = new ArrayList<String>();
+		commands = new LinkedList<String>();
 
 		commands.add("mp");
 		getCommand("mp").setExecutor(new MP(this));
@@ -115,7 +115,7 @@ public class Main extends JavaPlugin {
 		getCommand("excludefromdefault").setTabCompleter(new ExcludeTab(this));
 	}
 
-	public ArrayList<String> getCommands() {
+	public LinkedList<String> getCommands() {
 		return commands;
 	}
 

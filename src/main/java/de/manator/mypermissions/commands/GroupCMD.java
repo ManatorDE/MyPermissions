@@ -1,6 +1,6 @@
 package de.manator.mypermissions.commands;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -563,8 +563,8 @@ public class GroupCMD implements CommandExecutor {
 		return false;
 	}
 
-	private ArrayList<String> getPlayers(Group g) {
-		ArrayList<String> players = new ArrayList<String>();
+	private LinkedList<String> getPlayers(Group g) {
+		LinkedList<String> players = new LinkedList<String>();
 		for (String s : ph.getPlayers()) {
 			if (ph.isInGroup(s, g)) {
 				players.add(s);

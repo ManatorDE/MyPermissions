@@ -1,25 +1,25 @@
 package de.manator.mypermissions.groups;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.LinkedList;
+
+import de.manator.mypermissions.io.FileHandler;
 
 public class GroupHandler {
 
 	private File groupFolder;
-	private ArrayList<Group> groups;
+	private LinkedList<Group> groups;
 
 	public GroupHandler(File dataFolder) {
 		this.groupFolder = new File(dataFolder.getAbsolutePath() + "/groups");
 		if (!this.groupFolder.exists()) {
 			this.groupFolder.mkdirs();
 		}
-		this.groups = new ArrayList<Group>();
+		this.groups = new LinkedList<Group>();
 	}
 
 	public boolean addGroup(String name) {
@@ -38,7 +38,7 @@ public class GroupHandler {
 			return false;
 		} else {
 			groups.add(g);
-			ArrayList<String> permissions = getPermissions(sg);
+			LinkedList<String> permissions = getPermissions(sg);
 			g.setRank(sg.getRank());
 			boolean created = createGroupFile(g);
 			if (created) {
@@ -63,7 +63,7 @@ public class GroupHandler {
 	public boolean loadGroups() {
 		File[] groupFiles = groupFolder.listFiles();
 		for (File f : groupFiles) {
-			if(!f.getName().equalsIgnoreCase("default.yml")) {
+			if (!f.getName().equalsIgnoreCase("default.yml")) {
 				String[] data = new String[5];
 				try {
 					BufferedReader br = new BufferedReader(new FileReader(new File(f.getAbsolutePath() + "/data.yml")));
@@ -101,31 +101,14 @@ public class GroupHandler {
 		if (groupExists(g)) {
 			getGroup(g.getName()).setPrefix(prefix);
 			File groupDataFile = new File(groupFolder.getAbsolutePath() + "/" + g.getName() + "/data.yml");
-			try {
-				BufferedReader br = new BufferedReader(new FileReader(groupDataFile));
-				ArrayList<String> lines = new ArrayList<String>();
-				while (br.ready()) {
-					String l = br.readLine();
-					if (l.startsWith("Prefix: ")) {
-						l = "Prefix: " + prefix;
-					}
-					lines.add(l);
+			LinkedList<String> lines = FileHandler.getLines(groupDataFile);
+			for (int i = 0; i < lines.size(); i++) {
+				if (lines.get(i).startsWith("Prefix:")) {
+					lines.set(i, "Prefix: " + prefix);
 				}
-				br.close();
-				BufferedWriter bw = new BufferedWriter(new FileWriter(groupDataFile));
-				for (String l : lines) {
-					bw.write(l);
-					bw.newLine();
-				}
-				bw.close();
-				return true;
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-				return false;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
 			}
+			FileHandler.writeLines(lines, groupDataFile);
+			return true;
 		} else {
 			return false;
 		}
@@ -143,31 +126,17 @@ public class GroupHandler {
 		if (groupExists(g)) {
 			File groupDataFile = new File(groupFolder.getAbsolutePath() + "/" + g.getName() + "/data.yml");
 			getGroup(g.getName()).setPrefix(null);
-			try {
-				BufferedReader br = new BufferedReader(new FileReader(groupDataFile));
-				ArrayList<String> lines = new ArrayList<String>();
-				while (br.ready()) {
-					lines.add(br.readLine());
+
+			LinkedList<String> lines = FileHandler.getLines(groupDataFile);
+
+			for (int i = 0; i < lines.size(); i++) {
+				if (lines.get(i).startsWith("Prefix:")) {
+					lines.set(i, "Prefix:");
 				}
-				br.close();
-				BufferedWriter bw = new BufferedWriter(new FileWriter(groupDataFile));
-				for (String l : lines) {
-					if (l.startsWith("Prefix:")) {
-						l = "Prefix:";
-					} else {
-						bw.write(l);
-					}
-					bw.newLine();
-				}
-				bw.close();
-				return true;
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-				return false;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
 			}
+
+			FileHandler.writeLines(lines, groupDataFile);
+			return true;
 		} else {
 			return false;
 		}
@@ -177,31 +146,14 @@ public class GroupHandler {
 		if (groupExists(g)) {
 			getGroup(g.getName()).setSuffix(suffix);
 			File groupDataFile = new File(groupFolder.getAbsolutePath() + "/" + g.getName() + "/data.yml");
-			try {
-				BufferedReader br = new BufferedReader(new FileReader(groupDataFile));
-				ArrayList<String> lines = new ArrayList<String>();
-				while (br.ready()) {
-					String l = br.readLine();
-					if (l.startsWith("Suffix: ")) {
-						l = "Suffix: " + suffix;
-					}
-					lines.add(l);
+			LinkedList<String> lines = FileHandler.getLines(groupDataFile);
+			for (int i = 0; i < lines.size(); i++) {
+				if (lines.get(i).startsWith("Suffix:")) {
+					lines.set(i, "Suffix: " + suffix);
 				}
-				br.close();
-				BufferedWriter bw = new BufferedWriter(new FileWriter(groupDataFile));
-				for (String l : lines) {
-					bw.write(l);
-					bw.newLine();
-				}
-				bw.close();
-				return true;
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-				return false;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
 			}
+			FileHandler.writeLines(lines, groupDataFile);
+			return true;
 		} else {
 			return false;
 		}
@@ -218,32 +170,18 @@ public class GroupHandler {
 	public boolean deleteSuffix(Group g) {
 		if (groupExists(g)) {
 			File groupDataFile = new File(groupFolder.getAbsolutePath() + "/" + g.getName() + "/data.yml");
-			getGroup(g.getName()).setSuffix(null);
-			try {
-				BufferedReader br = new BufferedReader(new FileReader(groupDataFile));
-				ArrayList<String> lines = new ArrayList<String>();
-				while (br.ready()) {
-					lines.add(br.readLine());
+			getGroup(g.getName()).setPrefix(null);
+
+			LinkedList<String> lines = FileHandler.getLines(groupDataFile);
+
+			for (int i = 0; i < lines.size(); i++) {
+				if (lines.get(i).startsWith("Suffix:")) {
+					lines.set(i, "Suffix:");
 				}
-				br.close();
-				BufferedWriter bw = new BufferedWriter(new FileWriter(groupDataFile));
-				for (String l : lines) {
-					if (l.startsWith("Suffix:")) {
-						l = "Suffix:";
-					} else {
-						bw.write(l);
-					}
-					bw.newLine();
-				}
-				bw.close();
-				return true;
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-				return false;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
 			}
+
+			FileHandler.writeLines(lines, groupDataFile);
+			return true;
 		} else {
 			return false;
 		}
@@ -253,31 +191,17 @@ public class GroupHandler {
 		if (groupExists(g)) {
 			getGroup(g.getName()).setRank(rank);
 			File groupDataFile = new File(groupFolder.getAbsolutePath() + "/" + g.getName() + "/data.yml");
-			try {
-				BufferedReader br = new BufferedReader(new FileReader(groupDataFile));
-				ArrayList<String> lines = new ArrayList<String>();
-				while (br.ready()) {
-					String l = br.readLine();
-					if (l.startsWith("Rank: ")) {
-						l = "Rank: " + rank;
-					}
-					lines.add(l);
+			LinkedList<String> lines = FileHandler.getLines(groupDataFile);
+
+			for (int i = 0; i < lines.size(); i++) {
+				if (lines.get(i).startsWith("Rank:")) {
+					lines.set(i, "Rank: " + rank);
 				}
-				br.close();
-				BufferedWriter bw = new BufferedWriter(new FileWriter(groupDataFile));
-				for (String l : lines) {
-					bw.write(l);
-					bw.newLine();
-				}
-				bw.close();
-				return true;
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-				return false;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
 			}
+
+			FileHandler.writeLines(lines, groupDataFile);
+
+			return true;
 		} else {
 			return false;
 		}
@@ -295,25 +219,13 @@ public class GroupHandler {
 		if (groupExists(g)) {
 			File groupPermissionsFile = new File(
 					groupFolder.getAbsolutePath() + "/" + g.getName() + "/permissions.yml");
-			try {
-				BufferedReader br = new BufferedReader(new FileReader(groupPermissionsFile));
-				ArrayList<String> perms = new ArrayList<>();
-				while(br.ready()) {
-					perms.add(br.readLine());
-				}
-				br.close();
-				BufferedWriter bw = new BufferedWriter(new FileWriter(groupPermissionsFile));
-				for(String s : perms) {
-					bw.write(s);
-					bw.newLine();
-				}
-				bw.write(perm);
-				bw.close();
+			LinkedList<String> lines = FileHandler.getLines(groupPermissionsFile);
+			if (!lines.contains(perm)) {
+				lines.add(perm);
+				FileHandler.writeLines(lines, groupPermissionsFile);
 				return true;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
 			}
+			return false;
 		} else {
 			return false;
 		}
@@ -323,30 +235,12 @@ public class GroupHandler {
 		if (groupExists(g)) {
 			File groupPermissionsFile = new File(
 					groupFolder.getAbsolutePath() + "/" + g.getName() + "/permissions.yml");
-			try {
-				BufferedReader br = new BufferedReader(new FileReader(groupPermissionsFile));
-				ArrayList<String> lines = new ArrayList<String>();
-				while (br.ready()) {
-					String l = br.readLine();
-					if (!l.equalsIgnoreCase(perm)) {
-						lines.add(l);
-					}
-				}
-				br.close();
-				BufferedWriter bw = new BufferedWriter(new FileWriter(groupPermissionsFile));
-				for (String l : lines) {
-					bw.write(l);
-					bw.newLine();
-				}
-				bw.close();
+			LinkedList<String> lines = FileHandler.getLines(groupPermissionsFile);
+			if (lines.remove(perm)) {
+				FileHandler.writeLines(lines, groupPermissionsFile);
 				return true;
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-				return false;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
 			}
+			return false;
 		} else {
 			return false;
 		}
@@ -356,25 +250,13 @@ public class GroupHandler {
 		if (groupExists(g)) {
 			File groupNegatedPermissionsFile = new File(
 					groupFolder.getAbsolutePath() + "/" + g.getName() + "/negated_permissions.yml");
-			try {
-				BufferedReader br = new BufferedReader(new FileReader(groupNegatedPermissionsFile));
-				ArrayList<String> nperms = new ArrayList<>();
-				while(br.ready()) {
-					nperms.add(br.readLine());
-				}
-				br.close();
-				BufferedWriter bw = new BufferedWriter(new FileWriter(groupNegatedPermissionsFile));
-				for(String s : nperms) {
-					bw.write(s);
-					bw.newLine();
-				}
-				bw.write(nperm);
-				bw.close();
+			LinkedList<String> lines = FileHandler.getLines(groupNegatedPermissionsFile);
+			if (!lines.contains(nperm)) {
+				lines.add(nperm);
+				FileHandler.writeLines(lines, groupNegatedPermissionsFile);
 				return true;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
 			}
+			return false;
 		} else {
 			return false;
 		}
@@ -384,108 +266,52 @@ public class GroupHandler {
 		if (groupExists(g)) {
 			File groupNegatedPermissionsFile = new File(
 					groupFolder.getAbsolutePath() + "/" + g.getName() + "/negated_permissions.yml");
-			try {
-				BufferedReader br = new BufferedReader(new FileReader(groupNegatedPermissionsFile));
-				ArrayList<String> lines = new ArrayList<String>();
-				while (br.ready()) {
-					String l = br.readLine();
-					if (!l.equalsIgnoreCase(nperm)) {
-						lines.add(l);
-					}
-				}
-				br.close();
-				BufferedWriter bw = new BufferedWriter(new FileWriter(groupNegatedPermissionsFile));
-				for (String l : lines) {
-					bw.write(l);
-					bw.newLine();
-				}
-				bw.close();
+			LinkedList<String> lines = FileHandler.getLines(groupNegatedPermissionsFile);
+			
+			if(lines.remove(nperm)) {
+				FileHandler.writeLines(lines, groupNegatedPermissionsFile);
 				return true;
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-				return false;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
 			}
+			return false;
 		} else {
 			return false;
 		}
 	}
 
-	public ArrayList<String> getPermissions(Group g) {
-		ArrayList<String> perms = new ArrayList<String>();
+	public LinkedList<String> getPermissions(Group g) {
 		if (groupExists(g)) {
 			File groupPermissionsFile = new File(
 					groupFolder.getAbsolutePath() + "/" + g.getName() + "/permissions.yml");
-			try {
-				BufferedReader br = new BufferedReader(new FileReader(groupPermissionsFile));
-				while (br.ready()) {
-					perms.add(br.readLine());
-				}
-				br.close();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			return FileHandler.getLines(groupPermissionsFile);
 		}
-		return perms;
+		return new LinkedList<>();
 	}
 
-	public ArrayList<String> getNegatedPermissions(Group g) {
-		ArrayList<String> perms = new ArrayList<String>();
+	public LinkedList<String> getNegatedPermissions(Group g) {
 		if (groupExists(g)) {
 			File groupNegatedPermissionsFile = new File(
 					groupFolder.getAbsolutePath() + "/" + g.getName() + "/negated_permissions.yml");
-			try {
-				BufferedReader br = new BufferedReader(new FileReader(groupNegatedPermissionsFile));
-				while (br.ready()) {
-					perms.add(br.readLine());
-				}
-				br.close();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			return FileHandler.getLines(groupNegatedPermissionsFile);
 		}
-		return perms;
+		return new LinkedList<>();
 	}
 
 	public boolean setOp(Group g, boolean op) {
 		if (groupExists(g)) {
 			File groupDataFile = new File(groupFolder.getAbsolutePath() + "/" + g.getName() + "/data.yml");
-			ArrayList<String> lines = new ArrayList<String>();
-			try {
-				BufferedReader br = new BufferedReader(new FileReader(groupDataFile));
-				while (br.ready()) {
-					lines.add(br.readLine());
-				}
-				br.close();
-				BufferedWriter bw = new BufferedWriter(new FileWriter(groupDataFile));
-				for (String l : lines) {
-					if (l.startsWith("OP:")) {
-						if (op) {
-							bw.write("OP: true");
-						} else {
-							bw.write("OP: false");
-						}
+			LinkedList<String> lines = FileHandler.getLines(groupDataFile);
+			for (int i = 0; i < lines.size(); i++) {
+				if (lines.get(i).startsWith("OP:")) {
+					if (op) {
+						lines.set(i, "OP: true");
 					} else {
-						bw.write(l);
+						lines.set(i, "OP: false");
 					}
-					bw.newLine();
 				}
-				bw.close();
-				getGroup(g.getName()).setOp(op);
-				return true;
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-				return false;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
 			}
+			FileHandler.writeLines(lines, groupDataFile);
+			getGroup(g.getName()).setOp(op);
+			return true;
 		} else {
 			return false;
 		}
@@ -501,7 +327,7 @@ public class GroupHandler {
 
 	private boolean groupExists(Group g) {
 		boolean exists = false;
-		if(g!=null) {
+		if (g != null) {
 			for (Group gr : groups) {
 				if (gr.getName().equalsIgnoreCase(g.getName())) {
 					exists = true;
@@ -525,33 +351,33 @@ public class GroupHandler {
 				groupDataFile.createNewFile();
 				groupPermissionsFile.createNewFile();
 				groupNegatedPermissionsFile.createNewFile();
-				BufferedWriter bw = new BufferedWriter(new FileWriter(groupDataFile));
+
 				if (g.getName() != null) {
-					bw.write("Name: " + g.getName());
-					bw.newLine();
-					bw.write("Rank: " + g.getRank());
-					bw.newLine();
+
+					LinkedList<String> lines = new LinkedList<>();
+
+					lines.add("Name: " + g.getName());
+					lines.add("Rank: " + g.getRank());
 					if (g.getPrefix() != null) {
-						bw.write("Prefix: " + g.getPrefix());
+						lines.add("Prefix: " + g.getPrefix());
 					} else {
-						bw.write("Prefix: ");
+						lines.add("Prefix: ");
 					}
-					bw.newLine();
 					if (g.getSuffix() != null) {
-						bw.write("Suffix: " + g.getSuffix());
+						lines.add("Suffix: " + g.getSuffix());
 					} else {
-						bw.write("Suffix: ");
+						lines.add("Suffix: ");
 					}
-					bw.newLine();
 					if (g.isOp()) {
-						bw.write("OP: true");
+						lines.add("OP: true");
 					} else {
-						bw.write("OP: false");
+						lines.add("OP: false");
 					}
-					bw.close();
+
+					FileHandler.writeLines(lines, groupDataFile);
+
 					return true;
 				} else {
-					bw.close();
 					return false;
 				}
 			} catch (IOException e) {
@@ -583,16 +409,8 @@ public class GroupHandler {
 					return false;
 				}
 			}
-
-			try {
-				BufferedWriter bw = new BufferedWriter(new FileWriter(defaultGroup));
-				bw.write(g.getName());
-				bw.close();
-				return true;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
-			}
+			FileHandler.writeLine(g.getName(), defaultGroup);
+			return true;
 		} else {
 			return false;
 		}
@@ -609,23 +427,16 @@ public class GroupHandler {
 				return null;
 			}
 		} else {
-			try {
-				BufferedReader br = new BufferedReader(new FileReader(defaultGroup));
-				Group g = getGroup(br.readLine());
-				br.close();
-				return g;
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-				return null;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return null;
+			LinkedList<String> def = FileHandler.getLines(defaultGroup);
+			if(def != null &&  !def.isEmpty()) {
+				return getGroup(def.get(0));
 			}
+			return null;
 		}
 	}
 
-	public ArrayList<Group> getGroups() {
-		ArrayList<Group> gr = new ArrayList<>();
+	public LinkedList<Group> getGroups() {
+		LinkedList<Group> gr = new LinkedList<>();
 		for (String s : groupFolder.list()) {
 			gr.add(getGroup(s));
 		}

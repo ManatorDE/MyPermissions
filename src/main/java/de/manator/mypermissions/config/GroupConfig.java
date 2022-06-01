@@ -1,7 +1,7 @@
 package de.manator.mypermissions.config;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -211,7 +211,7 @@ public class GroupConfig {
 		last.setItemMeta(lastMeta);
 	}
 
-	public void setMenu(ArrayList<String> settings, int menuType) {
+	public void setMenu(LinkedList<String> settings, int menuType) {
 		int size = settings.size() / 9;
 		size++;
 		if (size > 6) {
@@ -277,8 +277,8 @@ public class GroupConfig {
 		this.op = op;
 	}
 
-	public void nextPage(ArrayList<String> settings) {
-		if (settings.size() > 54) {
+	public void nextPage(LinkedList<String> linkedList) {
+		if (linkedList.size() > 54) {
 			Material mat = null;
 			ItemStack lastItem = null;
 			if (menu.getItem(53).equals(next)) {
@@ -287,14 +287,14 @@ public class GroupConfig {
 				lastItem = menu.getItem(52);
 			}
 			int it = 0;
-			while (it < settings.size() && settings.get(it) != null
-					&& !lastItem.getItemMeta().getDisplayName().equals(settings.get(it))) {
+			while (it < linkedList.size() && linkedList.get(it) != null
+					&& !lastItem.getItemMeta().getDisplayName().equals(linkedList.get(it))) {
 				it++;
 			}
-			if (lastItem.getItemMeta().getDisplayName().equals(settings.get(it))) {
+			if (lastItem.getItemMeta().getDisplayName().equals(linkedList.get(it))) {
 				it++;
 			}
-			if (settings.get(it) != null) {
+			if (linkedList.get(it) != null) {
 				if (menuType == ADD_PLAYER) {
 					mat = Material.PLAYER_HEAD;
 				} else if (menuType == REMOVE_PLAYER) {
@@ -311,19 +311,19 @@ public class GroupConfig {
 					mat = Material.BELL;
 				}
 				menu.clear();
-				for (int i = it; i < settings.size(); i++) {
+				for (int i = it; i < linkedList.size(); i++) {
 
 					if (mat == Material.PLAYER_HEAD) {
 						ItemStack item = new ItemStack(mat);
 						SkullMeta meta = (SkullMeta) item.getItemMeta();
-						meta.setDisplayName(settings.get(i));
-						meta.setOwnerProfile(Bukkit.getServer().createPlayerProfile(settings.get(i)));
+						meta.setDisplayName(linkedList.get(i));
+						meta.setOwnerProfile(Bukkit.getServer().createPlayerProfile(linkedList.get(i)));
 						item.setItemMeta(meta);
 						menu.addItem(item);
 					} else {
 						ItemStack item = new ItemStack(mat);
 						ItemMeta meta = item.getItemMeta();
-						meta.setDisplayName(settings.get(i));
+						meta.setDisplayName(linkedList.get(i));
 						item.setItemMeta(meta);
 						menu.addItem(item);
 					}
@@ -335,8 +335,8 @@ public class GroupConfig {
 
 	}
 
-	public void previousPage(ArrayList<String> settings) {
-		if (settings.size() > 54) {
+	public void previousPage(LinkedList<String> linkedList) {
+		if (linkedList.size() > 54) {
 			Material mat = null;
 
 			ItemStack lastItem = null;
@@ -350,11 +350,11 @@ public class GroupConfig {
 				}
 			}
 
-			while (it < settings.size() && !lastItem.getItemMeta().getDisplayName().equals(settings.get(it))) {
+			while (it < linkedList.size() && !lastItem.getItemMeta().getDisplayName().equals(linkedList.get(it))) {
 				it++;
 			}
 
-			if (lastItem.getItemMeta().getDisplayName().equals(settings.get(it))) {
+			if (lastItem.getItemMeta().getDisplayName().equals(linkedList.get(it))) {
 				it++;
 			}
 
@@ -374,10 +374,10 @@ public class GroupConfig {
 				mat = Material.BELL;
 			}
 			menu.clear();
-			for (int i = it - 51 - amount; i < settings.size(); i++) {
+			for (int i = it - 51 - amount; i < linkedList.size(); i++) {
 				ItemStack item = new ItemStack(mat);
 				ItemMeta meta = item.getItemMeta();
-				meta.setDisplayName(settings.get(i));
+				meta.setDisplayName(linkedList.get(i));
 				item.setItemMeta(meta);
 				menu.addItem(item);
 			}

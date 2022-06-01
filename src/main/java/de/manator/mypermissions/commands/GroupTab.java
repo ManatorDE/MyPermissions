@@ -1,6 +1,6 @@
 package de.manator.mypermissions.commands;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.bukkit.command.Command;
@@ -24,7 +24,7 @@ public class GroupTab implements TabCompleter {
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-		ArrayList<String> list = new ArrayList<>();
+		LinkedList<String> list = new LinkedList<>();
 		if (args.length == 1) {
 			list.add("add");
 			list.add("addplayer");
@@ -151,7 +151,7 @@ public class GroupTab implements TabCompleter {
 		return list;
 	}
 	
-	private ArrayList<String> cleanUp(ArrayList<String> list, String arg) {
+	private LinkedList<String> cleanUp(LinkedList<String> list, String arg) {
 		for (int i = 0; i < list.size(); i++) {
 			if (!list.get(i).startsWith(arg)) {
 				list.remove(i);

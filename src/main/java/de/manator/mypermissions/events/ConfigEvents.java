@@ -1,7 +1,7 @@
 package de.manator.mypermissions.events;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -33,7 +33,7 @@ public class ConfigEvents implements Listener {
 	private Main main;
 	private GroupHandler gh;
 	private PlayerHandler ph;
-	private ArrayList<GroupConfig> configs;
+	private LinkedList<GroupConfig> configs;
 
 	private Location loc;
 	private Group g;
@@ -43,7 +43,7 @@ public class ConfigEvents implements Listener {
 		main = plugin;
 		gh = main.getGroupHandler();
 		ph = main.getPlayerHandler();
-		configs = new ArrayList<>();
+		configs = new LinkedList<>();
 		for (Group g : main.getGroupHandler().getGroups()) {
 			if (g != null) {
 				configs.add(new GroupConfig(g));
@@ -84,7 +84,7 @@ public class ConfigEvents implements Listener {
 						g = cfg.getGroup();
 						type = GroupConfig.SUFFIX;
 					} else if (item.equals(cfg.getConfig(GroupConfig.ADD_PLAYER))) {
-						ArrayList<String> players = ph.getPlayers();
+						LinkedList<String> players = ph.getPlayers();
 						players.removeAll(getPlayers(cfg.getGroup()));
 						cfg.setMenu(players, GroupConfig.ADD_PLAYER);
 						p.openInventory(cfg.getMenu());
@@ -94,7 +94,7 @@ public class ConfigEvents implements Listener {
 						p.openInventory(cfg.getMenu());
 
 					} else if (item.equals(cfg.getConfig(GroupConfig.ADD_PERMISSION))) {
-						ArrayList<String> permissions = new ArrayList<>();
+						LinkedList<String> permissions = new LinkedList<>();
 						for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
 							PluginDescriptionFile file = pl.getDescription();
 							for (String command : file.getCommands().keySet()) {
@@ -126,7 +126,7 @@ public class ConfigEvents implements Listener {
 
 					} else if (item.equals(cfg.getConfig(GroupConfig.NEGATE))) {
 
-						ArrayList<String> permissions = new ArrayList<>();
+						LinkedList<String> permissions = new LinkedList<>();
 						for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
 							PluginDescriptionFile file = pl.getDescription();
 							for (String command : file.getCommands().keySet()) {
@@ -158,7 +158,7 @@ public class ConfigEvents implements Listener {
 
 					} else if (item.equals(cfg.getConfig(GroupConfig.RANK))) {
 
-						ArrayList<String> list = new ArrayList<>();
+						LinkedList<String> list = new LinkedList<>();
 						for (int i = 0; i < 11; i++) {
 							list.add("" + i);
 						}
@@ -189,11 +189,11 @@ public class ConfigEvents implements Listener {
 				if(item != null) {
 					if (cfg.getMenuType() == GroupConfig.ADD_PLAYER) {
 						if (item.equals(cfg.getConfig(GroupConfig.NEXT))) {
-							ArrayList<String> players = ph.getPlayers();
+							LinkedList<String> players = ph.getPlayers();
 							players.removeAll(getPlayers(cfg.getGroup()));
 							cfg.nextPage(players);
 						} else if (item.equals(cfg.getConfig(GroupConfig.LAST))) {
-							ArrayList<String> players = ph.getPlayers();
+							LinkedList<String> players = ph.getPlayers();
 							players.removeAll(getPlayers(cfg.getGroup()));
 							cfg.previousPage(players);
 						} else if (ph.addGroup(cfg.getGroup(), e.getCurrentItem().getItemMeta().getDisplayName())) {
@@ -211,7 +211,7 @@ public class ConfigEvents implements Listener {
 						}
 					} else if (cfg.getMenuType() == GroupConfig.ADD_PERMISSION) {
 						if (item.equals(cfg.getConfig(GroupConfig.NEXT))) {
-							ArrayList<String> permissions = new ArrayList<>();
+							LinkedList<String> permissions = new LinkedList<>();
 							for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
 								PluginDescriptionFile file = pl.getDescription();
 								for (String command : file.getCommands().keySet()) {
@@ -235,7 +235,7 @@ public class ConfigEvents implements Listener {
 							}
 							cfg.nextPage(permissions);
 						} else if (item.equals(cfg.getConfig(GroupConfig.LAST))) {
-							ArrayList<String> permissions = new ArrayList<>();
+							LinkedList<String> permissions = new LinkedList<>();
 							for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
 								PluginDescriptionFile file = pl.getDescription();
 								for (String command : file.getCommands().keySet()) {
@@ -273,7 +273,7 @@ public class ConfigEvents implements Listener {
 						}
 					} else if (cfg.getMenuType() == GroupConfig.NEGATE) {
 						if (item.equals(cfg.getConfig(GroupConfig.NEXT))) {
-							ArrayList<String> permissions = new ArrayList<>();
+							LinkedList<String> permissions = new LinkedList<>();
 							for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
 								PluginDescriptionFile file = pl.getDescription();
 								for (String command : file.getCommands().keySet()) {
@@ -297,7 +297,7 @@ public class ConfigEvents implements Listener {
 							}
 							cfg.nextPage(permissions);
 						} else if (item.equals(cfg.getConfig(GroupConfig.LAST))) {
-							ArrayList<String> permissions = new ArrayList<>();
+							LinkedList<String> permissions = new LinkedList<>();
 							for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
 								PluginDescriptionFile file = pl.getDescription();
 								for (String command : file.getCommands().keySet()) {
@@ -369,8 +369,8 @@ public class ConfigEvents implements Listener {
 		}
 	}
 
-	private ArrayList<String> getPlayers(Group g) {
-		ArrayList<String> players = new ArrayList<String>();
+	private LinkedList<String> getPlayers(Group g) {
+		LinkedList<String> players = new LinkedList<String>();
 		for (String s : ph.getPlayers()) {
 			if (ph.isInGroup(s, g)) {
 				players.add(s);
@@ -380,7 +380,7 @@ public class ConfigEvents implements Listener {
 	}
 
 	public void updateGroups() {
-		configs = new ArrayList<>();
+		configs = new LinkedList<>();
 		for (Group g : main.getGroupHandler().getGroups()) {
 			if (g != null)
 				configs.add(new GroupConfig(g));

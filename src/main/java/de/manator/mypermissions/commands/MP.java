@@ -1,6 +1,6 @@
 package de.manator.mypermissions.commands;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
@@ -16,7 +16,7 @@ import de.manator.mypermissions.Main;
 public class MP implements CommandExecutor {
 
 	private Main main;
-	private ArrayList<String> commands;
+	private LinkedList<String> commands;
 
 	public MP(Main main) {
 		this.main = main;
