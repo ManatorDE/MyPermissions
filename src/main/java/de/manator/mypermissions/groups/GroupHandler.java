@@ -69,7 +69,7 @@ public class GroupHandler {
 					BufferedReader br = new BufferedReader(new FileReader(new File(f.getAbsolutePath() + "/data.yml")));
 					for (int i = 0; i < 5; i++) {
 						data[i] = br.readLine();
-						if (data[i].split("\\s+").length > 1) {
+						if (data[i] != null && data[i].split("\\s+").length > 1) {
 							data[i] = data[i].split("\\s+")[1];
 						} else {
 							data[i] = null;
