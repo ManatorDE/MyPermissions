@@ -17,18 +17,40 @@ import de.manator.mypermissions.groups.GroupHandler;
 import de.manator.mypermissions.players.PlayerHandler;
 import net.md_5.bungee.api.ChatColor;
 
+/**
+ * The CommandExecutor of the group command
+ * @author ManatorDE
+ */
 public class GroupCMD implements CommandExecutor {
 
+	/**
+	 * A reference to the Main object of MyPermissions
+	 */
 	private Main main;
+	
+	/**
+	 * A reference to the GroupHandler object of MyPermissions
+	 */
 	private GroupHandler gh;
+	
+	/**
+	 * A reference to the PlayerHandler object of MyPermissions
+	 */
 	private PlayerHandler ph;
 
+	/**
+	 * The constructor of GroupCMD
+	 * @param main A reference to the Main object of MyPermissions
+	 */
 	public GroupCMD(Main main) {
 		this.main = main;
 		gh = this.main.getGroupHandler();
 		ph = this.main.getPlayerHandler();
 	}
 
+	/**
+	 * A method that gets called when a command was send
+	 */
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
@@ -563,6 +585,11 @@ public class GroupCMD implements CommandExecutor {
 		return false;
 	}
 
+	/**
+	 * Gets all players of a group
+	 * @param g The group
+	 * @return A list of all players of the group as Strings
+	 */
 	private LinkedList<String> getPlayers(Group g) {
 		LinkedList<String> players = new LinkedList<String>();
 		for (String s : ph.getPlayers()) {

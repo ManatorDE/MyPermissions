@@ -11,18 +11,34 @@ import org.bukkit.entity.Player;
 
 import de.manator.mypermissions.Main;
 
-// ToDo's: reloadPlayers implementation
-
+/**
+ * The CommandExecutor of the mp command
+ * @author ManatorDE
+ */
 public class MP implements CommandExecutor {
 
+	/**
+	 * A reference to the Main object of MyPermissions
+	 */
 	private Main main;
+	
+	/**
+	 * A list of all MyPermissions commands
+	 */
 	private LinkedList<String> commands;
 
+	/**
+	 * The constructor of MP
+	 * @param main A reference to the Main object of MyPermissions
+	 */
 	public MP(Main main) {
 		this.main = main;
 		this.commands = main.getCommands();
 	}
 
+	/**
+	 * A method that gets called when a command was send
+	 */
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (command.getName().equalsIgnoreCase("mp")) {

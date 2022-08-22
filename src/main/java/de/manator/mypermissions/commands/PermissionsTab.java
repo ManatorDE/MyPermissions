@@ -10,14 +10,28 @@ import org.bukkit.command.TabCompleter;
 import de.manator.mypermissions.Main;
 import de.manator.mypermissions.players.PlayerHandler;
 
+/**
+ * The TabCompleter of the permissions command
+ * @author ManatorDE
+ */
 public class PermissionsTab implements TabCompleter {
 
+	/**
+	 * A reference to the PlayerHandler object of MyPermissions
+	 */
 	private PlayerHandler ph;
 
+	/**
+	 * The constructor of PermissionsTab
+	 * @param main A reference to the Main object of MyPermissions
+	 */
 	public PermissionsTab(Main main) {
 		this.ph = main.getPlayerHandler();
 	}
-
+	
+	/**
+	 * A method used to get a list of possible tab completions for the Permissions
+	 */
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
 		LinkedList<String> list = new LinkedList<>();

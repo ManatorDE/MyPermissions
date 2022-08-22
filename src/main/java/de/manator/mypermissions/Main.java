@@ -1,7 +1,7 @@
 package de.manator.mypermissions;
 
-import java.util.LinkedList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -25,17 +25,44 @@ import de.manator.mypermissions.events.PlayerJoin;
 import de.manator.mypermissions.groups.Group;
 import de.manator.mypermissions.groups.GroupHandler;
 import de.manator.mypermissions.players.PlayerHandler;
+import de.manator.mypermissions.players.PlayerUpdater;
 
+/**
+ * The main class of MyPermissions
+ * @author ManatorDE
+ */
 public class Main extends JavaPlugin {
 
 	// Add permission by given command
 
+	/**
+	 * A list of all MyPermissions commands 
+	 */
 	private LinkedList<String> commands;
+	
+	/**
+	 * A reference to the GroupHandler of MyPermissions
+	 */
 	private GroupHandler gh;
+	
+	/**
+	 * A reference to the PlayerHandler of MyPermissions 
+	 */
 	private PlayerHandler ph;
+	
+	/**
+	 * A map storing all permission nodes of all players 
+	 */
 	private HashMap<UUID, PermissionAttachment> perms;
+	
+	/**
+	 * A reference to the events used for group configuration
+	 */
 	private ConfigEvents configs;
 
+	/**
+	 * A method called when the plugin gets enabled
+	 */
 	@Override
 	public void onEnable() {
 		getLogger().info("Loading files...");
@@ -75,7 +102,10 @@ public class Main extends JavaPlugin {
 		registerListeners();
 		getLogger().info("Listeners registered!");
 	}
-
+	
+	/**
+	 * A method that gets called when the plugin gets disabled
+	 */
 	@Override
 	public void onDisable() {
 		getLogger().info("Resetting scoreboard...");
@@ -87,14 +117,20 @@ public class Main extends JavaPlugin {
 		}
 		getLogger().info("Scoreboard reset!");
 	}
-
+	
+	/**
+	 * A method that is used to register all listeners of MyPermissions
+	 */
 	private void registerListeners() {
 		Bukkit.getPluginManager().registerEvents(new PlayerJoin(this), this);
 		
 		configs = new ConfigEvents(this);
 		Bukkit.getPluginManager().registerEvents(configs, this);
 	}
-
+	
+	/**
+	 * A method that is used to register all commands of MyPermissions
+	 */
 	private void registerCommands() {
 		commands = new LinkedList<String>();
 
@@ -114,97 +150,53 @@ public class Main extends JavaPlugin {
 		getCommand("excludefromdefault").setExecutor(new ExcludeFromDefaultCMD(this));
 		getCommand("excludefromdefault").setTabCompleter(new ExcludeTab(this));
 	}
-
+	
+	/**
+	 * Gets a list of all MyPermissions commands
+	 * @return LinkedList with all MyPermissions commands as Strings
+	 */
 	public LinkedList<String> getCommands() {
 		return commands;
 	}
 
+	/**
+	 * Gets the reference to the GroupHandler of MyPermissions
+	 * @return A reference to the GroupHandler
+	 */
 	public GroupHandler getGroupHandler() {
 		return gh;
 	}
-
+	
+	/**
+	 * Gets the reference to the PlayerHandler of MyPermissions
+	 * @return A reference to the PlayerHandler
+	 */
 	public PlayerHandler getPlayerHandler() {
 		return ph;
 	}
 
+	/**
+	 * A method used to reload the player data
+	 * - Permissions
+	 * - Grouos
+	 * - Prefixes and suffixes
+	 */
 	public void reloadPlayers() {
-		for (Player p : Bukkit.getOnlinePlayers()) {
-			PermissionAttachment attachment = perms.get(p.getUniqueId());
-			if (attachment == null) {
-				attachment = p.addAttachment(this);
-				perms.put(p.getUniqueId(), attachment);
-			} else {
-				attachment = p.addAttachment(this);
-				perms.replace(p.getUniqueId(), attachment);
-			}
-			if (ph.getPlayers().contains(p.getName())) {
-				Group prefix = null;
-				for (String gr : ph.getGroups(p.getName())) {
-					Group g = gh.getGroup(gr);
-					if (g != null) {
-						if (prefix == null || prefix.getRank() < g.getRank()) {
-							prefix = g;
-						}
-						if (g.isOp()) {
-							p.setOp(true);
-						}
-						for (String perm : gh.getPermissions(gh.getGroup(gr))) {
-							attachment.setPermission(perm, true);
-						}
-						for (String nperm : gh.getNegatedPermissions(gh.getGroup(gr))) {
-							attachment.setPermission(nperm, false);
-						}
-					}
-				}
-
-				for (String perm : ph.getPermissions(p.getName())) {
-					attachment.setPermission(perm, true);
-				}
-				for (String nperm : ph.getNegatedPermissions(p.getName())) {
-					attachment.setPermission(nperm, false);
-				}
-				String name = "";
-				Team t = null;
-				if (prefix != null) {
-					Scoreboard s = Bukkit.getScoreboardManager().getMainScoreboard();
-
-					if (s.getTeam(prefix.getName()) == null) {
-						t = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(prefix.getName());
-					} else {
-						t = s.getTeam(prefix.getName());
-					}
-
-					if (prefix.getPrefix() != null) {
-						t.setPrefix(prefix.getPrefix());
-						name += prefix.getPrefix();
-					}
-					name += ChatColor.WHITE + p.getName();
-					if (prefix.getSuffix() != null) {
-						t.setPrefix(prefix.getSuffix());
-						name += prefix.getSuffix();
-					}
-				}
-
-				if (t != null) {
-					t.addEntry(p.getName());
-					p.setCustomName(name);
-					p.setDisplayName(name);
-					p.setPlayerListName(name);
-					p.setCustomNameVisible(true);
-				}
-				p.updateCommands();
-			}
-		}
+		Bukkit.getScheduler().runTaskAsynchronously(this, new PlayerUpdater(this));
 	}
 
+	/**
+	 * A method used to reload the player data of a single player
+	 * @param p The player that should be reloaded
+	 */
 	public void reloadPlayer(Player p) {
-		PermissionAttachment attachment = perms.get(p.getUniqueId());
+		PermissionAttachment attachment = getPerms().get(p.getUniqueId());
 		if (attachment == null) {
 			attachment = p.addAttachment(this);
-			perms.put(p.getUniqueId(), attachment);
+			getPerms().put(p.getUniqueId(), attachment);
 		} else {
 			attachment = p.addAttachment(this);
-			perms.replace(p.getUniqueId(), attachment);
+			getPerms().replace(p.getUniqueId(), attachment);
 		}
 		if (ph.getPlayers().contains(p.getName())) {
 			Group prefix = null;
@@ -264,7 +256,19 @@ public class Main extends JavaPlugin {
 		}
 	}
 	
+	/**
+	 * Gets a reference to MyPermissions group config events
+	 * @return A reference to the ConfigEvents
+	 */
 	public ConfigEvents getConfigs() {
 		return configs;
+	}
+
+	/**
+	 * Gets the perms HashMap
+	 * @return A HashMap of all permissions of all player
+	 */
+	public HashMap<UUID, PermissionAttachment> getPerms() {
+		return perms;
 	}
 }

@@ -28,17 +28,52 @@ import de.manator.mypermissions.groups.GroupHandler;
 import de.manator.mypermissions.players.PlayerHandler;
 import net.md_5.bungee.api.ChatColor;
 
+/**
+ * A class used to handle some events used for configuration of groups
+ * @author ManatorDE
+ */
 public class ConfigEvents implements Listener {
 
+	/**
+	 * A reference to the Main object of MyPermissions
+	 */
 	private Main main;
+	
+	/**
+	 * A reference to the GroupHandler object of MyPermissions 
+	 */
 	private GroupHandler gh;
+	
+	/**
+	 * A reference to the GroupHandler object of MyPermissions 
+	 */
 	private PlayerHandler ph;
+	
+	/**
+	 * A list of all GroupConfigs 
+	 */
 	private LinkedList<GroupConfig> configs;
 
+	
+	/**
+	 * A variable to temporarily store a players location 
+	 */
 	private Location loc;
+	
+	/**
+	 * A variable to temporarily store a group
+	 */
 	private Group g;
+	
+	/**
+	 * A variable to temporarily store a menu type
+	 */
 	private int type;
 
+	/**
+	 * The constructor of ConfigEvents
+	 * @param plugin A reference to the Main object of MyPermissions
+	 */
 	public ConfigEvents(Main plugin) {
 		main = plugin;
 		gh = main.getGroupHandler();
@@ -51,6 +86,10 @@ public class ConfigEvents implements Listener {
 		}
 	}
 
+	/**
+	 * A method that gets called, when someone clicked an inventory
+	 * @param e The event
+	 */
 	@EventHandler
 	public void inventoryClicked(InventoryClickEvent e) {
 		Player p = (Player) e.getWhoClicked();
@@ -351,6 +390,10 @@ public class ConfigEvents implements Listener {
 		main.reloadPlayers();
 	}
 
+	/**
+	 * A method that gets called, when a sign has changed
+	 * @param e The event
+	 */
 	@EventHandler
 	public void signChange(SignChangeEvent e) {
 		if (e.getBlock().getLocation().equals(loc)) {
@@ -369,6 +412,11 @@ public class ConfigEvents implements Listener {
 		}
 	}
 
+	/**
+	 * Gets all players of a group as list
+	 * @param g The group
+	 * @return A LinkedList of player names as Strings
+	 */
 	private LinkedList<String> getPlayers(Group g) {
 		LinkedList<String> players = new LinkedList<String>();
 		for (String s : ph.getPlayers()) {
@@ -379,6 +427,9 @@ public class ConfigEvents implements Listener {
 		return players;
 	}
 
+	/**
+	 * Updates the GroupConfig list
+	 */
 	public void updateGroups() {
 		configs = new LinkedList<>();
 		for (Group g : main.getGroupHandler().getGroups()) {
@@ -387,6 +438,11 @@ public class ConfigEvents implements Listener {
 		}
 	}
 
+	/**
+	 * Gets the inventory of a groups GroupConfig
+	 * @param group The group
+	 * @return The inventory of a groups GroupConfig
+	 */
 	public Inventory getGroupConfig(String group) {
 		for (GroupConfig g : configs) {
 			if (group.equals(g.getTitle())) {

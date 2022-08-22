@@ -10,10 +10,21 @@ import java.util.LinkedList;
 import de.manator.mypermissions.groups.Group;
 import de.manator.mypermissions.io.FileHandler;
 
+/**
+ * A class used to handle all player files
+ * @author ManatorDE
+ */
 public class PlayerHandler {
 
+	/**
+	 * A reference to the folder to store all player data
+	 */
 	private File playersFolder;
 
+	/**
+	 * The constructor of the PlayerHandler
+	 * @param dataFolder The plugins data folder
+	 */
 	public PlayerHandler(File dataFolder) {
 		this.playersFolder = new File(dataFolder.getAbsolutePath() + "/players");
 		if (!this.playersFolder.exists()) {
@@ -21,6 +32,11 @@ public class PlayerHandler {
 		}
 	}
 
+	/**
+	 * Adds the player files of a player for MyPermissions 
+	 * @param name The name of the player
+	 * @return True if files were added, false if not
+	 */
 	public boolean addPlayer(String name) {
 		if (playerExists(name)) {
 			return false;
@@ -71,6 +87,12 @@ public class PlayerHandler {
 		}
 	}
 
+	/**
+	 * Adds a group to a players group file
+	 * @param g The name of the group
+	 * @param player The name of the player
+	 * @return True if it worked, false if not
+	 */
 	public boolean addGroup(Group g, String player) {
 		if (playerExists(player) && g != null) {
 			File groups = new File(playersFolder.getAbsolutePath() + "/" + player + "/groups.yml");
@@ -86,6 +108,12 @@ public class PlayerHandler {
 		}
 	}
 
+	/**
+	 * Removes a group from a players group file
+	 * @param g The name of the group
+	 * @param player The name of the player
+	 * @return True if it worked, false if not
+	 */
 	public boolean removeGroup(Group g, String player) {
 		if (playerExists(player) && g != null) {
 			File groups = new File(playersFolder.getAbsolutePath() + "/" + player + "/groups.yml");
@@ -100,6 +128,11 @@ public class PlayerHandler {
 		}
 	}
 
+	/**
+	 * Gets a list of all groups from a players group file
+	 * @param player The name of the player
+	 * @return LinkedList with all group names as Strings
+	 */
 	public LinkedList<String> getGroups(String player) {
 		File groups = new File(playersFolder.getAbsolutePath() + "/" + player + "/groups.yml");
 		LinkedList<String> list = FileHandler.getUpperCaseLines(groups);
@@ -109,15 +142,21 @@ public class PlayerHandler {
 		return new LinkedList<>();
 	}
 
+	/**
+	 * Checks if the files for that player already exist
+	 * @param name The name of the player
+	 * @return True if the player exists, false if not
+	 */
 	private boolean playerExists(String name) {
-		for (File f : playersFolder.listFiles()) {
-			if (f.getName().equalsIgnoreCase(name)) {
-				return true;
-			}
-		}
-		return false;
+		File player = new File(playersFolder.getAbsolutePath() + "/" + name);
+		return player.exists();
 	}
-
+	
+	
+	/**
+	 * Gets a list of all players known to MyPermissions
+	 * @return LinkedList with player names as Strings
+	 */
 	public LinkedList<String> getPlayers() {
 		LinkedList<String> players = new LinkedList<String>();
 		for (String s : playersFolder.list()) {
@@ -127,13 +166,25 @@ public class PlayerHandler {
 		return players;
 	}
 
+	/**
+	 * Checks if a  player is in a specific group
+	 * @param player The name of the player
+	 * @param g The name of the group
+	 * @return True if the player is in the group, false if not
+	 */
 	public boolean isInGroup(String player, Group g) {
 		if (g != null && getGroups(player).contains(g.getName().toUpperCase())) {
 			return true;
 		}
 		return false;
 	}
-
+	
+	/**
+	 * Adds a permission to the permissions file of a player
+	 * @param player The name of the player
+	 * @param perm The permission
+	 * @return True if it worked, false if not
+	 */
 	public boolean addPermission(String player, String perm) {
 		File perms = new File(playersFolder.getAbsolutePath() + "/" + player + "/permissions.yml");
 		LinkedList<String> lines = FileHandler.getLines(perms);
@@ -145,6 +196,11 @@ public class PlayerHandler {
 		return false;
 	}
 
+	/**
+	 * Gets a list of all permissions from the permissions file of a player
+	 * @param player The name of the player
+	 * @return LinkedList with the permissions of the player as Strings
+	 */
 	public LinkedList<String> getPermissions(String player) {
 		File perms = new File(playersFolder.getAbsolutePath() + "/" + player + "/permissions.yml");
 		LinkedList<String> list = FileHandler.getLines(perms);
@@ -156,6 +212,12 @@ public class PlayerHandler {
 		return new LinkedList<>();
 	}
 
+	/**
+	 * Removes a permission from the permissions file of a player
+	 * @param player The name of the player
+	 * @param perm The permission
+	 * @return True if it worked, false if not
+	 */
 	public boolean removePermission(String player, String perm) {
 		File perms = new File(playersFolder.getAbsolutePath() + "/" + player + "/permissions.yml");
 		LinkedList<String> list = FileHandler.getLines(perms);
@@ -166,7 +228,13 @@ public class PlayerHandler {
 		}
 		return false;
 	}
-
+	
+	/**
+	 * Adds a permission to the negated permissions file of a player
+	 * @param player The name of the player
+	 * @param nperm The permission
+	 * @return True if it worked, false if not
+	 */
 	public boolean negatePermission(String player, String nperm) {
 		File nperms = new File(playersFolder.getAbsolutePath() + "/" + player + "/negated_permissions.yml");
 		LinkedList<String> lines = FileHandler.getLines(nperms);
@@ -178,6 +246,12 @@ public class PlayerHandler {
 		return false;
 	}
 
+	/**
+	 * Removes a permission from the negated permissions file of a player
+	 * @param player The name of the player
+	 * @param nperm The permission
+	 * @return True if it worked, false if not
+	 */
 	public boolean removeNegatedPermission(String player, String nperm) {
 		File nperms = new File(playersFolder.getAbsolutePath() + "/" + player + "/negated_permissions.yml");
 		LinkedList<String> list = FileHandler.getLines(nperms);
@@ -187,7 +261,12 @@ public class PlayerHandler {
 		}
 		return false;
 	}
-
+	
+	/**
+	 * Gets a list of all permissions from the negated permissions file of a player
+	 * @param player The name of the player
+	 * @return LinkedList with the permissions of the player as Strings
+	 */
 	public LinkedList<String> getNegatedPermissions(String player) {
 		File nperms = new File(playersFolder.getAbsolutePath() + "/" + player + "/negated_permissions.yml");
 		LinkedList<String> list = new LinkedList<String>();
@@ -204,7 +283,13 @@ public class PlayerHandler {
 		}
 		return list;
 	}
-
+	
+	/**
+	 * Excludes a player from being added to the default group
+	 * @param player The name of the player
+	 * @param excluded True if the player should be excluded, false if not
+	 * @return True if it worked
+	 */
 	public boolean excludeFromDefault(String player, boolean excluded) {
 		File cfg = new File(playersFolder.getAbsolutePath() + "/" + player + "/config.yml");
 		if (excluded) {
@@ -215,6 +300,11 @@ public class PlayerHandler {
 		return true;
 	}
 
+	/**
+	 * Checks if a player is excluded from being added to the default group
+	 * @param player The name of the player
+	 * @return True if the player is excluded, false if not
+	 */
 	public boolean isExcluded(String player) {
 		File cfg = new File(playersFolder.getAbsolutePath() + "/" + player + "/config.yml");
 		

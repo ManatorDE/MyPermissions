@@ -10,16 +10,34 @@ import org.bukkit.entity.Player;
 import de.manator.mypermissions.Main;
 import de.manator.mypermissions.players.PlayerHandler;
 
+/**
+ * The CommandExecutor of the permissions command
+ * @author ManatorDE
+ */
 public class Permissions implements CommandExecutor {
 	
+	/**
+	 * A reference to the PlayerHandler object of MyPermissions
+	 */
 	private PlayerHandler ph;
+	
+	/**
+	 * A reference to the Main object of MyPermissions
+	 */
 	private Main main;
 	
+	/**
+	 * The constructor of Permissions
+	 * @param main A reference to the Main object of MyPermissions
+	 */
 	public Permissions(Main main) {
 		this.main = main;
 		this.ph = main.getPlayerHandler();
 	}
 	
+	/**
+	 * A method that gets called when a command was send
+	 */
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		

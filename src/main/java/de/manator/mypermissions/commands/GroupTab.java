@@ -12,16 +12,34 @@ import de.manator.mypermissions.groups.Group;
 import de.manator.mypermissions.groups.GroupHandler;
 import de.manator.mypermissions.players.PlayerHandler;
 
+/**
+ * The TabCompleter of the group command
+ * @author ManatorDE
+ */
 public class GroupTab implements TabCompleter {
 
+	/**
+	 * A reference to the GroupHandler object of MyPermissions
+	 */
 	private GroupHandler gh;
+	
+	/**
+	 * A reference to the PlayerHandler object of MyPermissions
+	 */
 	private PlayerHandler ph;
 
+	/**
+	 * The constructor of GroupTab
+	 * @param main A reference to the Main object of MyPermissions
+	 */
 	public GroupTab(Main main) {
 		this.gh = main.getGroupHandler();
 		this.ph = main.getPlayerHandler();
 	}
-
+	
+	/**
+	 * A method used to get a list of possible tab completions for the GroupCMD
+	 */
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
 		LinkedList<String> list = new LinkedList<>();
@@ -151,6 +169,12 @@ public class GroupTab implements TabCompleter {
 		return list;
 	}
 	
+	/**
+	 * A method used to clean up the list of tabcompletions
+	 * @param list The list of tabcompletions
+	 * @param arg The given gebinning of the argument
+	 * @return A cleaned up list of tabcompletions
+	 */
 	private LinkedList<String> cleanUp(LinkedList<String> list, String arg) {
 		for (int i = 0; i < list.size(); i++) {
 			if (!list.get(i).startsWith(arg)) {

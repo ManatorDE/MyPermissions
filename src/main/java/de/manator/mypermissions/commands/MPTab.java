@@ -7,8 +7,15 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
+/**
+ * The TabCompleter of the mp command
+ * @author ManatorDE
+ */
 public class MPTab implements TabCompleter {
-
+	
+	/**
+	 * A method used to get a list of possible tab completions for the MP
+	 */
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
 		LinkedList<String> list = new LinkedList<String>();

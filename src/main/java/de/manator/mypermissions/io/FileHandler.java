@@ -9,8 +9,17 @@ import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * A class used to manage the file writing and reading
+ * @author ManatorDE
+ */
 public class FileHandler {
 
+	/**
+	 * Writes the given line into the given file
+	 * @param line The line to write into the file
+	 * @param f The file to be written into
+	 */
 	public static void writeLine(String line, File f) {
 		PrintWriter pw = null;
 		try {
@@ -25,6 +34,11 @@ public class FileHandler {
 		}
 	}
 
+	/**
+	 * Writes multiple lines into a file
+	 * @param lines The lines to be written into the file
+	 * @param f The file to be written into
+	 */
 	public static void writeLines(List<String> lines, File f) {
 		PrintWriter pw = null;
 		try {
@@ -41,6 +55,11 @@ public class FileHandler {
 		}
 	}
 	
+	/**
+	 * Gets the lines written in a file
+	 * @param f The file to read
+	 * @return A LinkedList with all lines of the read file
+	 */
 	public static LinkedList<String> getLines(File f) {
 		BufferedReader br = null;
 		LinkedList<String> lines = new LinkedList<>();
@@ -65,6 +84,11 @@ public class FileHandler {
 		return lines;
 	}
 	
+	/**
+	 * Gets the lines written in a file in UPPER CASE
+	 * @param f The file to read
+	 * @return A LinkedList with all lines of the read file in UPPER CASE
+	 */
 	public static LinkedList<String> getUpperCaseLines(File f) {
 		BufferedReader br = null;
 		LinkedList<String> lines = new LinkedList<>();

@@ -12,62 +12,208 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import de.manator.mypermissions.groups.Group;
 
+/**
+ * A class used to configure a group
+ * @author ManatorDE
+ */
 public class GroupConfig {
 
+	/**
+	 * A reference to the config inventory
+	 */
 	private Inventory inv;
+	
+	/**
+	 * A reference to the menu inventory
+	 */
 	private Inventory menu;
+	
+	/**
+	 * A reference to the group that gets edited 
+	 */
 	private Group g;
+	
+	/**
+	 * The title of the config inventory 
+	 */
 	private String title;
 
+	/**
+	 * int used to store the last edited menu type
+	 */
 	private int menuType;
-
+	
+	
+	/**
+	 * ItemStack used to get to the prefix menu
+	 */
 	private ItemStack prefix;
+	
+	/**
+	 * ItemStack used to get to the suffix menu
+	 */
 	private ItemStack suffix;
+	
+	/**
+	 * ItemStack used to get to the add permissions menu
+	 */
 	private ItemStack addPerm;
+	
+	/**
+	 * ItemStack used to get to the remove permissions menu
+	 */
 	private ItemStack remPerm;
+	
+	/**
+	 * ItemStack used to get to the negate permissions menu
+	 */
 	private ItemStack negate;
+	
+	/**
+	 * ItemStack used to get to the remove negation menu
+	 */
 	private ItemStack remNeg;
-	private ItemStack addPlayer;
-	private ItemStack remPlayer;
-	private ItemStack rank;
-	private ItemStack op;
-	private ItemStack def;
-	private ItemStack next;
-	private ItemStack last;
 
+	/**
+	 * ItemStack used to get to the add player menu
+	 */
+	private ItemStack addPlayer;
+	
+	/**
+	 * ItemStack used to get to the remove player menu
+	 */
+	private ItemStack remPlayer;
+	
+	/**
+	 * ItemStack used to get to the rank menu
+	 */
+	private ItemStack rank;
+	
+	/**
+	 * ItemStack used to get to the op menu
+	 */
+	private ItemStack op;
+	
+	/**
+	 * ItemStack used to get to the default group menu
+	 */
+	private ItemStack def;
+	
+	/**
+	 * ItemStack used to get to the next menu page
+	 */
+	private ItemStack next;
+	
+	/**
+	 * ItemStack used to get to the previous menu page
+	 */
+	private ItemStack last;
+	
+	/**
+	 * Menu type PREFIX
+	 */
 	public static final int PREFIX = 0;
+	
+	/**
+	 * Menu type SUFFIX
+	 */
 	public static final int SUFFIX = 1;
+	
+	/**
+	 * Menu type ADD_PERMISSIONS
+	 */
 	public static final int ADD_PERMISSION = 2;
+	
+	/**
+	 * Menu type REMOVE_PERMISSIONS
+	 */
 	public static final int REMOVE_PERMISSION = 3;
+	
+	/**
+	 * Menu type NEGATE
+	 */
 	public static final int NEGATE = 4;
+	
+	/**
+	 * Menu type REMOVE_NEGATION
+	 */
 	public static final int REMOVE_NEGATION = 5;
+	
+	/**
+	 * Menu type ADD_PLAYER
+	 */
 	public static final int ADD_PLAYER = 6;
+	
+	/**
+	 * Menu type REMOVE_PLAYER
+	 */
 	public static final int REMOVE_PLAYER = 7;
+	
+	/**
+	 * Menu type RANK
+	 */
 	public static final int RANK = 8;
+	
+	/**
+	 * Menu type OP
+	 */
 	public static final int OP = 9;
+	
+	/**
+	 * Menu type DEFAULT
+	 */
 	public static final int DEFAULT = 10;
+	
+	/**
+	 * Menu type NEXT
+	 */
 	public static final int NEXT = 100;
+	
+	/**
+	 * Menu type LAST
+	 */
 	public static final int LAST = 101;
 
+	/**
+	 * The constructor of GroupConfig
+	 * @param group The group to be configured
+	 */
 	public GroupConfig(Group group) {
 		g = group;
 		this.title = g.getName();
 		inv = Bukkit.createInventory(null, 18, title);
 		init();
 	}
-
+	
+	/**
+	 * Gets the group of this config
+	 * @return The group of this config
+	 */
 	public Group getGroup() {
 		return g;
 	}
 
+	/**
+	 * Gets the title of this config
+	 * @return The title of this config
+	 */
 	public String getTitle() {
 		return title;
 	}
 
+	/**
+	 * Gets the config inventory
+	 * @return The config inventory
+	 */
 	public Inventory getInv() {
 		return inv;
 	}
 
+	/**
+	 * Gets the current config ItemStack
+	 * @param cfg The wanted config
+	 * @return The config ItemStack
+	 */
 	public ItemStack getConfig(int cfg) {
 		switch (cfg) {
 		case PREFIX:
@@ -101,6 +247,9 @@ public class GroupConfig {
 		}
 	}
 
+	/**
+	 * A method used to initialize this config
+	 */
 	private void init() {
 		prefix = new ItemStack(Material.NAME_TAG);
 		ItemMeta pmeta = prefix.getItemMeta();
@@ -211,6 +360,11 @@ public class GroupConfig {
 		last.setItemMeta(lastMeta);
 	}
 
+	/**
+	 * A method used to set the current menu
+	 * @param settings The settings of this menu
+	 * @param menuType The type of the menu
+	 */
 	public void setMenu(LinkedList<String> settings, int menuType) {
 		int size = settings.size() / 9;
 		size++;
@@ -265,18 +419,34 @@ public class GroupConfig {
 		}
 	}
 
+	/**
+	 * Gets the menu inventory
+	 * @return The menu inventory
+	 */
 	public Inventory getMenu() {
 		return menu;
 	}
 
+	/**
+	 * Gets the menu type
+	 * @return The menu type
+	 */
 	public int getMenuType() {
 		return menuType;
 	}
 
+	/**
+	 * Sets the op ItemStack
+	 * @param op The new op ItemStack
+	 */
 	public void setOP(ItemStack op) {
 		this.op = op;
 	}
-
+	
+	/**
+	 * Gets the next page of the current menu
+	 * @param linkedList The settings of the current menu
+	 */
 	public void nextPage(LinkedList<String> linkedList) {
 		if (linkedList.size() > 54) {
 			Material mat = null;
@@ -334,7 +504,11 @@ public class GroupConfig {
 		}
 
 	}
-
+	
+	/**
+	 * Gets the previous page of the current menu
+	 * @param linkedList The settings of the current menu
+	 */
 	public void previousPage(LinkedList<String> linkedList) {
 		if (linkedList.size() > 54) {
 			Material mat = null;
