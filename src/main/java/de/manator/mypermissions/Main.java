@@ -1,5 +1,7 @@
 package de.manator.mypermissions;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.UUID;
@@ -12,6 +14,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import com.earth2me.essentials.Essentials;
+
 import de.manator.mypermissions.commands.ExcludeFromDefaultCMD;
 import de.manator.mypermissions.commands.ExcludeTab;
 import de.manator.mypermissions.commands.GroupCMD;
@@ -20,6 +24,7 @@ import de.manator.mypermissions.commands.MP;
 import de.manator.mypermissions.commands.MPTab;
 import de.manator.mypermissions.commands.Permissions;
 import de.manator.mypermissions.commands.PermissionsTab;
+import de.manator.mypermissions.config.ConfigFile;
 import de.manator.mypermissions.events.ConfigEvents;
 import de.manator.mypermissions.events.PlayerJoin;
 import de.manator.mypermissions.groups.Group;
@@ -29,6 +34,7 @@ import de.manator.mypermissions.players.PlayerUpdater;
 
 /**
  * The main class of MyPermissions
+ * 
  * @author ManatorDE
  */
 public class Main extends JavaPlugin {
@@ -36,30 +42,35 @@ public class Main extends JavaPlugin {
 	// Add permission by given command
 
 	/**
-	 * A list of all MyPermissions commands 
+	 * A list of all MyPermissions commands
 	 */
 	private LinkedList<String> commands;
-	
+
 	/**
 	 * A reference to the GroupHandler of MyPermissions
 	 */
 	private GroupHandler gh;
-	
+
 	/**
-	 * A reference to the PlayerHandler of MyPermissions 
+	 * A reference to the PlayerHandler of MyPermissions
 	 */
 	private PlayerHandler ph;
-	
+
 	/**
-	 * A map storing all permission nodes of all players 
+	 * A map storing all permission nodes of all players
 	 */
 	private HashMap<UUID, PermissionAttachment> perms;
-	
+
 	/**
 	 * A reference to the events used for group configuration
 	 */
 	private ConfigEvents configs;
-
+	
+	/**
+	 * A reference to the config file of MyPermissions
+	 */
+	private ConfigFile configFile;
+	
 	/**
 	 * A method called when the plugin gets enabled
 	 */
@@ -69,6 +80,7 @@ public class Main extends JavaPlugin {
 		if (!getDataFolder().exists()) {
 			getDataFolder().mkdirs();
 		}
+		configFile = new ConfigFile(getDataFolder(), "config.yml");
 		getLogger().info("Files loaded!");
 
 		getLogger().info("Loading groups...");
@@ -97,12 +109,14 @@ public class Main extends JavaPlugin {
 		getLogger().info("Commands loaded!");
 
 		perms = new HashMap<>();
-		
+
 		getLogger().info("Registering listeners...");
 		registerListeners();
 		getLogger().info("Listeners registered!");
+
+		essentialsFix();
 	}
-	
+
 	/**
 	 * A method that gets called when the plugin gets disabled
 	 */
@@ -117,17 +131,17 @@ public class Main extends JavaPlugin {
 		}
 		getLogger().info("Scoreboard reset!");
 	}
-	
+
 	/**
 	 * A method that is used to register all listeners of MyPermissions
 	 */
 	private void registerListeners() {
 		Bukkit.getPluginManager().registerEvents(new PlayerJoin(this), this);
-		
+
 		configs = new ConfigEvents(this);
 		Bukkit.getPluginManager().registerEvents(configs, this);
 	}
-	
+
 	/**
 	 * A method that is used to register all commands of MyPermissions
 	 */
@@ -152,7 +166,49 @@ public class Main extends JavaPlugin {
 	}
 	
 	/**
+	 * A method used to enable the essentials fix
+	 */
+	private void essentialsFix() {
+		if(configFile.getEssentialsDisplayNameDisabled()) {
+			getLogger().info("Checking for essentials...");
+			Essentials ess = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
+			if (ess != null) {
+				if(ess.isEnabled()) {
+					getLogger().info("Essentials found...");
+					ess.getConfig().set("change-displayname", false);
+					try {
+						ess.getConfig().save(new File(ess.getDataFolder() + "/config.yml"));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					getLogger().info("Essentials custom nickname disabled!");
+				} else {
+					Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+						
+						@Override
+						public void run() {
+							getLogger().info("Essentials found...");
+							ess.getConfig().set("change-displayname", false);
+							try {
+								ess.getConfig().save(new File(ess.getDataFolder() + "/config.yml"));
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+							ess.reloadConfig();
+							getLogger().info("Essentials custom nickname disabled!");
+						}
+					}, 5000);
+				}
+				ess.reloadConfig();
+			} else {
+				getLogger().info("Essentials not found!");
+			}
+		}
+	}
+	
+	/**
 	 * Gets a list of all MyPermissions commands
+	 * 
 	 * @return LinkedList with all MyPermissions commands as Strings
 	 */
 	public LinkedList<String> getCommands() {
@@ -161,14 +217,16 @@ public class Main extends JavaPlugin {
 
 	/**
 	 * Gets the reference to the GroupHandler of MyPermissions
+	 * 
 	 * @return A reference to the GroupHandler
 	 */
 	public GroupHandler getGroupHandler() {
 		return gh;
 	}
-	
+
 	/**
 	 * Gets the reference to the PlayerHandler of MyPermissions
+	 * 
 	 * @return A reference to the PlayerHandler
 	 */
 	public PlayerHandler getPlayerHandler() {
@@ -176,10 +234,8 @@ public class Main extends JavaPlugin {
 	}
 
 	/**
-	 * A method used to reload the player data
-	 * - Permissions
-	 * - Grouos
-	 * - Prefixes and suffixes
+	 * A method used to reload the player data - Permissions - Grouos - Prefixes and
+	 * suffixes
 	 */
 	public void reloadPlayers() {
 		Bukkit.getScheduler().runTaskAsynchronously(this, new PlayerUpdater(this));
@@ -187,6 +243,7 @@ public class Main extends JavaPlugin {
 
 	/**
 	 * A method used to reload the player data of a single player
+	 * 
 	 * @param p The player that should be reloaded
 	 */
 	public void reloadPlayer(Player p) {
@@ -255,9 +312,10 @@ public class Main extends JavaPlugin {
 			p.updateCommands();
 		}
 	}
-	
+
 	/**
 	 * Gets a reference to MyPermissions group config events
+	 * 
 	 * @return A reference to the ConfigEvents
 	 */
 	public ConfigEvents getConfigs() {
@@ -266,9 +324,18 @@ public class Main extends JavaPlugin {
 
 	/**
 	 * Gets the perms HashMap
+	 * 
 	 * @return A HashMap of all permissions of all player
 	 */
 	public HashMap<UUID, PermissionAttachment> getPerms() {
 		return perms;
+	}
+	
+	/**
+	 * Gets the config file of my permissions
+	 * @return A reference to the ConfigFile object of MyPermissions
+	 */
+	public ConfigFile getConfigFile() {
+		return configFile;
 	}
 }

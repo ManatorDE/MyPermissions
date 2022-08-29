@@ -29,6 +29,8 @@ public class MPTab implements TabCompleter {
 				} else {
 					list.add("rl");
 					list.add("help");
+					list.add("enableEssentialsFix");
+					list.add("disableEssentialsFix");
 				}
 			} else if (args.length == 2) {
 				if (args[0].equalsIgnoreCase("help")) {

@@ -68,7 +68,6 @@ public class FileHandler {
 			while(br.ready()) {
 				lines.add(br.readLine());
 			}
-			
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
@@ -80,7 +79,6 @@ public class FileHandler {
 				}
 			}
 		}
-		
 		return lines;
 	}
 	

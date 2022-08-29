@@ -8,6 +8,10 @@
         <id>spigot-repo</id>
         <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
     </repository>
+    <repository>
+        <id>essentials-releases</id>
+        <url>https://repo.essentialsx.net/releases/</url>
+    </repository>
   </repositories>
   <dependencies>
     <!--This adds the Spigot API artifact to the build -->
@@ -17,9 +21,16 @@
            <version>1.19.2-R0.1-SNAPSHOT</version>
            <scope>provided</scope>
     </dependency>
+    <dependency>
+           <groupId>net.essentialsx</groupId>
+           <artifactId>EssentialsX</artifactId>
+           <version>2.19.7</version>
+           <scope>provided</scope>
+           <optional>true</optional>
+    </dependency>
   </dependencies>
 
-  <version>1.2.7_pre1</version>
+  <version>1.2.7</version>
 
   <properties>
     <maven.compiler.source>1.17</maven.compiler.source>
