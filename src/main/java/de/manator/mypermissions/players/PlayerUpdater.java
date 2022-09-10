@@ -112,7 +112,6 @@ public class PlayerUpdater implements Runnable {
 					p.setPlayerListName(name);
 					p.setCustomNameVisible(true);
 				}
-				p.updateCommands();
 			}
 		}
 	}

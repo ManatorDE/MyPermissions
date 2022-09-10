@@ -56,6 +56,12 @@ public class PermissionsTab implements TabCompleter {
 		return list;
 	}
 
+	/**
+	 * A method used to remove unneded objects from a list
+	 * @param list The List
+	 * @param arg The argument which is used to sort out unneeded objects
+	 * @return A list clean of all unneded Object
+	 */
 	private LinkedList<String> cleanUp(LinkedList<String> list, String arg) {
 		for (int i = 0; i < list.size(); i++) {
 			if (!list.get(i).startsWith(arg)) {

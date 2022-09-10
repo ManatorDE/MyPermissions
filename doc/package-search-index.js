@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"de.manator.mypermissions.io"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"de.manator.mypermissions"},{"l":"de.manator.mypermissions.commands"},{"l":"de.manator.mypermissions.config"},{"l":"de.manator.mypermissions.events"},{"l":"de.manator.mypermissions.groups"},{"l":"de.manator.mypermissions.io"},{"l":"de.manator.mypermissions.players"}];updateSearchResults();
