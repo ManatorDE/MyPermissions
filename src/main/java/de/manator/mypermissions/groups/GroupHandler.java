@@ -6,11 +6,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.List;
 
 import de.manator.mypermissions.io.FileHandler;
 
 /**
  * A class used to handle all groups
+ * 
  * @author ManatorDE
  */
 public class GroupHandler {
@@ -19,14 +21,15 @@ public class GroupHandler {
 	 * The folder to store all group data
 	 */
 	private File groupFolder;
-	
+
 	/**
-	 * A list of all groups 
+	 * A list of all groups
 	 */
 	private LinkedList<Group> groups;
 
 	/**
 	 * The constructor of GroupHandler
+	 * 
 	 * @param dataFolder The dataFolder of the plugin
 	 */
 	public GroupHandler(File dataFolder) {
@@ -39,6 +42,7 @@ public class GroupHandler {
 
 	/**
 	 * Adds the group files of a group
+	 * 
 	 * @param name The name of the group
 	 * @return True if it worked, false if not
 	 */
@@ -54,8 +58,9 @@ public class GroupHandler {
 
 	/**
 	 * Adds the group files of a group based of a super group
+	 * 
 	 * @param name The name of the group
-	 * @param sg The super group
+	 * @param sg   The super group
 	 * @return True if it worked, false if not
 	 */
 	public boolean addGroup(String name, Group sg) {
@@ -78,25 +83,39 @@ public class GroupHandler {
 
 	/**
 	 * Deletes the group files of a group
+	 * 
 	 * @param g The group
 	 * @return True if it worked, false if not
 	 */
 	public boolean deleteGroup(Group g) {
 		if (groupExists(g)) {
 			File folder = new File(groupFolder.getAbsolutePath() + "/" + g.getName());
-			folder.delete();
+			deleteFiles(folder);
 			groups.remove(getGroup(g.getName()));
 			return true;
 		}
 		return false;
 	}
+	
+	private void deleteFiles(File f) {
+		if(f.isDirectory() && f.listFiles().length != 0) {
+			for(File file : f.listFiles()) {
+				deleteFiles(file);
+			}
+			f.delete();
+		} else {
+			f.delete();
+		}
+	}
 
 	/**
 	 * Loads all group files
+	 * 
 	 * @return True if it worked, false if not
 	 */
 	public boolean loadGroups() {
 		File[] groupFiles = groupFolder.listFiles();
+		groups = new LinkedList<>();
 		for (File f : groupFiles) {
 			if (!f.getName().equalsIgnoreCase("default.yml")) {
 				String[] data = new String[5];
@@ -111,7 +130,7 @@ public class GroupHandler {
 						}
 					}
 					br.close();
-					if(data[0] != null && data[1] != null && !data[0].equals("") && !data[1].equals("")) {
+					if (data[0] != null && data[1] != null && !data[0].equals("") && !data[1].equals("")) {
 						Group g = new Group(data[0], Integer.parseInt(data[1]));
 						if (data[2] != null && !data[2].equalsIgnoreCase("")) {
 							g.setPrefix(data[2]);
@@ -138,7 +157,8 @@ public class GroupHandler {
 
 	/**
 	 * Sets the prefix of a group
-	 * @param g The group
+	 * 
+	 * @param g      The group
 	 * @param prefix The new prefix
 	 * @return True if it worked, false if not
 	 */
@@ -161,6 +181,7 @@ public class GroupHandler {
 
 	/**
 	 * Gets the prefix of a group
+	 * 
 	 * @param g The group
 	 * @return The prefix as String
 	 */
@@ -174,6 +195,7 @@ public class GroupHandler {
 
 	/**
 	 * Deletes the prefix of a group
+	 * 
 	 * @param g The group
 	 * @return True if it worked, false if not
 	 */
@@ -196,10 +218,11 @@ public class GroupHandler {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Sets the suffix of a group
-	 * @param g The group
+	 * 
+	 * @param g      The group
 	 * @param suffix The new prefix
 	 * @return True if it worked, false if not
 	 */
@@ -219,9 +242,10 @@ public class GroupHandler {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Gets the suffix of a group
+	 * 
 	 * @param g The group
 	 * @return The suffix as String
 	 */
@@ -232,9 +256,10 @@ public class GroupHandler {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Deletes the suffix of a group
+	 * 
 	 * @param g The group
 	 * @return True if it worked, false if not
 	 */
@@ -260,7 +285,8 @@ public class GroupHandler {
 
 	/**
 	 * Sets the rank of a group
-	 * @param g The group
+	 * 
+	 * @param g    The group
 	 * @param rank The new rank of the group
 	 * @return True if it worked, false if not
 	 */
@@ -286,6 +312,7 @@ public class GroupHandler {
 
 	/**
 	 * Gets the rank of a group
+	 * 
 	 * @param g The group
 	 * @return The rank of a group
 	 */
@@ -299,7 +326,8 @@ public class GroupHandler {
 
 	/**
 	 * Adds a permission to a group
-	 * @param g The group
+	 * 
+	 * @param g    The group
 	 * @param perm The permission
 	 * @return True if it worked, false if not
 	 */
@@ -321,7 +349,8 @@ public class GroupHandler {
 
 	/**
 	 * Removes a permission from a group
-	 * @param g The group
+	 * 
+	 * @param g    The group
 	 * @param perm The permission
 	 * @return True if it worked, false if not
 	 */
@@ -342,7 +371,8 @@ public class GroupHandler {
 
 	/**
 	 * Negates a permission for a group
-	 * @param g The group
+	 * 
+	 * @param g     The group
 	 * @param nperm The permission
 	 * @return True if it worked, false if not
 	 */
@@ -364,7 +394,8 @@ public class GroupHandler {
 
 	/**
 	 * Removes a negation for a group
-	 * @param g The group
+	 * 
+	 * @param g     The group
 	 * @param nperm The permission
 	 * @return True if it worked, false if not
 	 */
@@ -373,8 +404,8 @@ public class GroupHandler {
 			File groupNegatedPermissionsFile = new File(
 					groupFolder.getAbsolutePath() + "/" + g.getName() + "/negated_permissions.yml");
 			LinkedList<String> lines = FileHandler.getLines(groupNegatedPermissionsFile);
-			
-			if(lines.remove(nperm)) {
+
+			if (lines.remove(nperm)) {
 				FileHandler.writeLines(lines, groupNegatedPermissionsFile);
 				return true;
 			}
@@ -386,6 +417,7 @@ public class GroupHandler {
 
 	/**
 	 * Gets the permissions of a group
+	 * 
 	 * @param g The group
 	 * @return A LinkedList of all permissions of the group as Strings
 	 */
@@ -397,9 +429,10 @@ public class GroupHandler {
 		}
 		return new LinkedList<>();
 	}
-	
+
 	/**
 	 * Gets the negated permissions of a group
+	 * 
 	 * @param g The group
 	 * @return A LinkedList of all negated permissions of the group as Strings
 	 */
@@ -411,10 +444,11 @@ public class GroupHandler {
 		}
 		return new LinkedList<>();
 	}
-	
+
 	/**
 	 * Sets the op state of the group
-	 * @param g The group
+	 * 
+	 * @param g  The group
 	 * @param op The new op state of the group
 	 * @return True if it worked, false if not
 	 */
@@ -441,6 +475,7 @@ public class GroupHandler {
 
 	/**
 	 * gets the op state of a group
+	 * 
 	 * @param g The group
 	 * @return The op state of a group
 	 */
@@ -454,6 +489,7 @@ public class GroupHandler {
 
 	/**
 	 * Checks if a group exists
+	 * 
 	 * @param g The group
 	 * @return True if the group exists, false if not
 	 */
@@ -472,6 +508,7 @@ public class GroupHandler {
 
 	/**
 	 * A method used to create a groups files
+	 * 
 	 * @param g The group
 	 * @return True if it worked, false if not
 	 */
@@ -526,6 +563,7 @@ public class GroupHandler {
 
 	/**
 	 * Gets a group object by its name
+	 * 
 	 * @param name The name of the group
 	 * @return The group object
 	 */
@@ -542,6 +580,7 @@ public class GroupHandler {
 
 	/**
 	 * Setting a group as default group
+	 * 
 	 * @param g The group
 	 * @return True if it worked, false if not
 	 */
@@ -565,6 +604,7 @@ public class GroupHandler {
 
 	/**
 	 * Gets the default group
+	 * 
 	 * @return The default groups object
 	 */
 	public Group getDefault() {
@@ -579,7 +619,7 @@ public class GroupHandler {
 			}
 		} else {
 			LinkedList<String> def = FileHandler.getLines(defaultGroup);
-			if(def != null &&  !def.isEmpty()) {
+			if (def != null && !def.isEmpty()) {
 				return getGroup(def.get(0));
 			}
 			return null;
@@ -588,13 +628,51 @@ public class GroupHandler {
 
 	/**
 	 * Gets a list of all groups
+	 * 
 	 * @return A LinkedList of all group objects
 	 */
 	public LinkedList<Group> getGroups() {
-		LinkedList<Group> gr = new LinkedList<>();
-		for (String s : groupFolder.list()) {
-			gr.add(getGroup(s));
+		if(groups.isEmpty())
+			loadGroups();
+		return groups;
+	}
+	
+	/**
+	 * 
+	 * Writes all given permissions into the permissions file
+	 * 
+	 * @param perms A list containing the permissions 
+	 * @param g The group
+	 * @return true, if it was successful
+	 */
+	public boolean setPermissions(List<String> perms, Group g) {
+		if (groupExists(g)) {
+			File groupPermissionsFile = new File(
+					groupFolder.getAbsolutePath() + "/" + g.getName() + "/permissions.yml");
+			FileHandler.writeLines(perms, groupPermissionsFile);
+			return true;
+		} else {
+			return false;
 		}
-		return gr;
+	}
+	
+	
+	/**
+	 * 
+	 * Writes all given permissions into the negated permissions file
+	 * 
+	 * @param perms A list containing the permissions 
+	 * @param g The group
+	 * @return true, if it was successful
+	 */
+	public boolean setNegatedPermissions(List<String> perms, Group g) {
+		if (groupExists(g)) {
+			File groupPermissionsFile = new File(
+					groupFolder.getAbsolutePath() + "/" + g.getName() + "/negated_permissions.yml");
+			FileHandler.writeLines(perms, groupPermissionsFile);
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

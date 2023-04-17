@@ -29,9 +29,25 @@ public class ConfigFile {
 			try {
 				config.createNewFile();
 				setEssentialsDisplayNameDisabled(true);
+				setField("Web-Username", "admin");
+				setField("Web-Password", "admin");
+				setField("Webserver-Port", "8080");
+				setField("Webserver-Enabled", "false");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			if(getStringField("Web-Username") == null) {
+				setField("Web-Username", "admin");
+			}
+			if(getStringField("Web-Password") == null) {
+				setField("Web-Password", "admin");
+			}
+			if(getStringField("Webserver-Port") == null) {
+                setField("Webserver-Port", "8080");
+            }
+			if(getStringField("Webserver-Enabled") == null) {
+                setField("Webserver-Enabled", "false");
+            }
 		}
 	}
 	
@@ -73,7 +89,28 @@ public class ConfigFile {
 	}
 	
 	/**
-	 * Gets the boolean value of a field
+	 * A method used to set a String field
+	 * @param field The fields name
+	 * @param state The String value
+	 */
+	private void setField(String field, String state) {
+		LinkedList<String> lines = getLines();
+		boolean lineChanged = false;
+		for(int i = 0; i < lines.size(); i++) {
+			if(lines.get(i).startsWith(field)) {
+				lines.set(i, field + ": " + state);
+				lineChanged = true;
+				break;
+			}
+		}
+		if(!lineChanged) {
+			lines.add(field + ": " + state);
+		}
+		writeLines(lines);
+	}
+	
+	/**
+	 * Gets the S value of a field
 	 * @param field The name of the field
 	 * @return The boolean value of that field
 	 */
@@ -92,6 +129,21 @@ public class ConfigFile {
 	}
 	
 	/**
+	 * Gets the String value of a field
+	 * @param field The name of the field
+	 * @return The String value of that field
+	 */
+	private String getStringField(String field) {
+		LinkedList<String> lines = getLines();
+		for(int i = 0; i < lines.size(); i++) {
+			if(lines.get(i).startsWith(field)) {
+				return lines.get(i).replace(field + ": ", "");
+			}
+		}
+		return null;
+	}
+	
+	/**
 	 * Gets the lines of the config file
 	 * @return A LinkedList wit all lines of this config file as Strings 
 	 */
@@ -106,5 +158,21 @@ public class ConfigFile {
 	private void writeLines(LinkedList<String> lines) {
 		FileHandler.writeLines(lines, config);
 	}
+
+	public String getPassword() {
+		return getStringField("Web-Password");
+	}
+	
+	public String getUsername() {
+		return getStringField("Web-Username");
+	}
+
+    public int getWebserverPort() {
+        return Integer.parseInt(getStringField("Webserver-Port"));
+    }
+    
+    public boolean isWebServerEnabled() {
+        return getField("Webserver-Enabled");
+    }
 	
 }

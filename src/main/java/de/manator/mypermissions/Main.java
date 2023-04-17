@@ -29,8 +29,10 @@ import de.manator.mypermissions.events.ConfigEvents;
 import de.manator.mypermissions.events.PlayerJoin;
 import de.manator.mypermissions.groups.Group;
 import de.manator.mypermissions.groups.GroupHandler;
+import de.manator.mypermissions.io.FileHandler;
 import de.manator.mypermissions.players.PlayerHandler;
 import de.manator.mypermissions.players.PlayerUpdater;
+import de.manator.mypermissions.web.HttpServer;
 
 /**
  * The main class of MyPermissions
@@ -65,17 +67,29 @@ public class Main extends JavaPlugin {
 	 * A reference to the events used for group configuration
 	 */
 	private ConfigEvents configs;
-	
+
 	/**
 	 * A reference to the config file of MyPermissions
 	 */
 	private ConfigFile configFile;
 	
 	/**
+	 * A reference to the internal webserver
+	 */
+	private HttpServer server;
+
+	/**
 	 * A method called when the plugin gets enabled
 	 */
 	@Override
 	public void onEnable() {
+		getLogger().info("Initializing bStats...");
+		int pluginID = 16698;
+		Metrics m = new Metrics(this, pluginID);
+		// Getting rid of the annoying warning
+		m.toString();
+		getLogger().info("Metrics initialized!");
+
 		getLogger().info("Loading files...");
 		if (!getDataFolder().exists()) {
 			getDataFolder().mkdirs();
@@ -113,7 +127,20 @@ public class Main extends JavaPlugin {
 		getLogger().info("Registering listeners...");
 		registerListeners();
 		getLogger().info("Listeners registered!");
-
+		
+		getLogger().info("Loading web files...");
+		initWeb();
+		getLogger().info("Loaded web files!");
+		
+		getLogger().info("Initializing webserver...");
+		if(server == null) {
+			server = new HttpServer(configFile.getWebserverPort(), this);
+			if(configFile.isWebServerEnabled()) {
+			    server.runServer();
+			}
+		}
+		getLogger().info("Webserver initialized!");
+		
 		essentialsFix();
 	}
 
@@ -130,6 +157,9 @@ public class Main extends JavaPlugin {
 			}
 		}
 		getLogger().info("Scoreboard reset!");
+		if(configFile.isWebServerEnabled()) {
+		    server.stopServer();
+		}
 	}
 
 	/**
@@ -164,16 +194,16 @@ public class Main extends JavaPlugin {
 		getCommand("excludefromdefault").setExecutor(new ExcludeFromDefaultCMD(this));
 		getCommand("excludefromdefault").setTabCompleter(new ExcludeTab(this));
 	}
-	
+
 	/**
 	 * A method used to enable the essentials fix
 	 */
 	private void essentialsFix() {
-		if(configFile.getEssentialsDisplayNameDisabled()) {
+		if (configFile.getEssentialsDisplayNameDisabled()) {
 			getLogger().info("Checking for essentials...");
 			Essentials ess = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
 			if (ess != null) {
-				if(ess.isEnabled()) {
+				if (ess.isEnabled()) {
 					getLogger().info("Essentials found...");
 					ess.getConfig().set("change-displayname", false);
 					try {
@@ -184,7 +214,7 @@ public class Main extends JavaPlugin {
 					getLogger().info("Essentials custom nickname disabled!");
 				} else {
 					Bukkit.getScheduler().runTaskLater(this, new Runnable() {
-						
+
 						@Override
 						public void run() {
 							getLogger().info("Essentials found...");
@@ -205,7 +235,7 @@ public class Main extends JavaPlugin {
 			}
 		}
 	}
-	
+
 	/**
 	 * Gets a list of all MyPermissions commands
 	 * 
@@ -239,8 +269,8 @@ public class Main extends JavaPlugin {
 	 */
 	public void reloadPlayers() {
 		Bukkit.getScheduler().runTaskAsynchronously(this, new PlayerUpdater(this));
-		
-		for(Player pl : Bukkit.getOnlinePlayers()) {
+
+		for (Player pl : Bukkit.getOnlinePlayers()) {
 			pl.updateCommands();
 		}
 	}
@@ -318,6 +348,21 @@ public class Main extends JavaPlugin {
 	}
 
 	/**
+	 * Downloads the latest website version of the Config Panel
+	 */
+	private void initWeb() {
+		File dest = new File(this.getDataFolder().getAbsolutePath() + "/web");
+		if(!dest.exists()) {
+			dest.mkdir();
+		} else {
+			FileHandler.removeRecursive(dest);
+			dest.mkdir();
+		}
+		
+		FileHandler.unzipFile("https://dev.manator.de/dl/mp/web-latest.zip", dest);
+	}
+
+	/**
 	 * Gets a reference to MyPermissions group config events
 	 * 
 	 * @return A reference to the ConfigEvents
@@ -334,9 +379,10 @@ public class Main extends JavaPlugin {
 	public HashMap<UUID, PermissionAttachment> getPerms() {
 		return perms;
 	}
-	
+
 	/**
 	 * Gets the config file of my permissions
+	 * 
 	 * @return A reference to the ConfigFile object of MyPermissions
 	 */
 	public ConfigFile getConfigFile() {

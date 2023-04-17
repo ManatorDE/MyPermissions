@@ -314,4 +314,36 @@ public class PlayerHandler {
 		}
 		return false;
 	}
+
+	/**
+	 * Writes all permissions from the list into the player permission file
+	 * @param perms A list of permissions
+	 * @param name The name of the player
+	 */
+	public boolean setPermissions(LinkedList<String> perms, String name) {
+		if(perms != null) {
+			File pperms = new File(playersFolder.getAbsolutePath() + "/" + name + "/permissions.yml");
+			if(playerExists(name)) {
+				FileHandler.writeLines(perms, pperms);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Writes all permissions from the list into the player negated permission file
+	 * @param perms A list of permissions
+	 * @param name The name of the player
+	 */
+	public boolean setNegatedPermissions(LinkedList<String> perms, String name) {
+		if(perms != null) {
+			File pperms = new File(playersFolder.getAbsolutePath() + "/" + name + "/negated_permissions.yml");
+			if(playerExists(name)) {
+				FileHandler.writeLines(perms, pperms);
+				return true;
+			}
+		}
+		return false;
+	}
 }

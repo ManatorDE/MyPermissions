@@ -63,7 +63,7 @@ public class Permissions implements CommandExecutor {
 						} else {
 							CMD.sendMessage(p, "§cThe permission §6" + args[2] + " §ccouldn't be negated for the player §6" + args[1] + "§c!");
 						}
-					} else if(args[0].equalsIgnoreCase("add")) {
+					} else if(args[0].equalsIgnoreCase("removenegation")) {
 						if(ph.removeNegatedPermission(args[1], args[2])) {
 							CMD.sendMessage(p, "§aThe permission §6" + args[2] + " §ais no longer negated for the player §6" + args[1] + "§a!");
 						} else {
@@ -94,7 +94,7 @@ public class Permissions implements CommandExecutor {
 						} else {
 							CMD.sendMessage(p, "§cThe permission §6" + args[2] + " §ccouldn't be negated for the player §6" + args[1] + "§c!");
 						}
-					} else if(args[0].equalsIgnoreCase("add")) {
+					} else if(args[0].equalsIgnoreCase("removenegation")) {
 						if(ph.removeNegatedPermission(args[1], args[2])) {
 							CMD.sendMessage(p, "§aThe permission §6" + args[2] + " §ais no longer negated for the player §6" + args[1] + "§a!");
 						} else {
@@ -125,7 +125,7 @@ public class Permissions implements CommandExecutor {
 						} else {
 							CMD.sendMessage(p, "§cThe permission §6" + args[2] + " §ccouldn't be negated for the player §6" + args[1] + "§c!");
 						}
-					} else if(args[0].equalsIgnoreCase("add")) {
+					} else if(args[0].equalsIgnoreCase("removenegation")) {
 						if(ph.removeNegatedPermission(args[1], args[2])) {
 							CMD.sendMessage(p, "§aThe permission §6" + args[2] + " §ais no longer negated for the player §6" + args[1] + "§a!");
 						} else {
