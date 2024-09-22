@@ -601,6 +601,24 @@ public class GroupHandler {
 			return false;
 		}
 	}
+	
+	/**
+     * Deletes the default group
+     * 
+     * @return True, if the default group was deleted
+     */
+	public boolean removeDefault() {
+	    if (groupExists(getDefault())) {
+            File defaultGroup = new File(groupFolder.getAbsolutePath() + "/default.yml");
+            if (!defaultGroup.exists()) {
+                return false;
+            }
+            defaultGroup.delete();
+            return true;
+        } else {
+            return false;
+        }
+	}
 
 	/**
 	 * Gets the default group

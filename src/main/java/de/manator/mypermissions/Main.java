@@ -29,10 +29,9 @@ import de.manator.mypermissions.events.ConfigEvents;
 import de.manator.mypermissions.events.PlayerJoin;
 import de.manator.mypermissions.groups.Group;
 import de.manator.mypermissions.groups.GroupHandler;
-import de.manator.mypermissions.io.FileHandler;
 import de.manator.mypermissions.players.PlayerHandler;
 import de.manator.mypermissions.players.PlayerUpdater;
-import de.manator.mypermissions.web.HttpServer;
+import de.manator.mypermissions.web.WebServer;
 
 /**
  * The main class of MyPermissions
@@ -76,7 +75,7 @@ public class Main extends JavaPlugin {
 	/**
 	 * A reference to the internal webserver
 	 */
-	private HttpServer server;
+	private WebServer server;
 
 	/**
 	 * A method called when the plugin gets enabled
@@ -128,15 +127,11 @@ public class Main extends JavaPlugin {
 		registerListeners();
 		getLogger().info("Listeners registered!");
 		
-		getLogger().info("Loading web files...");
-		initWeb();
-		getLogger().info("Loaded web files!");
-		
 		getLogger().info("Initializing webserver...");
 		if(server == null) {
-			server = new HttpServer(configFile.getWebserverPort(), this);
+			server = new WebServer(this);
 			if(configFile.isWebServerEnabled()) {
-			    server.runServer();
+			    server.startServer();
 			}
 		}
 		getLogger().info("Webserver initialized!");
@@ -345,21 +340,6 @@ public class Main extends JavaPlugin {
 			}
 			p.updateCommands();
 		}
-	}
-
-	/**
-	 * Downloads the latest website version of the Config Panel
-	 */
-	private void initWeb() {
-		File dest = new File(this.getDataFolder().getAbsolutePath() + "/web");
-		if(!dest.exists()) {
-			dest.mkdir();
-		} else {
-			FileHandler.removeRecursive(dest);
-			dest.mkdir();
-		}
-		
-		FileHandler.unzipFile("https://dev.manator.de/dl/mp/web-latest.zip", dest);
 	}
 
 	/**
