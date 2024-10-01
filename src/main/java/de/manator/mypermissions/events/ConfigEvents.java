@@ -104,7 +104,7 @@ public class ConfigEvents implements Listener {
 						b.setType(Material.OAK_SIGN);
 
 						Sign s = (Sign) b.getState();
-						s.setEditable(true);
+						s.setWaxed(true);
 
 						p.openSign(s);
 						loc = s.getLocation();
@@ -116,7 +116,7 @@ public class ConfigEvents implements Listener {
 						b.setType(Material.OAK_SIGN);
 
 						Sign s = (Sign) b.getState();
-						s.setEditable(true);
+						s.setWaxed(true);
 
 						p.openSign(s);
 						loc = s.getLocation();

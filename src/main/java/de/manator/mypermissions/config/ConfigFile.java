@@ -36,19 +36,22 @@ public class ConfigFile {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			if(getStringField("Web-Username") == null) {
-				setField("Web-Username", "admin");
-			}
-			if(getStringField("Web-Password") == null) {
-				setField("Web-Password", "admin");
-			}
-			if(getStringField("Webserver-Port") == null) {
-                setField("Webserver-Port", "8080");
-            }
-			if(getStringField("Webserver-Enabled") == null) {
-                setField("Webserver-Enabled", "false");
-            }
 		}
+		if(getStringField("Web-Username") == null) {
+            setField("Web-Username", "admin");
+        }
+        if(getStringField("Web-Password") == null) {
+            setField("Web-Password", "admin");
+        }
+        if(getStringField("Webserver-Port") == null) {
+            setField("Webserver-Port", "8080");
+        }
+        if(getStringField("Webserver-Enabled") == null) {
+            setField("Webserver-Enabled", "false");
+        }
+        if(getStringField("essentials-displayname-disabled") == null) {
+            setField("essentials-displayname-disabled", false);
+        }
 	}
 	
 	/**
