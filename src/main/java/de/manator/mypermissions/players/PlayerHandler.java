@@ -135,7 +135,7 @@ public class PlayerHandler {
 	 */
 	public LinkedList<String> getGroups(String player) {
 		File groups = new File(playersFolder.getAbsolutePath() + "/" + player + "/groups.yml");
-		LinkedList<String> list = FileHandler.getUpperCaseLines(groups);
+		LinkedList<String> list = FileHandler.getLines(groups);
 		if (list != null) {
 			return list;
 		}
@@ -173,7 +173,7 @@ public class PlayerHandler {
 	 * @return True if the player is in the group, false if not
 	 */
 	public boolean isInGroup(String player, Group g) {
-		if (g != null && getGroups(player).contains(g.getName().toUpperCase())) {
+		if (g != null && getGroups(player).contains(g.getName())) {
 			return true;
 		}
 		return false;

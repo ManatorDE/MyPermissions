@@ -72,7 +72,7 @@ public class MP implements CommandExecutor {
 							for (String s : commands) {
 								CMD.sendMessage(p, "§6/" + s + " - " +  main.getCommand(s).getDescription());
 							}
-							CMD.sendMessage(p, "§6Visit https://manatorde.github.io/mypermissions/ for more information!");
+							CMD.sendMessage(p, "§6Visit https://dev.manator.de/mypermissions/ for more information!");
 						}
 					} else if(args[0].equalsIgnoreCase("enableEssentialsFix")) {
 						main.getConfigFile().setEssentialsDisplayNameDisabled(true);

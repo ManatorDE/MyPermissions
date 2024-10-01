@@ -578,6 +578,8 @@ public class GroupCMD implements CommandExecutor {
 					}
 				}
 			}
+		} else {
+		    return true;
 		}
 		
 		main.reloadPlayers();

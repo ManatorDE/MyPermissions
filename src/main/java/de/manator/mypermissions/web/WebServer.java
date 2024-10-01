@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -37,9 +40,16 @@ public class WebServer {
                 int port = 8080;
                 if(main != null) port = main.getConfigFile().getWebserverPort();
                 try (ServerSocket serverSocket = new ServerSocket(port)) {
+                    if(main != null) main.getLogger().info("WebServer started at port " + port);
                     while (running) {
                         try (Socket socket = serverSocket.accept()) {
                             handleClient(socket);
+                        } catch(IOException e) {
+                            if(main != null) {
+                                main.getLogger().info("Socket connection crashed!");
+                            } else {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 } catch (IOException e) {
@@ -89,7 +99,7 @@ public class WebServer {
             StringBuilder sb = new StringBuilder();
             sb.append(body);
             doPost(lines, writer, sb.toString());
-        } else {
+        } else if(!lines.isEmpty()) {
             doGet(lines, writer);
         }
 
@@ -98,7 +108,7 @@ public class WebServer {
 
     private void doPost(ArrayList<String> request, PrintWriter writer, String body) throws IOException {
         String path = request.get(0).split("\s+")[1];
-        
+
         String httpResponse = "";
         boolean cookies = false;
 
@@ -146,7 +156,11 @@ public class WebServer {
             writer.write(httpResponse);
             return;
         }
-        String path = request.get(0).split("\s+")[1];
+        String path = "";
+        String[] req = request.get(0).split("\s+"); 
+        if(req.length >= 2) {
+            path = req[1];
+        }
         String cookie = null;
         boolean cookies = false;
         for(String line : request) {
@@ -162,8 +176,8 @@ public class WebServer {
         String httpResponse = "";
 
         httpResponse = "HTTP/1.1 200 OK\r\n";
-
-        if(redirect) {
+        
+        if(redirect || path.isEmpty()) {
             httpResponse = "HTTP/1.1 303 See Other\r\n";
         }
 
@@ -173,6 +187,15 @@ public class WebServer {
             httpResponse += "Location: /\r\n";
             writer.write(httpResponse);
             return;
+        } else if(path.equals("/reload")) {
+            main.reloadPlayers();
+            httpResponse = "HTTP/1.1 303 See Other\r\n";
+            httpResponse += "Location: /\r\n";
+            writer.write(httpResponse);
+            return;
+        } else if(path.isEmpty()) {
+            httpResponse += "Location: /\r\n";
+            writer.write(httpResponse);
         }
 
         if(resp != null) {
@@ -225,14 +248,37 @@ public class WebServer {
         if(main != null) {
             if(postMap.containsKey("action") && postMap.containsKey("group")) {
                 if(postMap.get("action").equals("config")) {
-                    if(postMap.containsKey("op") && postMap.containsKey("rank") && postMap.containsKey("prefix") && postMap.containsKey("suffix")) {
-                        GroupHandler gh = main.getGroupHandler();
-                        Group g = gh.getGroup(postMap.get("group"));
+                    GroupHandler gh = main.getGroupHandler();
+                    Group g = gh.getGroup(postMap.get("group"));
+                    if(postMap.containsKey("op"))
                         gh.setOp(g, postMap.get("op").equals("on"));
-                        gh.setPrefix(g, postMap.get("prefix"));
-                        gh.setSuffix(g, postMap.get("suffix"));
-                        gh.setRank(g, Integer.parseInt(postMap.get("rank")));
+                    if(postMap.containsKey("default") && postMap.get("default").equals("on")) {
+                        gh.setDefault(g);
+                    } else if(gh.getDefault() != null && gh.getDefault().equals(g)) {
+                        gh.removeDefault();
                     }
+                    if(postMap.containsKey("prefix")) {
+                        String prefix;
+                        try {
+                            prefix = URLDecoder.decode(postMap.get("prefix"), StandardCharsets.UTF_8.name());
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                            prefix = postMap.get("prefix");
+                        }
+                        gh.setPrefix(g, prefix);
+                    }
+                    if(postMap.containsKey("suffix")) {
+                        String suffix;
+                        try {
+                            suffix = URLDecoder.decode(postMap.get("suffix"), StandardCharsets.UTF_8.name());
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                            suffix = postMap.get("suffix");
+                        }
+                        gh.setSuffix(g, suffix);
+                    }
+                    if(postMap.containsKey("rank"))
+                        gh.setRank(g, Integer.parseInt(postMap.get("rank")));
                 } else if(postMap.get("action").equals("perms")) {
                     if(postMap.containsKey("permissions")) {
                         String[] perms = postMap.get("permissions").split("%0D%0A");
@@ -268,6 +314,8 @@ public class WebServer {
                             gh.setNegatedPermissions(l, g);
                         }
                     }
+                } else if(postMap.get("action").equals("deletegroup")) {
+                    main.getGroupHandler().deleteGroup(main.getGroupHandler().getGroup(postMap.get("group")));
                 }
             } else if(postMap.containsKey("action") && postMap.containsKey("player")) {
                 if(postMap.get("action").equals("permsplayer")) {
@@ -280,6 +328,11 @@ public class WebServer {
                             l.add(s);
                         }
                         ph.setPermissions(l, postMap.get("player"));
+                    } else {
+                        PlayerHandler ph = main.getPlayerHandler();
+                        ph.getPermissions(postMap.get("player"));
+                        LinkedList<String> l = new LinkedList<>();
+                        ph.setPermissions(l, postMap.get("player"));
                     }
                 } else if(postMap.get("action").equals("npermsplayer")) {
                     if(postMap.containsKey("npermissions")) {
@@ -291,9 +344,23 @@ public class WebServer {
                             l.add(s);
                         }
                         ph.setNegatedPermissions(l, postMap.get("player"));
+                    } else {
+                        PlayerHandler ph = main.getPlayerHandler();
+                        ph.getNegatedPermissions(postMap.get("player"));
+                        LinkedList<String> l = new LinkedList<>();
+                        ph.setNegatedPermissions(l, postMap.get("player"));
+                    }
+                }
+            } else if(postMap.containsKey("action")) {
+                if(postMap.get("action").equals("creategroup") && postMap.containsKey("name") && postMap.containsKey("super")) {
+                    if(postMap.get("super").equals("nogroup")) {
+                        main.getGroupHandler().addGroup(postMap.get("name"));
+                    } else {
+                        main.getGroupHandler().addGroup(postMap.get("name"), main.getGroupHandler().getGroup(postMap.get("super")));
                     }
                 }
             }
+            main.getGroupHandler().loadGroups();
             main.reloadPlayers();
         }
     }
