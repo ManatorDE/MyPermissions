@@ -1,5 +1,8 @@
 package de.manator.mypermissions.web;
 
+import java.util.Comparator;
+import java.util.LinkedList;
+
 import de.manator.mypermissions.Main;
 import de.manator.mypermissions.groups.Group;
 import de.manator.mypermissions.groups.GroupHandler;
@@ -29,18 +32,20 @@ public class Templates {
         s+= getHeader(title);
         s+= "<div class=\"content-div\">";
         if(path.contains("groups")) {
-            if(path.equals("/groups")) {
+            if(path.equals("/groups") || path.equals("/groups/")) {
                 s+= getGroups(main);
+            } else if(path.equals("/groups/create")) {
+                s+= getGroupCreate(main);
             } else {
                 s+= getGroupOptions(path.split("/")[2], main);
             }
         } else if(path.contains("permissions")) {
-            if(path.equals("/permissions")) {
+            if(path.equals("/permissions") || path.equals("/permissions/")) {
                 s+= getPermissions(main);
             } else {
                 s+= getPermissionsOptions(path.split("/")[2], main);
             }
-            
+
         } else {
             s+=getMain();
         }
@@ -78,7 +83,12 @@ public class Templates {
             GroupHandler gh = main.getGroupHandler();
             Group g = gh.getGroup(group);
             String checked = g.isOp() ? " checked" : "";
+            String defaultChecked = "";
+            if(gh.getDefault() != null) {
+                defaultChecked = gh.getDefault().equals(g) ? " checked" : "";
+            }
             s+="<label for=\"op\">OP: <input type=\"checkbox\" name=\"op\" id=\"op\"" + checked + "></label>";
+            s+="<label for=\"default\">Default group: <input type=\"checkbox\" name=\"default\" id=\"default\"" + defaultChecked + "></label>";
             s+="<label for=\"rank\">Rank: <input type=\"number\" name=\"rank\" id=\"rank\" min=\"0\" max=\"10\" value=\"" + g.getRank() + "\"></label>";
             String prefix = g.getPrefix() != null ? g.getPrefix() : "";
             s+="<label for=\"prefix\">Prefix: <input type=\"text\" name=\"prefix\" id=\"prefix\" value=\"" + prefix + "\"></label>";
@@ -90,7 +100,7 @@ public class Templates {
             s+="<label for=\"prefix\">Prefix: <input type=\"text\" name=\"prefix\" id=\"prefix\" value=\"test\"></label>";
             s+="<label for=\"suffix\">Suffix: <input type=\"text\" name=\"suffix\" id=\"suffix\" value=\"tset\"></label>";
         }
-        s+="<button type=\"submit\">Save permissions!</button></form></details>";
+        s+="<button type=\"submit\">Save config!</button></form></details>";
 
         s+="<details onclick=\"detailsClick(this)\">";
         s+="<summary><h3>Permissions</h3></summary>";
@@ -133,7 +143,9 @@ public class Templates {
         s+= "<select name=\"player\" id=\"player\">";
         if(main != null) {
             PlayerHandler ph = main.getPlayerHandler();
-            for(String player : ph.getPlayers()) {
+            LinkedList<String> players = ph.getPlayers();
+            players.sort(Comparator.naturalOrder());
+            for(String player : players) {
                 if(!ph.getGroups(player).contains(group)) {
                     s+="<option value=\"" + player + "\">" + player + "</option>";
                 }
@@ -147,13 +159,36 @@ public class Templates {
         s+= "<select name=\"player\" id=\"player\">";
         if(main != null) {
             PlayerHandler ph = main.getPlayerHandler();
-            for(String player : ph.getPlayers()) {
-                if(!ph.getGroups(player).contains(group)) {
+            LinkedList<String> players = ph.getPlayers();
+            players.sort(Comparator.naturalOrder());
+            for(String player : players) {
+                if(ph.getGroups(player).contains(group)) {
                     s+="<option value=\"" + player + "\">" + player + "</option>";
                 }
             }
         }
         s+="</select><button type=\"submit\">Remove selected player</button></form></details>";
+        s+="<form action=\"/groups\" method=\"post\">"
+            + "    <input type=\"hidden\" name=\"action\" value=\"deletegroup\">"
+            + "    <input type=\"hidden\" name=\"group\" value=\"" + group + "\">"
+            + "    <button type=\"submit\" class=\"delete\">Delete group!</button>"
+            + "</form>";
+        return s;
+    }
+
+    private static String getGroupCreate(Main main) {
+        String s = "<h2>Create group!</h2><form action=\"/groups\" method=\"post\"><label for=\"name\">Name: <input type=\"text\" name=\"name\" id=\"name\" placeholder=\"Group\" required></label>";
+        s+="<label for=\"super\">Supergroup: <select name=\"super\" id=\"super\">";
+        s+="<option value=\"nogroup\">No selection</option>";
+        if(main != null) {
+            GroupHandler gh = main.getGroupHandler();
+            for(Group g : gh.getGroups()) {
+                s+= "<option value=\"" + g.getName() + "\">" + g.getName() + "</option>";
+            }
+        } else {
+            s+= "<option value=\"test\">test</option>";
+        }
+        s+= "</select></label><input type=\"hidden\" name=\"action\" value=\"creategroup\"><button type=\"submit\" class=\"create\">Create group!</button></form>";
         return s;
     }
 
@@ -182,7 +217,7 @@ public class Templates {
         s+="<input type=\"hidden\" name=\"player\" value=\"" + player + "\">";
         s+="<input type=\"hidden\" name=\"action\" value=\"npermsplayer\">";
         s+="<textarea name=\"npermissions\" id=\"npermissions\">";
-        
+
         if(main != null) {
             PlayerHandler ph = main.getPlayerHandler();
             for(String perm : ph.getNegatedPermissions(player)) {
@@ -200,6 +235,7 @@ public class Templates {
         String s = "<h2>Groups</h2>";
         if(main != null) {
             GroupHandler gh = main.getGroupHandler();
+            s+="<a class=\"button create\" href=\"/groups/create\">Create a group!</a>";
             for(Group g : gh.getGroups()) {
                 s+="<a class=\"button\" href=\"/groups/" + g.getName() + "\">" + g.getName() + "</a>";
             }
@@ -213,7 +249,9 @@ public class Templates {
         String s = "<h2>Players</h2>";
         if(main != null) {
             PlayerHandler ph = main.getPlayerHandler();
-            for(String pl : ph.getPlayers()) {
+            LinkedList<String> players = ph.getPlayers();
+            players.sort(Comparator.naturalOrder());
+            for(String pl : players) {
                 s+="<a class=\"button\" href=\"/permissions/" + pl + "\">" + pl + "</a>";
             }
         } else {
@@ -361,6 +399,16 @@ public class Templates {
                 + "    cursor: pointer;\r\n"
                 + "}\r\n"
                 + "\r\n"
+                + ".create, button[type=submit].create, .button.create {\r\n"
+                + "    background-color: #094;\r\n"
+                + "    color: #fff;\r\n"
+                + "}\r\n"
+                + "\r\n"
+                + ".delete, button[type=submit].delete, .button.delete {\r\n"
+                + "    background-color: #900;\r\n"
+                + "    color: #fff;\r\n"
+                + "}\r\n"
+                + "\r\n"
                 + ".button {\r\n"
                 + "    text-decoration: none;\r\n"
                 + "    color: #000;\r\n"
@@ -439,6 +487,6 @@ public class Templates {
     }
 
     public static String getMain() {
-        return "<h2>Options</h2><a class=\"button\" href=\"/groups\">Manage groups</a><a class=\"button\" href=\"/permissions\">Manage players</a>";
+        return "<h2>Options</h2><a class=\"button\" href=\"/groups\">Manage groups</a><a class=\"button\" href=\"/permissions\">Manage players</a><a class=\"button\" href=\"/reload\">Reload MyPermissions</a>";
     }
 }

@@ -264,10 +264,6 @@ public class Main extends JavaPlugin {
 	 */
 	public void reloadPlayers() {
 		Bukkit.getScheduler().runTaskAsynchronously(this, new PlayerUpdater(this));
-
-		for (Player pl : Bukkit.getOnlinePlayers()) {
-			pl.updateCommands();
-		}
 	}
 
 	/**

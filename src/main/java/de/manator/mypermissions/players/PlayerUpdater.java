@@ -71,10 +71,12 @@ public class PlayerUpdater implements Runnable {
                                 p.setOp(true);
                             }
                             for (String perm : gh.getPermissions(gh.getGroup(gr))) {
-                                attachment.setPermission(perm, true);
+                                if(perm != null)
+                                    attachment.setPermission(perm, true);
                             }
                             for (String nperm : gh.getNegatedPermissions(gh.getGroup(gr))) {
-                                attachment.setPermission(nperm, false);
+                                if(nperm != null)
+                                    attachment.setPermission(nperm, false);
                             }
                         }
                     }
@@ -120,6 +122,7 @@ public class PlayerUpdater implements Runnable {
                         p.setCustomNameVisible(true);
                     }
                 }
+                p.updateCommands();
             }
         }
     }
