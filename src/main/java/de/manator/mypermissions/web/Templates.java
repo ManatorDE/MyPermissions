@@ -11,7 +11,7 @@ import de.manator.mypermissions.players.PlayerHandler;
 public class Templates {
 
     public static String getHeader(String title) {
-        return "<header><a href=\"/\"><img class=\"logo\" src=\"https://test.manator.de/resources/icon.svg\" alt=\"MP-Logo\"><h1>" + title + "</h1></a></header>";
+        return "<header><a href=\"/\"><img class=\"logo\" src=\"https://dev.manator.de/rss/MyPermissions_2.png\" alt=\"MP-Logo\"><h1>" + title + "</h1></a></header>";
     }
 
     public static String getHead(String title) {
