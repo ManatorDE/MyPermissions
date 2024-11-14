@@ -105,12 +105,20 @@ public class PlayerUpdater implements Runnable {
 
                         if (prefix.getPrefix() != null) {
                             t.setPrefix(prefix.getPrefix());
-                            name += prefix.getPrefix();
+                            if(main.getConfigFile().isPrefixSpaceEnabled()) {
+                                name += prefix.getPrefix() + " ";
+                            } else {
+                                name += prefix.getPrefix();
+                            }
                         }
                         name += ChatColor.WHITE + p.getName();
                         if (prefix.getSuffix() != null) {
                             t.setPrefix(prefix.getSuffix());
-                            name += prefix.getSuffix();
+                            if(main.getConfigFile().isSuffixSpaceEnabled()) {
+                                name += " " + prefix.getSuffix();
+                            } else {
+                                name += prefix.getSuffix();
+                            }
                         }
                     }
 

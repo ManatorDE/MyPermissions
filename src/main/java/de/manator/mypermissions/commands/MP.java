@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import com.earth2me.essentials.Essentials;
 
 import de.manator.mypermissions.Main;
+import de.manator.mypermissions.config.ConfigFile;
 
 
 
@@ -83,6 +84,26 @@ public class MP implements CommandExecutor {
 						toggleFix(false);
 						CMD.sendMessage(p, "§aEssentials fix was disabled!");
 					}
+				} else if(args.length == 2) {
+				    if(args[0].equalsIgnoreCase("setprefixspace")) {
+				        ConfigFile cf = main.getConfigFile();
+				        if(args[1].equalsIgnoreCase("true")) {
+				            cf.setPrefixSpaceEnabled(true);
+				            CMD.sendMessage(p, "§aPrefix-Space was enabled!");
+				        } else if(args[1].equalsIgnoreCase("false")) {
+				            cf.setPrefixSpaceEnabled(false);
+				            CMD.sendMessage(p, "§aPrefix-Space was disabled!");
+				        }
+				    } else if(args[0].equalsIgnoreCase("setsuffixspace")) {
+                        ConfigFile cf = main.getConfigFile();
+                        if(args[1].equalsIgnoreCase("true")) {
+                            cf.setSuffixSpaceEnabled(true);
+                            CMD.sendMessage(p, "§aSuffix-Space was enabled!");
+                        } else if(args[1].equalsIgnoreCase("false")) {
+                            cf.setSuffixSpaceEnabled(false);
+                            CMD.sendMessage(p, "§aSuffix-Space was disabled!");
+                        }
+                    }
 				}
 
 			} else if(sender instanceof ConsoleCommandSender) {
@@ -118,7 +139,27 @@ public class MP implements CommandExecutor {
 						toggleFix(false);
 						CMD.sendMessage(p, "§aEssentials fix was disabled!");
 					}
-				}
+				} else if(args.length == 2) {
+                    if(args[0].equalsIgnoreCase("setprefixspace")) {
+                        ConfigFile cf = main.getConfigFile();
+                        if(args[1].equalsIgnoreCase("true")) {
+                            cf.setPrefixSpaceEnabled(true);
+                            CMD.sendMessage(p, "§aPrefix-Space was enabled!");
+                        } else if(args[1].equalsIgnoreCase("false")) {
+                            cf.setPrefixSpaceEnabled(false);
+                            CMD.sendMessage(p, "§aPrefix-Space was disabled!");
+                        }
+                    } else if(args[0].equalsIgnoreCase("setsuffixspace")) {
+                        ConfigFile cf = main.getConfigFile();
+                        if(args[1].equalsIgnoreCase("true")) {
+                            cf.setSuffixSpaceEnabled(true);
+                            CMD.sendMessage(p, "§aSuffix-Space was enabled!");
+                        } else if(args[1].equalsIgnoreCase("false")) {
+                            cf.setSuffixSpaceEnabled(false);
+                            CMD.sendMessage(p, "§aSuffix-Space was disabled!");
+                        }
+                    }
+                }
 			} else if(sender instanceof BlockCommandSender) {
 				BlockCommandSender p = (BlockCommandSender) sender;
 				if (args.length == 0) {
@@ -152,7 +193,27 @@ public class MP implements CommandExecutor {
 						toggleFix(false);
 						CMD.sendMessage(p, "§aEssentials fix was disabled!");
 					}
-				}
+				} else if(args.length == 2) {
+                    if(args[0].equalsIgnoreCase("setprefixspace")) {
+                        ConfigFile cf = main.getConfigFile();
+                        if(args[1].equalsIgnoreCase("true")) {
+                            cf.setPrefixSpaceEnabled(true);
+                            CMD.sendMessage(p, "§aPrefix-Space was enabled!");
+                        } else if(args[1].equalsIgnoreCase("false")) {
+                            cf.setPrefixSpaceEnabled(false);
+                            CMD.sendMessage(p, "§aPrefix-Space was disabled!");
+                        }
+                    } else if(args[0].equalsIgnoreCase("setsuffixspace")) {
+                        ConfigFile cf = main.getConfigFile();
+                        if(args[1].equalsIgnoreCase("true")) {
+                            cf.setSuffixSpaceEnabled(true);
+                            CMD.sendMessage(p, "§aSuffix-Space was enabled!");
+                        } else if(args[1].equalsIgnoreCase("false")) {
+                            cf.setSuffixSpaceEnabled(false);
+                            CMD.sendMessage(p, "§aSuffix-Space was disabled!");
+                        }
+                    }
+                }
 			}
 		}
 		

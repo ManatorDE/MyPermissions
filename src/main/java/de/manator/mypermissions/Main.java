@@ -317,14 +317,22 @@ public class Main extends JavaPlugin {
 					t = s.getTeam(prefix.getName());
 				}
 				if (prefix.getPrefix() != null) {
-					t.setPrefix(prefix.getPrefix());
-					name += prefix.getPrefix();
-				}
-				name += ChatColor.WHITE + p.getName();
-				if (prefix.getSuffix() != null) {
-					t.setPrefix(prefix.getSuffix());
-					name += prefix.getSuffix();
-				}
+                    t.setPrefix(prefix.getPrefix());
+                    if(configFile.isPrefixSpaceEnabled()) {
+                        name += prefix.getPrefix() + " ";
+                    } else {
+                        name += prefix.getPrefix();
+                    }
+                }
+                name += ChatColor.WHITE + p.getName();
+                if (prefix.getSuffix() != null) {
+                    t.setPrefix(prefix.getSuffix());
+                    if(configFile.isSuffixSpaceEnabled()) {
+                        name += " " + prefix.getSuffix();
+                    } else {
+                        name += prefix.getSuffix();
+                    }
+                }
 			}
 
 			if (t != null) {
