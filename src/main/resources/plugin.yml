@@ -1,6 +1,6 @@
 load: POSTWORLD
 name: MyPermissions
-version: 1.3.3
+version: 1.3.4
 author: ManatorDE
 website: https://dev.bukkit.org/projects/mypermissions
 main: de.manator.mypermissions.Main

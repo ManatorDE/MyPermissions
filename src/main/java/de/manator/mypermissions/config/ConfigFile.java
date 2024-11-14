@@ -33,6 +33,8 @@ public class ConfigFile {
 				setField("Web-Password", "admin");
 				setField("Webserver-Port", "8080");
 				setField("Webserver-Enabled", "false");
+				setField("Prefix-Space", "false");
+				setField("Suffix -Space", "false");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -51,6 +53,12 @@ public class ConfigFile {
         }
         if(getStringField("essentials-displayname-disabled") == null) {
             setField("essentials-displayname-disabled", false);
+        }
+        if(getStringField("Prefix-Space") == null) {
+            setField("Prefix-Space", "false");
+        }
+        if(getStringField("Suffix-Space") == null) {
+            setField("Suffix-Space", "false");
         }
 	}
 	
@@ -177,5 +185,21 @@ public class ConfigFile {
     public boolean isWebServerEnabled() {
         return getField("Webserver-Enabled");
     }
+    
+    public boolean isPrefixSpaceEnabled() {
+        return getField("Prefix-Space");
+    }
 	
+    public void setPrefixSpaceEnabled(boolean enabled) {
+        setField("Prefix-Space", enabled);
+    }
+    
+    public boolean isSuffixSpaceEnabled() {
+        return getField("Suffix-Space");
+    }
+    
+    public void setSuffixSpaceEnabled(boolean enabled) {
+        setField("Suffix-Space", enabled);
+    }
+    
 }

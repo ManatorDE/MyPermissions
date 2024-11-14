@@ -31,6 +31,8 @@ public class MPTab implements TabCompleter {
 					list.add("help");
 					list.add("enableEssentialsFix");
 					list.add("disableEssentialsFix");
+					list.add("setprefixspace");
+					list.add("setsuffixspace");
 				}
 			} else if (args.length == 2) {
 				if (args[0].equalsIgnoreCase("help")) {
@@ -38,7 +40,13 @@ public class MPTab implements TabCompleter {
 					list.add("2");
 					list.add("3");
 					list.add("4");
-				}
+				} else if(args[0].equalsIgnoreCase("setprefixspace")) {
+				    list.add("true");
+				    list.add("false");
+				} else if(args[0].equalsIgnoreCase("setsuffixspace")) {
+                    list.add("true");
+                    list.add("false");
+                }
 			}
 		}
 		return list;
