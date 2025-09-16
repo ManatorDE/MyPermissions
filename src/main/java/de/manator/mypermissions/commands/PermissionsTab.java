@@ -9,6 +9,7 @@ import org.bukkit.command.TabCompleter;
 
 import de.manator.mypermissions.Main;
 import de.manator.mypermissions.players.PlayerHandler;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The TabCompleter of the permissions command
@@ -19,7 +20,7 @@ public class PermissionsTab implements TabCompleter {
 	/**
 	 * A reference to the PlayerHandler object of MyPermissions
 	 */
-	private PlayerHandler ph;
+	private final PlayerHandler ph;
 
 	/**
 	 * The constructor of PermissionsTab
@@ -33,7 +34,7 @@ public class PermissionsTab implements TabCompleter {
 	 * A method used to get a list of possible tab completions for the Permissions
 	 */
 	@Override
-	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+	public List<String> onTabComplete(@NotNull CommandSender sender, Command command, @NotNull String label, String[] args) {
 		LinkedList<String> list = new LinkedList<>();
 
 		if (command.getName().equalsIgnoreCase("permissions")) {
@@ -42,33 +43,20 @@ public class PermissionsTab implements TabCompleter {
 				list.add("remove");
 				list.add("negate");
 				list.add("removenegation");
-				list = cleanUp(list, args[0]);
+                list.removeIf(item -> !item.startsWith(args[0]));
 			} else if (args.length == 2) {
-				list = cleanUp(ph.getPlayers(), args[1]);
+                list = ph.getPlayers();
+                list.removeIf(item -> !item.startsWith(args[1]));
 			} else if(args.length == 3) {
 				if(args[0].equalsIgnoreCase("remove")) {
-					list = cleanUp(ph.getPermissions(args[1]), args[2]);
+                    list = ph.getPermissions((args[1]));
+                    list.removeIf(item -> !item.startsWith(args[2]));
 				} else if(args[0].equalsIgnoreCase("removenegation")) {
-					list = cleanUp(ph.getNegatedPermissions(args[1]), args[2]);
+                    list = ph.getNegatedPermissions((args[1]));
+                    list.removeIf(item -> !item.startsWith(args[2]));
 				}
 			}
 		}
 		return list;
 	}
-
-	/**
-	 * A method used to remove unneded objects from a list
-	 * @param list The List
-	 * @param arg The argument which is used to sort out unneeded objects
-	 * @return A list clean of all unneded Object
-	 */
-	private LinkedList<String> cleanUp(LinkedList<String> list, String arg) {
-		for (int i = 0; i < list.size(); i++) {
-			if (!list.get(i).startsWith(arg)) {
-				list.remove(i);
-			}
-		}
-		return list;
-	}
-
 }

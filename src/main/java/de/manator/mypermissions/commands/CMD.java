@@ -1,5 +1,7 @@
 package de.manator.mypermissions.commands;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Color;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -17,7 +19,7 @@ public class CMD {
 	 */
 	public static void sendMessage(CommandSender p, String message) {
 		if (p instanceof Player) {
-			((Player) p).sendMessage("§b[§aMyPermissions§b]§r " + message);
+			((Player) p).sendMessage(ChatColor.AQUA + "[" + ChatColor.GREEN + "MyPermissions" + ChatColor.AQUA + "] " + ChatColor.RESET + message);
 		} else if (p instanceof ConsoleCommandSender) {
 			((ConsoleCommandSender) p).sendMessage(message);
 		} else if (p instanceof BlockCommandSender) {

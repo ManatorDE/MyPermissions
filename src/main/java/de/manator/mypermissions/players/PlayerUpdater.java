@@ -21,17 +21,17 @@ public class PlayerUpdater implements Runnable {
     /**
      * A reference to the Main object of MyPermissions
      */
-    private Main main;
+    private final Main main;
 
     /**
      * A reference to the PlayerHandler object of MyPermissions
      */
-    private PlayerHandler ph;
+    private final PlayerHandler ph;
 
     /**
      * A reference to the GroupHandler object of MyPermissions
      */
-    private GroupHandler gh;
+    private final GroupHandler gh;
 
     /**
      * The constructor of PlayerUpdater
@@ -49,16 +49,14 @@ public class PlayerUpdater implements Runnable {
      */
     @Override
     public void run() {
+        if (!Bukkit.isPrimaryThread()) {
+            Bukkit.getScheduler().runTask(main, this);
+            return;
+        }
+        main.getPerms().clear();
         for (Player p : Bukkit.getOnlinePlayers()) {
             if (p != null) {
-                PermissionAttachment attachment = main.getPerms().get(p.getUniqueId());
-                if (attachment == null) {
-                    attachment = p.addAttachment(main);
-                    main.getPerms().put(p.getUniqueId(), attachment);
-                } else {
-                    attachment = p.addAttachment(main);
-                    main.getPerms().replace(p.getUniqueId(), attachment);
-                }
+                PermissionAttachment attachment = p.addAttachment(main);
                 if (ph.getPlayers().contains(p.getName())) {
                     Group prefix = null;
                     for (String gr : ph.getGroups(p.getName())) {
@@ -94,6 +92,10 @@ public class PlayerUpdater implements Runnable {
                     String name = "";
                     Team t = null;
                     if (prefix != null) {
+                        if(Bukkit.getScoreboardManager() == null) {
+                            main.getLogger().severe("Could not get ScoreboardManager");
+                            return;
+                        }
                         Scoreboard s = Bukkit.getScoreboardManager().getMainScoreboard();
 
                         if (s.getTeam(prefix.getName()) == null) {
@@ -102,7 +104,10 @@ public class PlayerUpdater implements Runnable {
                         } else {
                             t = s.getTeam(prefix.getName());
                         }
-
+                        if (t == null) {
+                            main.getLogger().severe("Could not create or get team " + prefix.getName());
+                            return;
+                        }
                         if (prefix.getPrefix() != null) {
                             t.setPrefix(prefix.getPrefix());
                             if(main.getConfigFile().isPrefixSpaceEnabled()) {
@@ -130,6 +135,7 @@ public class PlayerUpdater implements Runnable {
                         p.setCustomNameVisible(true);
                     }
                 }
+                main.getPerms().put(p.getUniqueId(), attachment);
                 p.updateCommands();
             }
         }

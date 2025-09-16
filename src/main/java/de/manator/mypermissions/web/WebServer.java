@@ -123,13 +123,8 @@ public class WebServer {
 
         handlePost(postMap);
 
-        if(postMap.containsKey("cookies")) {
-            httpResponse += setCookieString("cookies", postMap.get("cookies"));
-            cookies = true;
-        }
-
-        if(postMap.containsKey("user") &&  postMap.containsKey("password")) {
-            String user = postMap.get("user");
+        if(postMap.containsKey("username") &&  postMap.containsKey("password")) {
+            String user = postMap.get("username");
             String password = postMap.get("password");
             if(main != null && user.equals(main.getConfigFile().getUsername()) && password.equals(main.getConfigFile().getPassword())) {
                 httpResponse += setCookieString("logged-in", "1", 600);

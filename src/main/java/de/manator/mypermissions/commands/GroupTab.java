@@ -11,6 +11,7 @@ import de.manator.mypermissions.Main;
 import de.manator.mypermissions.groups.Group;
 import de.manator.mypermissions.groups.GroupHandler;
 import de.manator.mypermissions.players.PlayerHandler;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The TabCompleter of the group command
@@ -21,12 +22,12 @@ public class GroupTab implements TabCompleter {
 	/**
 	 * A reference to the GroupHandler object of MyPermissions
 	 */
-	private GroupHandler gh;
+	private final GroupHandler gh;
 	
 	/**
 	 * A reference to the PlayerHandler object of MyPermissions
 	 */
-	private PlayerHandler ph;
+	private final PlayerHandler ph;
 
 	/**
 	 * The constructor of GroupTab
@@ -41,7 +42,7 @@ public class GroupTab implements TabCompleter {
 	 * A method used to get a list of possible tab completions for the GroupCMD
 	 */
 	@Override
-	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+	public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		LinkedList<String> list = new LinkedList<>();
 		if (args.length == 1) {
 			list.add("add");
@@ -65,7 +66,7 @@ public class GroupTab implements TabCompleter {
 			list.add("setdefault");
 			list.add("setop");
 			list.add("setrank");
-			list = cleanUp(list, args[0]);
+            list.removeIf(item -> !item.startsWith(args[0]));
 		} else if (args.length == 2) {
 			if (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("remove")) {
 				for (Group g : gh.getGroups()) {
@@ -130,7 +131,7 @@ public class GroupTab implements TabCompleter {
 					}
 				}
 			}
-			list = cleanUp(list, args[1]);
+            list.removeIf(item -> !item.startsWith(args[1]));
 		} else if (args.length == 3) {
 			if (args[0].equalsIgnoreCase("addplayer")) {
 				for (Group g : gh.getGroups()) {
@@ -164,24 +165,8 @@ public class GroupTab implements TabCompleter {
 			} else if(args[0].equalsIgnoreCase("removenegation")) {
 				list = gh.getNegatedPermissions(gh.getGroup(args[1]));
 			}
-			list = cleanUp(list, args[2]);
+            list.removeIf(item -> item.startsWith(args[2]));
 		}
 		return list;
 	}
-	
-	/**
-	 * A method used to clean up the list of tabcompletions
-	 * @param list The list of tabcompletions
-	 * @param arg The given gebinning of the argument
-	 * @return A cleaned up list of tabcompletions
-	 */
-	private LinkedList<String> cleanUp(LinkedList<String> list, String arg) {
-		for (int i = 0; i < list.size(); i++) {
-			if (!list.get(i).startsWith(arg)) {
-				list.remove(i);
-			}
-		}
-		return list;
-	}
-	
 }

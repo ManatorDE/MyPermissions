@@ -3,6 +3,7 @@ package de.manator.mypermissions.config;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.Objects;
 
 import de.manator.mypermissions.io.FileHandler;
 
@@ -16,7 +17,7 @@ public class ConfigFile {
 	/**
 	 * The config file
 	 */
-	private File config;
+	private final File config;
 	
 	/**
 	 * The constructor of ConfigFile
@@ -127,15 +128,11 @@ public class ConfigFile {
 	 */
 	private boolean getField(String field) {
 		LinkedList<String> lines = getLines();
-		for(int i = 0; i < lines.size(); i++) {
-			if(lines.get(i).startsWith(field)) {
-				if(lines.get(i).endsWith("true")) {
-					return true;
-				} else {
-					return false;
-				}
-			}
-		}
+        for (String line : lines) {
+            if (line.startsWith(field)) {
+                return line.endsWith("true");
+            }
+        }
 		return false;
 	}
 	
@@ -146,11 +143,11 @@ public class ConfigFile {
 	 */
 	private String getStringField(String field) {
 		LinkedList<String> lines = getLines();
-		for(int i = 0; i < lines.size(); i++) {
-			if(lines.get(i).startsWith(field)) {
-				return lines.get(i).replace(field + ": ", "");
-			}
-		}
+        for (String line : lines) {
+            if (line.startsWith(field)) {
+                return line.replace(field + ": ", "");
+            }
+        }
 		return null;
 	}
 	
@@ -179,7 +176,7 @@ public class ConfigFile {
 	}
 
     public int getWebserverPort() {
-        return Integer.parseInt(getStringField("Webserver-Port"));
+        return Integer.parseInt(Objects.requireNonNull(getStringField("Webserver-Port")));
     }
     
     public boolean isWebServerEnabled() {

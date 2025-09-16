@@ -9,6 +9,7 @@ import org.bukkit.command.TabCompleter;
 
 import de.manator.mypermissions.Main;
 import de.manator.mypermissions.players.PlayerHandler;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The TabCompleter of the excludefromdefault command
@@ -19,7 +20,7 @@ public class ExcludeTab implements TabCompleter {
 	/**
 	 * A reference to the PlayerHandler of MyPermissions
 	 */
-	private PlayerHandler ph;
+	private final PlayerHandler ph;
 	
 	/**
 	 * The constructor of ExludeTab
@@ -33,17 +34,13 @@ public class ExcludeTab implements TabCompleter {
 	 * A method used to get a list of possible tab completions for the ExludeFromDefaultCMD
 	 */
 	@Override
-	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+	public List<String> onTabComplete(@NotNull CommandSender sender, Command cmd, @NotNull String label, String[] args) {
 		LinkedList<String> list = new LinkedList<>();
 		
 		if(cmd.getName().equalsIgnoreCase("excludefromdefault")) {
 			if(args.length == 1) {
 				list = ph.getPlayers();
-				for(int i=0; i < list.size(); i++) {
-					if(!list.get(i).startsWith(args[0])) {
-						list.remove(i);
-					}
-				}
+                list.removeIf(item -> !item.startsWith(args[0]));
 			} else if(args.length == 2) {
 				list.add("true");
 				list.add("false");

@@ -11,6 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -28,17 +29,11 @@ public class FileHandler {
 	 * @param f    The file to be written into
 	 */
 	public static void writeLine(String line, File f) {
-		PrintWriter pw = null;
-		try {
-			pw = new PrintWriter(f);
-			pw.println(line);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-			if (pw != null) {
-				pw.close();
-			}
-		}
+        try (PrintWriter pw = new PrintWriter(f)) {
+            pw.println(line);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 	}
 
 	/**
@@ -48,19 +43,13 @@ public class FileHandler {
 	 * @param f     The file to be written into
 	 */
 	public static void writeLines(List<String> lines, File f) {
-		PrintWriter pw = null;
-		try {
-			pw = new PrintWriter(f);
-			for (String s : lines) {
-				pw.println(s);
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-			if (pw != null) {
-				pw.close();
-			}
-		}
+        try (PrintWriter pw = new PrintWriter(f)) {
+            for (String s : lines) {
+                pw.println(s);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 	}
 
 	/**
@@ -152,10 +141,6 @@ public class FileHandler {
 			     }
 			 zipEntry = zis.getNextEntry();
 			}
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -187,12 +172,11 @@ public class FileHandler {
 	 */
 	public static void removeRecursive(File f) {
 		if(f.exists() && f.isDirectory()) {
-			if(f.listFiles().length > 0) {
-				for(File f2 : f.listFiles()) {
-					removeRecursive(f2);
-				}
-			}
-			f.delete();
+            Objects.requireNonNull(f.listFiles());
+            for (File f2 : Objects.requireNonNull(f.listFiles())) {
+                removeRecursive(f2);
+            }
+            f.delete();
 		} else if(f.exists()) {
 			f.delete();
 		}

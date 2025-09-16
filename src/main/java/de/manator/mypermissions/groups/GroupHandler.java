@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 import de.manator.mypermissions.io.FileHandler;
 
@@ -98,8 +99,8 @@ public class GroupHandler {
 	}
 	
 	private void deleteFiles(File f) {
-		if(f.isDirectory() && f.listFiles().length != 0) {
-			for(File file : f.listFiles()) {
+		if(f.isDirectory() && Objects.requireNonNull(f.listFiles()).length != 0) {
+			for(File file : Objects.requireNonNull(f.listFiles())) {
 				deleteFiles(file);
 			}
 			f.delete();
@@ -116,43 +117,42 @@ public class GroupHandler {
 	public boolean loadGroups() {
 		File[] groupFiles = groupFolder.listFiles();
 		groups = new LinkedList<>();
-		for (File f : groupFiles) {
-			if (!f.getName().equalsIgnoreCase("default.yml")) {
-				String[] data = new String[5];
-				try {
-					BufferedReader br = new BufferedReader(new FileReader(new File(f.getAbsolutePath() + "/data.yml")));
-					for (int i = 0; i < 5; i++) {
-						data[i] = br.readLine();
-						if (data[i] != null && data[i].split("\\s+").length > 1) {
-							data[i] = data[i].split("\\s+")[1];
-						} else {
-							data[i] = null;
-						}
-					}
-					br.close();
-					if (data[0] != null && data[1] != null && !data[0].equals("") && !data[1].equals("")) {
-						Group g = new Group(data[0], Integer.parseInt(data[1]));
-						if (data[2] != null && !data[2].equalsIgnoreCase("")) {
-							g.setPrefix(data[2]);
-						}
-						if (data[3] != null && !data[3].equalsIgnoreCase("")) {
-							g.setSuffix(data[3]);
-						}
-						g.setOp(Boolean.parseBoolean(data[4]));
-						groups.add(g);
-					} else {
-						return false;
-					}
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-					return false;
-				} catch (IOException e) {
-					e.printStackTrace();
-					return false;
-				}
-			}
-		}
-		return true;
+        if (groupFiles != null) {
+            for (File f : groupFiles) {
+                if (!f.getName().equalsIgnoreCase("default.yml")) {
+                    String[] data = new String[5];
+                    try {
+                        BufferedReader br = new BufferedReader(new FileReader(new File(f.getAbsolutePath() + "/data.yml")));
+                        for (int i = 0; i < 5; i++) {
+                            data[i] = br.readLine();
+                            if (data[i] != null && data[i].split("\\s+").length > 1) {
+                                data[i] = data[i].split("\\s+")[1];
+                            } else {
+                                data[i] = null;
+                            }
+                        }
+                        br.close();
+                        if (data[0] != null && data[1] != null && !data[0].isEmpty() && !data[1].isEmpty()) {
+                            Group g = new Group(data[0], Integer.parseInt(data[1]));
+                            if (data[2] != null && !data[2].equalsIgnoreCase("")) {
+                                g.setPrefix(data[2]);
+                            }
+                            if (data[3] != null && !data[3].equalsIgnoreCase("")) {
+                                g.setSuffix(data[3]);
+                            }
+                            g.setOp(Boolean.parseBoolean(data[4]));
+                            groups.add(g);
+                        } else {
+                            return false;
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
 	}
 
 	/**
@@ -637,7 +637,7 @@ public class GroupHandler {
 			}
 		} else {
 			LinkedList<String> def = FileHandler.getLines(defaultGroup);
-			if (def != null && !def.isEmpty()) {
+			if (!def.isEmpty()) {
 				return getGroup(def.get(0));
 			}
 			return null;

@@ -15,6 +15,7 @@ public class Templates {
     }
 
     public static String getHead(String title) {
+
         return "<head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><link rel=\"stylesheet\" href=\"/style/style.css\"><link rel=\"shortcut icon\" href=\"https://test.manator.de/resources/icon.svg\" type=\"image/x-icon\"><title>" + title + "</title></head>";
     }
 

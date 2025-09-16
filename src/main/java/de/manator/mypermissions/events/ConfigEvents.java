@@ -2,6 +2,7 @@ package de.manator.mypermissions.events;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -147,13 +148,11 @@ public class ConfigEvents implements Listener {
 							}
 							for (Permission perms : file.getPermissions()) {
 								String perm = perms.getName();
-								if (perm != null) {
-									if (!permissions.contains(perm)
-											&& !gh.getPermissions(cfg.getGroup()).contains(perm)) {
-										permissions.add(perm);
-									}
-								}
-							}
+                                if (!permissions.contains(perm)
+                                        && !gh.getPermissions(cfg.getGroup()).contains(perm)) {
+                                    permissions.add(perm);
+                                }
+                            }
 						}
 						cfg.setMenu(permissions, GroupConfig.ADD_PERMISSION);
 						p.openInventory(cfg.getMenu());
@@ -179,13 +178,11 @@ public class ConfigEvents implements Listener {
 							}
 							for (Permission perms : file.getPermissions()) {
 								String perm = perms.getName();
-								if (perm != null) {
-									if (!permissions.contains(perm)
-											&& !gh.getNegatedPermissions(cfg.getGroup()).contains(perm)) {
-										permissions.add(perm);
-									}
-								}
-							}
+                                if (!permissions.contains(perm)
+                                        && !gh.getNegatedPermissions(cfg.getGroup()).contains(perm)) {
+                                    permissions.add(perm);
+                                }
+                            }
 						}
 						cfg.setMenu(permissions, GroupConfig.NEGATE);
 						p.openInventory(cfg.getMenu());
@@ -208,184 +205,182 @@ public class ConfigEvents implements Listener {
 							gh.setOp(cfg.getGroup(), false);
 							item.setType(Material.RED_WOOL);
 							ItemMeta meta = item.getItemMeta();
-							meta.setDisplayName("Toggle OP");
-							meta.setLore(Arrays.asList("OP - False"));
-							item.setItemMeta(meta);
-							cfg.setOP(item);
+                            if (meta != null) {
+                                meta.setDisplayName("Toggle OP");meta.setLore(List.of("OP - False"));
+                                item.setItemMeta(meta);
+                                cfg.setOP(item);
+                            }
+
 						} else {
 							gh.setOp(cfg.getGroup(), true);
 							item.setType(Material.GREEN_WOOL);
 							ItemMeta meta = item.getItemMeta();
+                            if (meta != null) {
 							meta.setDisplayName("Toggle OP");
 							meta.setLore(Arrays.asList("OP - True"));
 							item.setItemMeta(meta);
 							cfg.setOP(item);
+                            }
 						}
 					}
 				}
 				e.setCancelled(true);
-			} else if (e.getInventory() != null && e.getInventory().equals(cfg.getMenu())) {
-				if(item != null) {
-					if (cfg.getMenuType() == GroupConfig.ADD_PLAYER) {
-						if (item.equals(cfg.getConfig(GroupConfig.NEXT))) {
-							LinkedList<String> players = ph.getPlayers();
-							players.removeAll(getPlayers(cfg.getGroup()));
-							cfg.nextPage(players);
-						} else if (item.equals(cfg.getConfig(GroupConfig.LAST))) {
-							LinkedList<String> players = ph.getPlayers();
-							players.removeAll(getPlayers(cfg.getGroup()));
-							cfg.previousPage(players);
-						} else if (ph.addGroup(cfg.getGroup(), e.getCurrentItem().getItemMeta().getDisplayName())) {
-							CMD.sendMessage(p, "§aAdded §6" + e.getCurrentItem().getItemMeta().getDisplayName()
-									+ "§a to the group §6" + cfg.getTitle() + "§a!");
-						}
-					} else if (cfg.getMenuType() == GroupConfig.REMOVE_PLAYER) {
-						if (item.equals(cfg.getConfig(GroupConfig.NEXT))) {
-							cfg.nextPage(getPlayers(cfg.getGroup()));
-						} else if (item.equals(cfg.getConfig(GroupConfig.LAST))) {
-							cfg.previousPage(getPlayers(cfg.getGroup()));
-						} else if (ph.removeGroup(cfg.getGroup(), e.getCurrentItem().getItemMeta().getDisplayName())) {
-							CMD.sendMessage(p, "§aRemoved §6" + e.getCurrentItem().getItemMeta().getDisplayName()
-									+ "§a from the group §6" + cfg.getTitle() + "§a!");
-						}
-					} else if (cfg.getMenuType() == GroupConfig.ADD_PERMISSION) {
-						if (item.equals(cfg.getConfig(GroupConfig.NEXT))) {
-							LinkedList<String> permissions = new LinkedList<>();
-							for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
-								PluginDescriptionFile file = pl.getDescription();
-								for (String command : file.getCommands().keySet()) {
-									String perm = (String) file.getCommands().get(command).get("permission");
-									if (perm != null) {
-										if (!permissions.contains(perm)
-												&& !gh.getPermissions(cfg.getGroup()).contains(perm)) {
-											permissions.add(perm);
-										}
-									}
-								}
-								for (Permission perms : file.getPermissions()) {
-									String perm = perms.getName();
-									if (perm != null) {
-										if (!permissions.contains(perm)
-												&& !gh.getPermissions(cfg.getGroup()).contains(perm)) {
-											permissions.add(perm);
-										}
-									}
-								}
-							}
-							cfg.nextPage(permissions);
-						} else if (item.equals(cfg.getConfig(GroupConfig.LAST))) {
-							LinkedList<String> permissions = new LinkedList<>();
-							for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
-								PluginDescriptionFile file = pl.getDescription();
-								for (String command : file.getCommands().keySet()) {
-									String perm = (String) file.getCommands().get(command).get("permission");
-									if (perm != null) {
-										if (!permissions.contains(perm)
-												&& !gh.getPermissions(cfg.getGroup()).contains(perm)) {
-											permissions.add(perm);
-										}
-									}
-								}
-								for (Permission perms : file.getPermissions()) {
-									String perm = perms.getName();
-									if (perm != null) {
-										if (!permissions.contains(perm)
-												&& !gh.getPermissions(cfg.getGroup()).contains(perm)) {
-											permissions.add(perm);
-										}
-									}
-								}
-							}
-							cfg.previousPage(permissions);
-						} else if (gh.addPermission(cfg.getGroup(), e.getCurrentItem().getItemMeta().getDisplayName())) {
-							CMD.sendMessage(p, "§aAdded the permission §6" + e.getCurrentItem().getItemMeta().getDisplayName()
-									+ "§a to the group §6" + cfg.getTitle() + "§a!");
-						}
-					} else if (cfg.getMenuType() == GroupConfig.REMOVE_PERMISSION) {
-						if (item.equals(cfg.getConfig(GroupConfig.NEXT))) {
-							cfg.nextPage(gh.getPermissions(cfg.getGroup()));
-						} else if (item.equals(cfg.getConfig(GroupConfig.LAST))) {
-							cfg.previousPage(gh.getPermissions(cfg.getGroup()));
-						} else if (gh.removePermission(cfg.getGroup(), e.getCurrentItem().getItemMeta().getDisplayName())) {
-							CMD.sendMessage(p, "§aRemoved the permission §6" + e.getCurrentItem().getItemMeta().getDisplayName()
-									+ "§a from the group §6" + cfg.getTitle() + "§a!");
-						}
-					} else if (cfg.getMenuType() == GroupConfig.NEGATE) {
-						if (item.equals(cfg.getConfig(GroupConfig.NEXT))) {
-							LinkedList<String> permissions = new LinkedList<>();
-							for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
-								PluginDescriptionFile file = pl.getDescription();
-								for (String command : file.getCommands().keySet()) {
-									String perm = (String) file.getCommands().get(command).get("permission");
-									if (perm != null) {
-										if (!permissions.contains(perm)
-												&& !gh.getNegatedPermissions(cfg.getGroup()).contains(perm)) {
-											permissions.add(perm);
-										}
-									}
-								}
-								for (Permission perms : file.getPermissions()) {
-									String perm = perms.getName();
-									if (perm != null) {
-										if (!permissions.contains(perm)
-												&& !gh.getNegatedPermissions(cfg.getGroup()).contains(perm)) {
-											permissions.add(perm);
-										}
-									}
-								}
-							}
-							cfg.nextPage(permissions);
-						} else if (item.equals(cfg.getConfig(GroupConfig.LAST))) {
-							LinkedList<String> permissions = new LinkedList<>();
-							for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
-								PluginDescriptionFile file = pl.getDescription();
-								for (String command : file.getCommands().keySet()) {
-									String perm = (String) file.getCommands().get(command).get("permission");
-									if (perm != null) {
-										if (!permissions.contains(perm)
-												&& !gh.getNegatedPermissions(cfg.getGroup()).contains(perm)) {
-											permissions.add(perm);
-										}
-									}
-								}
-								for (Permission perms : file.getPermissions()) {
-									String perm = perms.getName();
-									if (perm != null) {
-										if (!permissions.contains(perm)
-												&& !gh.getNegatedPermissions(cfg.getGroup()).contains(perm)) {
-											permissions.add(perm);
-										}
-									}
-								}
-							}
-							cfg.previousPage(permissions);
-						} else if (gh.negatePermission(cfg.getGroup(), e.getCurrentItem().getItemMeta().getDisplayName())) {
-							CMD.sendMessage(p, "§aNegated the permission §6" + e.getCurrentItem().getItemMeta().getDisplayName()
-									+ "§a for the group §6" + cfg.getTitle() + "§a!");
-						}
-					} else if (cfg.getMenuType() == GroupConfig.REMOVE_NEGATION) {
-						if (item.equals(cfg.getConfig(GroupConfig.NEXT))) {
-							cfg.nextPage(gh.getNegatedPermissions(cfg.getGroup()));
-						} else if (item.equals(cfg.getConfig(GroupConfig.LAST))) {
-							cfg.previousPage(gh.getNegatedPermissions(cfg.getGroup()));
-						} else if (gh.removeNegatedPermission(cfg.getGroup(), e.getCurrentItem().getItemMeta().getDisplayName())) {
-							CMD.sendMessage(p, "§aRemoved the negated permission §6"
-									+ e.getCurrentItem().getItemMeta().getDisplayName() + "§a from the group §6"
-									+ cfg.getTitle() + "§a!");
-						}
-					} else if (cfg.getMenuType() == GroupConfig.RANK) {
-						if (gh.setRank(cfg.getGroup(),
-								Integer.parseInt(e.getCurrentItem().getItemMeta().getDisplayName()))) {
-							CMD.sendMessage(p, "§aSet the rank of the group §6" + cfg.getTitle() + " §ato §6"
-									+ e.getCurrentItem().getItemMeta().getDisplayName() + "§a!");
-						}
-					}
-				}
+			} else {
+                if (e.getInventory().equals(cfg.getMenu())) {
+                    if(item != null) {
+                        if (cfg.getMenuType() == GroupConfig.ADD_PLAYER) {
+                            if (item.equals(cfg.getConfig(GroupConfig.NEXT))) {
+                                LinkedList<String> players = ph.getPlayers();
+                                players.removeAll(getPlayers(cfg.getGroup()));
+                                cfg.nextPage(players);
+                            } else if (item.equals(cfg.getConfig(GroupConfig.LAST))) {
+                                LinkedList<String> players = ph.getPlayers();
+                                players.removeAll(getPlayers(cfg.getGroup()));
+                                cfg.previousPage(players);
+                            } else if (ph.addGroup(cfg.getGroup(), e.getCurrentItem().getItemMeta().getDisplayName())) {
+                                CMD.sendMessage(p, ChatColor.GREEN + "Added " + ChatColor.GOLD + e.getCurrentItem().getItemMeta().getDisplayName()
+                                        + ChatColor.GREEN + " to the group " + ChatColor.GOLD + cfg.getTitle() + ChatColor.GREEN + "!");
+                            }
+                        } else if (cfg.getMenuType() == GroupConfig.REMOVE_PLAYER) {
+                            if (item.equals(cfg.getConfig(GroupConfig.NEXT))) {
+                                cfg.nextPage(getPlayers(cfg.getGroup()));
+                            } else if (item.equals(cfg.getConfig(GroupConfig.LAST))) {
+                                cfg.previousPage(getPlayers(cfg.getGroup()));
+                            } else if (ph.removeGroup(cfg.getGroup(), e.getCurrentItem().getItemMeta().getDisplayName())) {
+                                CMD.sendMessage(p, ChatColor.GREEN + "Removed " + ChatColor.GOLD + e.getCurrentItem().getItemMeta().getDisplayName()
+                                        + ChatColor.GREEN + " from the group " + ChatColor.GOLD + cfg.getTitle() + ChatColor.GREEN + "!");
+                            }
+                        } else if (cfg.getMenuType() == GroupConfig.ADD_PERMISSION) {
+                            if (item.equals(cfg.getConfig(GroupConfig.NEXT))) {
+                                LinkedList<String> permissions = new LinkedList<>();
+                                for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
+                                    PluginDescriptionFile file = pl.getDescription();
+                                    for (String command : file.getCommands().keySet()) {
+                                        String perm = (String) file.getCommands().get(command).get("permission");
+                                        if (perm != null) {
+                                            if (!permissions.contains(perm)
+                                                    && !gh.getPermissions(cfg.getGroup()).contains(perm)) {
+                                                permissions.add(perm);
+                                            }
+                                        }
+                                    }
+                                    for (Permission perms : file.getPermissions()) {
+                                        String perm = perms.getName();
+                                        if (!permissions.contains(perm)
+                                                && !gh.getPermissions(cfg.getGroup()).contains(perm)) {
+                                            permissions.add(perm);
+                                        }
+                                    }
+                                }
+                                cfg.nextPage(permissions);
+                            } else if (item.equals(cfg.getConfig(GroupConfig.LAST))) {
+                                LinkedList<String> permissions = new LinkedList<>();
+                                for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
+                                    PluginDescriptionFile file = pl.getDescription();
+                                    for (String command : file.getCommands().keySet()) {
+                                        String perm = (String) file.getCommands().get(command).get("permission");
+                                        if (perm != null) {
+                                            if (!permissions.contains(perm)
+                                                    && !gh.getPermissions(cfg.getGroup()).contains(perm)) {
+                                                permissions.add(perm);
+                                            }
+                                        }
+                                    }
+                                    for (Permission perms : file.getPermissions()) {
+                                        String perm = perms.getName();
+                                        if (!permissions.contains(perm)
+                                                && !gh.getPermissions(cfg.getGroup()).contains(perm)) {
+                                            permissions.add(perm);
+                                        }
+                                    }
+                                }
+                                cfg.previousPage(permissions);
+                            } else if (gh.addPermission(cfg.getGroup(), e.getCurrentItem().getItemMeta().getDisplayName())) {
+                                CMD.sendMessage(p, ChatColor.GREEN + "Added the permission " + ChatColor.GOLD + e.getCurrentItem().getItemMeta().getDisplayName()
+                                        + ChatColor.GREEN + " to the group " + ChatColor.GOLD + cfg.getTitle() + ChatColor.GREEN + "!");
+                            }
+                        } else if (cfg.getMenuType() == GroupConfig.REMOVE_PERMISSION) {
+                            if (item.equals(cfg.getConfig(GroupConfig.NEXT))) {
+                                cfg.nextPage(gh.getPermissions(cfg.getGroup()));
+                            } else if (item.equals(cfg.getConfig(GroupConfig.LAST))) {
+                                cfg.previousPage(gh.getPermissions(cfg.getGroup()));
+                            } else if (e.getCurrentItem() != null && e.getCurrentItem().getItemMeta() != null && gh.removePermission(cfg.getGroup(), e.getCurrentItem().getItemMeta().getDisplayName())) {
+                                CMD.sendMessage(p, ChatColor.GREEN + "Removed the permission " + ChatColor.GOLD + e.getCurrentItem().getItemMeta().getDisplayName()
+                                        + ChatColor.GREEN + " from the group " + ChatColor.GOLD + cfg.getTitle() + ChatColor.GREEN + "!");
+                            }
+                        } else if (cfg.getMenuType() == GroupConfig.NEGATE) {
+                            if (item.equals(cfg.getConfig(GroupConfig.NEXT))) {
+                                LinkedList<String> permissions = new LinkedList<>();
+                                for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
+                                    PluginDescriptionFile file = pl.getDescription();
+                                    for (String command : file.getCommands().keySet()) {
+                                        String perm = (String) file.getCommands().get(command).get("permission");
+                                        if (perm != null) {
+                                            if (!permissions.contains(perm)
+                                                    && !gh.getNegatedPermissions(cfg.getGroup()).contains(perm)) {
+                                                permissions.add(perm);
+                                            }
+                                        }
+                                    }
+                                    for (Permission perms : file.getPermissions()) {
+                                        String perm = perms.getName();
+                                        if (!permissions.contains(perm)
+                                                && !gh.getNegatedPermissions(cfg.getGroup()).contains(perm)) {
+                                            permissions.add(perm);
+                                        }
+                                    }
+                                }
+                                cfg.nextPage(permissions);
+                            } else if (item.equals(cfg.getConfig(GroupConfig.LAST))) {
+                                LinkedList<String> permissions = new LinkedList<>();
+                                for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
+                                    PluginDescriptionFile file = pl.getDescription();
+                                    for (String command : file.getCommands().keySet()) {
+                                        String perm = (String) file.getCommands().get(command).get("permission");
+                                        if (perm != null) {
+                                            if (!permissions.contains(perm)
+                                                    && !gh.getNegatedPermissions(cfg.getGroup()).contains(perm)) {
+                                                permissions.add(perm);
+                                            }
+                                        }
+                                    }
+                                    for (Permission perms : file.getPermissions()) {
+                                        String perm = perms.getName();
+                                        if (!permissions.contains(perm)
+                                                && !gh.getNegatedPermissions(cfg.getGroup()).contains(perm)) {
+                                            permissions.add(perm);
+                                        }
+                                    }
+                                }
+                                cfg.previousPage(permissions);
+                            } else if (gh.negatePermission(cfg.getGroup(), e.getCurrentItem().getItemMeta().getDisplayName())) {
+                                CMD.sendMessage(p, ChatColor.GREEN + "Negated the permission " + ChatColor.GOLD + e.getCurrentItem().getItemMeta().getDisplayName()
+                                        + ChatColor.GREEN + " for the group " + ChatColor.GOLD + cfg.getTitle() + ChatColor.GREEN + "!");
+                            }
+                        } else if (cfg.getMenuType() == GroupConfig.REMOVE_NEGATION) {
+                            if (item.equals(cfg.getConfig(GroupConfig.NEXT))) {
+                                cfg.nextPage(gh.getNegatedPermissions(cfg.getGroup()));
+                            } else if (item.equals(cfg.getConfig(GroupConfig.LAST))) {
+                                cfg.previousPage(gh.getNegatedPermissions(cfg.getGroup()));
+                            } else if (gh.removeNegatedPermission(cfg.getGroup(), e.getCurrentItem().getItemMeta().getDisplayName())) {
+                                CMD.sendMessage(p, ChatColor.GREEN + "Removed the negated permission " + ChatColor.GOLD
+                                        + e.getCurrentItem().getItemMeta().getDisplayName() + ChatColor.GREEN + " from the group " + ChatColor.GOLD
+                                        + cfg.getTitle() + ChatColor.GREEN + "!");
+                            }
+                        } else if (cfg.getMenuType() == GroupConfig.RANK) {
+                            if (gh.setRank(cfg.getGroup(),
+                                    Integer.parseInt(e.getCurrentItem().getItemMeta().getDisplayName()))) {
+                                CMD.sendMessage(p, ChatColor.GREEN + "Set the rank of the group " + ChatColor.GOLD + cfg.getTitle() + ChatColor.GREEN + " to " + ChatColor.GOLD
+                                        + e.getCurrentItem().getItemMeta().getDisplayName() + ChatColor.GREEN + "!");
+                            }
+                        }
+                    }
+                    if(e.getCurrentItem() != null)
+                        e.getInventory().remove(e.getCurrentItem());
 
-				e.getInventory().remove(e.getCurrentItem());
-
-				e.setCancelled(true);
-			}
+                    e.setCancelled(true);
+                }
+            }
 		}
 		main.reloadPlayers();
 	}
@@ -400,10 +395,10 @@ public class ConfigEvents implements Listener {
 			String s = e.getLine(0) + e.getLine(1) + e.getLine(2) + e.getLine(3);
 			if (type == GroupConfig.PREFIX) {
 				gh.setPrefix(g, ChatColor.translateAlternateColorCodes('&', s));
-				CMD.sendMessage(e.getPlayer(), "§aThe prefix of the group §6" + g.getName() + "§a was set to " + ChatColor.translateAlternateColorCodes('&', s));
+				CMD.sendMessage(e.getPlayer(), ChatColor.GREEN + "The prefix of the group " + ChatColor.GOLD + g.getName() + ChatColor.GREEN + " was set to " + ChatColor.translateAlternateColorCodes('&', s));
 			} else if (type == GroupConfig.SUFFIX) {
 				gh.setSuffix(g, ChatColor.translateAlternateColorCodes('&', s));
-				CMD.sendMessage(e.getPlayer(), "§aThe suffix of the group §6" + g.getName() + "§a was set to " + ChatColor.translateAlternateColorCodes('&', s));
+				CMD.sendMessage(e.getPlayer(), ChatColor.GREEN + "The suffix of the group " + ChatColor.GOLD + g.getName() + ChatColor.GREEN + " was set to " + ChatColor.translateAlternateColorCodes('&', s));
 			}
 			e.getBlock().setType(Material.AIR);
 			loc = null;

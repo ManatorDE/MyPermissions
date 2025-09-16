@@ -1,11 +1,13 @@
 package de.manator.mypermissions.commands;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import de.manator.mypermissions.Main;
 import de.manator.mypermissions.players.PlayerHandler;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The CommandExecutor of the excludefromdefault command
@@ -36,18 +38,18 @@ public class ExcludeFromDefaultCMD implements CommandExecutor {
 	 * A method called, when a command was send
 	 */
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, Command cmd, @NotNull String label, String[] args) {
 		
 		if(cmd.getName().equalsIgnoreCase("excludefromdefault")) {
 			if(args.length == 2) {
 				if(ph.excludeFromDefault(args[0], Boolean.parseBoolean(args[1]))) {
 					if(Boolean.parseBoolean(args[1])) {
-						CMD.sendMessage(sender, "§aThe player §6" + args[0] + " §awas excluded from the default group!");
+                        CMD.sendMessage(sender, ChatColor.GREEN + "The player " + ChatColor.GOLD + args[0] + ChatColor.GREEN + " was excluded from the default group!");
 					} else {
-						CMD.sendMessage(sender, "§aThe player §6" + args[0] + " §acan join the default group now!");
+						CMD.sendMessage(sender, ChatColor.GREEN + "The player " + ChatColor.GOLD + args[0] + ChatColor.GREEN + " can join the default group now!");
 					}
 				} else {
-					CMD.sendMessage(sender, "§cPlayer couldn't be exluded from the default group!");
+					CMD.sendMessage(sender, ChatColor.RED + "Player couldn't be exluded from the default group!");
 				}
 			}
 		}

@@ -2,6 +2,8 @@ package de.manator.mypermissions.config;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -21,7 +23,7 @@ public class GroupConfig {
 	/**
 	 * A reference to the config inventory
 	 */
-	private Inventory inv;
+	private final Inventory inv;
 	
 	/**
 	 * A reference to the menu inventory
@@ -31,12 +33,12 @@ public class GroupConfig {
 	/**
 	 * A reference to the group that gets edited 
 	 */
-	private Group g;
+	private final Group g;
 	
 	/**
 	 * The title of the config inventory 
 	 */
-	private String title;
+	private final String title;
 
 	/**
 	 * int used to store the last edited menu type
@@ -215,36 +217,22 @@ public class GroupConfig {
 	 * @return The config ItemStack
 	 */
 	public ItemStack getConfig(int cfg) {
-		switch (cfg) {
-		case PREFIX:
-			return prefix;
-		case SUFFIX:
-			return suffix;
-		case ADD_PERMISSION:
-			return addPerm;
-		case REMOVE_PERMISSION:
-			return remPerm;
-		case NEGATE:
-			return negate;
-		case REMOVE_NEGATION:
-			return remNeg;
-		case ADD_PLAYER:
-			return addPlayer;
-		case REMOVE_PLAYER:
-			return remPlayer;
-		case RANK:
-			return rank;
-		case OP:
-			return op;
-		case DEFAULT:
-			return def;
-		case NEXT:
-			return next;
-		case LAST:
-			return last;
-		default:
-			return null;
-		}
+        return switch (cfg) {
+            case PREFIX -> prefix;
+            case SUFFIX -> suffix;
+            case ADD_PERMISSION -> addPerm;
+            case REMOVE_PERMISSION -> remPerm;
+            case NEGATE -> negate;
+            case REMOVE_NEGATION -> remNeg;
+            case ADD_PLAYER -> addPlayer;
+            case REMOVE_PLAYER -> remPlayer;
+            case RANK -> rank;
+            case OP -> op;
+            case DEFAULT -> def;
+            case NEXT -> next;
+            case LAST -> last;
+            default -> null;
+        };
 	}
 
 	/**
@@ -253,111 +241,138 @@ public class GroupConfig {
 	private void init() {
 		prefix = new ItemStack(Material.NAME_TAG);
 		ItemMeta pmeta = prefix.getItemMeta();
-		pmeta.setDisplayName("Set Prefix");
-		pmeta.setLore(Arrays.asList("Set Prefix"));
-		prefix.setItemMeta(pmeta);
+        if (pmeta != null) {
+            pmeta.setDisplayName("Set Prefix");
+            pmeta.setLore(List.of("Set Prefix"));
+            prefix.setItemMeta(pmeta);
+        }
 
 		inv.setItem(0, prefix);
 
 		suffix = new ItemStack(Material.NAME_TAG);
 		ItemMeta smeta = suffix.getItemMeta();
-		smeta.setDisplayName("Set Suffix");
-		smeta.setLore(Arrays.asList("Set Suffix"));
-		suffix.setItemMeta(smeta);
+        if(smeta != null) {
+            smeta.setDisplayName("Set Suffix");
+            smeta.setLore(List.of("Set Suffix"));
+            suffix.setItemMeta(smeta);
+        }
 
 		inv.setItem(1, suffix);
 
 		addPerm = new ItemStack(Material.GREEN_BANNER);
 		ItemMeta aMeta = addPerm.getItemMeta();
-		aMeta.setDisplayName("Add Permission");
-		aMeta.setLore(Arrays.asList("Add Permission"));
-		addPerm.setItemMeta(aMeta);
-
+        if(aMeta != null) {
+            aMeta.setDisplayName("Add Permission");
+            aMeta.setLore(List.of("Add Permission"));
+            addPerm.setItemMeta(aMeta);
+        }
 		inv.setItem(2, addPerm);
 
 		remPerm = new ItemStack(Material.RED_BANNER);
 		ItemMeta rMeta = remPerm.getItemMeta();
-		rMeta.setDisplayName("Remove Permission");
-		rMeta.setLore(Arrays.asList("Remove Permission"));
-		remPerm.setItemMeta(rMeta);
+        if (rMeta != null) {
+            rMeta.setDisplayName("Remove Permission");
+            rMeta.setLore(List.of("Remove Permission"));
+            remPerm.setItemMeta(rMeta);
+        }
 
 		inv.setItem(3, remPerm);
 
 		negate = new ItemStack(Material.BARRIER);
 		ItemMeta negMeta = negate.getItemMeta();
-		negMeta.setDisplayName("Negate Permission");
-		negMeta.setLore(Arrays.asList("Negate Permission"));
-		negate.setItemMeta(negMeta);
+        if (negMeta != null) {
+            negMeta.setDisplayName("Negate Permission");
+            negMeta.setLore(List.of("Negate Permission"));
+            negate.setItemMeta(negMeta);
+        }
 
 		inv.setItem(4, negate);
 
 		remNeg = new ItemStack(Material.BARRIER);
 		ItemMeta rnMeta = remNeg.getItemMeta();
-		rnMeta.setDisplayName("Remove Negation");
-		rnMeta.setLore(Arrays.asList("Remove Negation"));
-		remNeg.setItemMeta(rnMeta);
+        if( rnMeta != null) {
+            rnMeta.setDisplayName("Remove Negation");
+            rnMeta.setLore(List.of("Remove Negation"));
+            remNeg.setItemMeta(rnMeta);
+        }
 
 		inv.setItem(5, remNeg);
 
 		addPlayer = new ItemStack(Material.PLAYER_HEAD);
 		ItemMeta apMeta = addPlayer.getItemMeta();
-		apMeta.setDisplayName("Add Player");
-		apMeta.setLore(Arrays.asList("Add Player"));
-		addPlayer.setItemMeta(apMeta);
+        if (apMeta != null) {
+            apMeta.setDisplayName("Add Player");
+            apMeta.setLore(List.of("Add Player"));
+            addPlayer.setItemMeta(apMeta);
+        }
 
 		inv.setItem(6, addPlayer);
 
 		remPlayer = new ItemStack(Material.PLAYER_HEAD);
 		ItemMeta rpMeta = remPlayer.getItemMeta();
-		rpMeta.setDisplayName("Remove Player");
-		rpMeta.setLore(Arrays.asList("Remove Player"));
-		remPlayer.setItemMeta(rpMeta);
+        if (rpMeta != null) {
+            rpMeta.setDisplayName("Remove Player");
+            rpMeta.setLore(List.of("Remove Player"));
+            remPlayer.setItemMeta(rpMeta);
+        }
 
 		inv.setItem(7, remPlayer);
 
 		rank = new ItemStack(Material.BELL);
 		ItemMeta rankMeta = rank.getItemMeta();
-		rankMeta.setDisplayName("Set Rank");
-		rankMeta.setLore(Arrays.asList("Set Rank"));
-		rank.setItemMeta(rankMeta);
+        if(rankMeta != null) {
+            rankMeta.setDisplayName("Set Rank");
+            rankMeta.setLore(List.of("Set Rank"));
+            rank.setItemMeta(rankMeta);
+        }
 
 		inv.setItem(8, rank);
 
 		if (g.isOp()) {
 			op = new ItemStack(Material.GREEN_WOOL);
 			ItemMeta opMeta = op.getItemMeta();
-			opMeta.setDisplayName("Toggle OP");
-			opMeta.setLore(Arrays.asList("OP - TRUE"));
-			op.setItemMeta(opMeta);
+            if (opMeta != null) {
+                opMeta.setDisplayName("Toggle OP");
+                opMeta.setLore(List.of("OP - TRUE"));
+                op.setItemMeta(opMeta);
+            }
 		} else {
 			op = new ItemStack(Material.RED_WOOL);
 			ItemMeta opMeta = op.getItemMeta();
-			opMeta.setDisplayName("Toggle OP");
-			opMeta.setLore(Arrays.asList("OP - FALSE"));
-			op.setItemMeta(opMeta);
+            if (opMeta != null) {
+                opMeta.setDisplayName("Toggle OP");
+                opMeta.setLore(List.of("OP - FALSE"));
+                op.setItemMeta(opMeta);
+            }
 		}
 
 		inv.setItem(9, op);
 
 		def = new ItemStack(Material.WHITE_WOOL);
 		ItemMeta defMeta = def.getItemMeta();
-		defMeta.setDisplayName("Set Default Group");
-		defMeta.setLore(Arrays.asList("Set Default Group"));
-		def.setItemMeta(defMeta);
+        if (defMeta != null) {
+            defMeta.setDisplayName("Set Default Group");
+            defMeta.setLore(List.of("Set Default Group"));
+            def.setItemMeta(defMeta);
+        }
 
 		inv.setItem(10, def);
 
 		next = new ItemStack(Material.WARPED_STEM);
 		ItemMeta nextMeta = next.getItemMeta();
-		nextMeta.setDisplayName("Next Page");
-		nextMeta.setLore(Arrays.asList("Next Page"));
-		next.setItemMeta(nextMeta);
+        if (nextMeta != null) {
+            nextMeta.setDisplayName("Next Page");
+            nextMeta.setLore(List.of("Next Page"));
+            next.setItemMeta(nextMeta);
+        }
 
 		last = new ItemStack(Material.CRIMSON_STEM);
 		ItemMeta lastMeta = last.getItemMeta();
-		lastMeta.setDisplayName("Last Page");
-		lastMeta.setLore(Arrays.asList("Last Page"));
-		last.setItemMeta(lastMeta);
+        if( lastMeta != null) {
+            lastMeta.setDisplayName("Last Page");
+            lastMeta.setLore(List.of("Last Page"));
+            last.setItemMeta(lastMeta);
+        }
 	}
 
 	/**
@@ -401,21 +416,22 @@ public class GroupConfig {
 				menu.addItem(next);
 				break;
 			} else {
-				if (mat == Material.PLAYER_HEAD) {
-					ItemStack item = new ItemStack(mat);
-					SkullMeta meta = (SkullMeta) item.getItemMeta();
+                if (mat == null) continue;
+                ItemStack item = new ItemStack(mat);
+                if (mat == Material.PLAYER_HEAD) {
+                    SkullMeta meta = (SkullMeta) item.getItemMeta();
+                    if (meta == null) continue;
 					meta.setDisplayName(settings.get(i));
 					meta.setOwnerProfile(Bukkit.getServer().createPlayerProfile(settings.get(i)));
 					item.setItemMeta(meta);
-					menu.addItem(item);
-				} else {
-					ItemStack item = new ItemStack(mat);
-					ItemMeta meta = item.getItemMeta();
+                } else {
+                    ItemMeta meta = item.getItemMeta();
+                    if (meta == null) continue;
 					meta.setDisplayName(settings.get(i));
 					item.setItemMeta(meta);
-					menu.addItem(item);
-				}
-			}
+                }
+                menu.addItem(item);
+            }
 		}
 	}
 
@@ -451,17 +467,17 @@ public class GroupConfig {
 		if (linkedList.size() > 54) {
 			Material mat = null;
 			ItemStack lastItem = null;
-			if (menu.getItem(53).equals(next)) {
+			if (Objects.equals(menu.getItem(53), next)) {
 				lastItem = menu.getItem(51);
 			} else {
 				lastItem = menu.getItem(52);
 			}
 			int it = 0;
 			while (it < linkedList.size() && linkedList.get(it) != null
-					&& !lastItem.getItemMeta().getDisplayName().equals(linkedList.get(it))) {
+					&& !Objects.requireNonNull(Objects.requireNonNull(lastItem).getItemMeta()).getDisplayName().equals(linkedList.get(it))) {
 				it++;
 			}
-			if (lastItem.getItemMeta().getDisplayName().equals(linkedList.get(it))) {
+			if (Objects.requireNonNull(Objects.requireNonNull(lastItem).getItemMeta()).getDisplayName().equals(linkedList.get(it))) {
 				it++;
 			}
 			if (linkedList.get(it) != null) {
@@ -482,22 +498,22 @@ public class GroupConfig {
 				}
 				menu.clear();
 				for (int i = it; i < linkedList.size(); i++) {
-
-					if (mat == Material.PLAYER_HEAD) {
-						ItemStack item = new ItemStack(mat);
-						SkullMeta meta = (SkullMeta) item.getItemMeta();
+                    if (mat == null) continue;
+                    ItemStack item = new ItemStack(mat);
+                    if (mat == Material.PLAYER_HEAD) {
+                        SkullMeta meta = (SkullMeta) item.getItemMeta();
+                        if (meta == null) continue;
 						meta.setDisplayName(linkedList.get(i));
 						meta.setOwnerProfile(Bukkit.getServer().createPlayerProfile(linkedList.get(i)));
 						item.setItemMeta(meta);
-						menu.addItem(item);
-					} else {
-						ItemStack item = new ItemStack(mat);
-						ItemMeta meta = item.getItemMeta();
+                    } else {
+                        ItemMeta meta = item.getItemMeta();
+                        if (meta == null) continue;
 						meta.setDisplayName(linkedList.get(i));
 						item.setItemMeta(meta);
-						menu.addItem(item);
-					}
-				}
+                    }
+                    menu.addItem(item);
+                }
 				menu.setItem(53, next);
 				menu.setItem(52, last);
 			}
@@ -524,11 +540,11 @@ public class GroupConfig {
 				}
 			}
 
-			while (it < linkedList.size() && !lastItem.getItemMeta().getDisplayName().equals(linkedList.get(it))) {
+			while (it < linkedList.size() && !Objects.requireNonNull(Objects.requireNonNull(lastItem).getItemMeta()).getDisplayName().equals(linkedList.get(it))) {
 				it++;
 			}
 
-			if (lastItem.getItemMeta().getDisplayName().equals(linkedList.get(it))) {
+			if (Objects.requireNonNull(Objects.requireNonNull(lastItem).getItemMeta()).getDisplayName().equals(linkedList.get(it))) {
 				it++;
 			}
 
@@ -546,11 +562,12 @@ public class GroupConfig {
 				mat = Material.BARRIER;
 			} else if (menuType == RANK) {
 				mat = Material.BELL;
-			}
+			} else return;
 			menu.clear();
 			for (int i = it - 51 - amount; i < linkedList.size(); i++) {
 				ItemStack item = new ItemStack(mat);
 				ItemMeta meta = item.getItemMeta();
+                if (meta == null) continue;
 				meta.setDisplayName(linkedList.get(i));
 				item.setItemMeta(meta);
 				menu.addItem(item);

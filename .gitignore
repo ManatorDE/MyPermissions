@@ -2,3 +2,7 @@
 .classpath
 /target/
 /bin/
+.idea
+.vscode
+.project
+/MyPermissions.iml

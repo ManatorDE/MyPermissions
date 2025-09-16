@@ -5,10 +5,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.Objects;
 
 import de.manator.mypermissions.groups.Group;
 import de.manator.mypermissions.io.FileHandler;
+import org.bukkit.ChatColor;
 
 /**
  * A class used to handle all player files
@@ -19,7 +22,7 @@ public class PlayerHandler {
 	/**
 	 * A reference to the folder to store all player data
 	 */
-	private File playersFolder;
+	private final File playersFolder;
 
 	/**
 	 * The constructor of the PlayerHandler
@@ -158,10 +161,7 @@ public class PlayerHandler {
 	 * @return LinkedList with player names as Strings
 	 */
 	public LinkedList<String> getPlayers() {
-		LinkedList<String> players = new LinkedList<String>();
-		for (String s : playersFolder.list()) {
-			players.add(s);
-		}
+        LinkedList<String> players = new LinkedList<String>(Arrays.asList(Objects.requireNonNull(playersFolder.list())));
 
 		return players;
 	}
@@ -203,14 +203,8 @@ public class PlayerHandler {
 	 */
 	public LinkedList<String> getPermissions(String player) {
 		File perms = new File(playersFolder.getAbsolutePath() + "/" + player + "/permissions.yml");
-		LinkedList<String> list = FileHandler.getLines(perms);
-
-		if (list != null) {
-			return list;
-		}
-
-		return new LinkedList<>();
-	}
+		return FileHandler.getLines(perms);
+    }
 
 	/**
 	 * Removes a permission from the permissions file of a player
@@ -276,8 +270,6 @@ public class PlayerHandler {
 				list.add(br.readLine());
 			}
 			br.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -309,8 +301,8 @@ public class PlayerHandler {
 		File cfg = new File(playersFolder.getAbsolutePath() + "/" + player + "/config.yml");
 		
 		LinkedList<String> lines = FileHandler.getLines(cfg);
-		if(lines != null && !lines.isEmpty()) {
-			return lines.get(0).endsWith("true");
+		if(!lines.isEmpty()) {
+			return lines.getFirst().endsWith("true");
 		}
 		return false;
 	}
@@ -346,4 +338,8 @@ public class PlayerHandler {
 		}
 		return false;
 	}
+
+    public void setPlayerNameColor(String player, ChatColor color) {
+
+    }
 }
