@@ -175,7 +175,7 @@ public class Main extends JavaPlugin {
 
 		commands.add("mp");
 		getCommand("mp").setExecutor(new MP(this));
-		getCommand("mp").setTabCompleter(new MPTab());
+		getCommand("mp").setTabCompleter(new MPTab(this));
 
 		commands.add("group");
 		getCommand("group").setExecutor(new GroupCMD(this));
