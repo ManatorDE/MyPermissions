@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.UUID;
 
+import de.manator.mypermissions.web.WebServerHTTPD;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -75,7 +76,7 @@ public class Main extends JavaPlugin {
 	/**
 	 * A reference to the internal webserver
 	 */
-	private WebServer server;
+	private WebServerHTTPD server;
 
 	/**
 	 * A method called when the plugin gets enabled
@@ -129,10 +130,9 @@ public class Main extends JavaPlugin {
 		
 		getLogger().info("Initializing webserver...");
 		if(server == null) {
-			server = new WebServer(this);
 			if(configFile.isWebServerEnabled()) {
-			    server.startServer();
-			}
+                server = new WebServerHTTPD(this, configFile.getWebserverPort());
+            }
 		}
 		getLogger().info("Webserver initialized!");
 		
@@ -153,7 +153,7 @@ public class Main extends JavaPlugin {
 		}
 		getLogger().info("Scoreboard reset!");
 		if(configFile.isWebServerEnabled()) {
-		    server.stopServer();
+		    server.stop();
 		}
 	}
 
@@ -171,7 +171,7 @@ public class Main extends JavaPlugin {
 	 * A method that is used to register all commands of MyPermissions
 	 */
 	private void registerCommands() {
-		commands = new LinkedList<String>();
+		commands = new LinkedList<>();
 
 		commands.add("mp");
 		getCommand("mp").setExecutor(new MP(this));
