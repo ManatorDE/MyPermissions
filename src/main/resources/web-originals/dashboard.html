@@ -1,0 +1,57 @@
+<style>
+.dash {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+.dash > div {
+    background-color: var(--very-light-color);
+    padding: 1rem;
+    border: 1px solid var(--dark-color);
+    border-radius: 8px;
+    flex: 1;
+    box-sizing: border-box;
+}
+.card {
+    background-color: var(--very-light-color);
+    padding: 1rem;
+    border: 1px solid var(--dark-color);
+    border-radius: 8px;
+    box-sizing: border-box;
+    margin-top: 1rem;
+}
+.dash div {
+    background-color: var(--very-light-color);
+    padding: 1rem;
+    border: 1px solid var(--dark-color);
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+.playerlist {
+    max-height: 200px;
+    overflow-y: auto;
+    border-top: 1px solid var(--dark-color);
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+</style>
+<h2>Welcome to the Dashboard</h2>
+<p>This is your main dashboard where you can view your data.</p>
+<div class="dash">
+    <div class="active-players">
+        <h3>Active Players</h3>
+        <p><!active-players>/<!player-slots></p>
+        <p>Total Players: <!total-players></p>
+        <div class="playerlist">
+            <!player-list>
+        </div>
+    </div>
+    <div class="total-groups">
+        <h3>Total Groups</h3>
+        <p>Group Count: <!total-groups></p>
+        <p>Default Group: <!default-group></p>
+    </div>
+</div>

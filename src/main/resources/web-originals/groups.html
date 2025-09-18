@@ -1,0 +1,52 @@
+<style>
+.grid-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+.card {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    background-color: var(--light-color);
+}
+.btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+input[type="search"] {
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 1rem;
+}
+</style>
+<script>
+function filterGroups() {
+    const searchInput = document.getElementById('group-search');
+    const filter = searchInput.value.toLowerCase();
+    const groupCards = document.querySelectorAll('.card');
+
+    groupCards.forEach(card => {
+        const groupName = card.querySelector('h3').textContent.toLowerCase();
+        if (groupName.includes(filter)) {
+            card.style.display = '';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+</script>
+<h2>Groups</h2>
+<a href="create-group" class="btn">Create Group</a>
+<input type="search" name="group-search" id="group-search" placeholder="Search groups..." oninput="filterGroups()">
+<div class="grid-list">
+    <!groups>
+</div>

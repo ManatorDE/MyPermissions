@@ -1,0 +1,17 @@
+<div class="options">
+    <h2>Settings:</h2>
+    <form action="/settings" method="POST">
+        <div class="form-group">
+            <label for="prefix-space">Prefix Space: </label>
+            <input type="checkbox" id="prefix-space" name="prefix-space" value="<!prefix-space>">
+        </div>
+        <div class="form-group">
+            <label for="suffix-space">Suffix Space: </label>
+            <input type="checkbox" id="suffix-space" name="suffix-space" value="<!suffix-space>">
+        </div>
+        <button type="submit">Save Changes</button>
+    </form>
+    <form action="/settings/reload" method="POST">
+        <button type="submit">Reload Plugin</button>
+    </form>
+</div>
