@@ -3,9 +3,9 @@
         max-width: 600px;
         margin: auto;
         padding: 20px;
-        border: 1px solid #ccc;
+        border: 1px solid var(--border-color);
         border-radius: 10px;
-        background-color: #f9f9f9;
+        background-color: var(--very-light-color);
     }
     h2 {
         text-align: center;
@@ -15,7 +15,7 @@
         border: 1px solid #ddd;
         border-radius: 5px;
         padding: 10px;
-        background-color: #fff;
+        background-color: var(--light-color);
     }
     summary {
         font-weight: bold;
@@ -34,11 +34,11 @@
         width: 100%;
         padding: 8px;
         box-sizing: border-box;
-        border: 1px solid #ccc;
+        border: 1px solid var(--border-color);
         border-radius: 4px;
     }
     button {
-        background-color: #4CAF50;
+        background-color: var(--success-color);
         color: white;
         padding: 10px 15px;
         border: none;
@@ -46,11 +46,11 @@
         cursor: pointer;
     }
     button:hover {
-        background-color: #45a049;
+        background-color: var(--success-color-dark);
     }
 </style>
 <div class="options">
-    <h2>Manage Player:</h2>
+    <h2>Manage Player: <!player-name></h2>
     <details>
         <summary>Permissions</summary>
         <form method="POST" action="/players/<!player-name>/permissions">

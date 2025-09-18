@@ -32,7 +32,6 @@ import de.manator.mypermissions.groups.Group;
 import de.manator.mypermissions.groups.GroupHandler;
 import de.manator.mypermissions.players.PlayerHandler;
 import de.manator.mypermissions.players.PlayerUpdater;
-import de.manator.mypermissions.web.WebServer;
 
 /**
  * The main class of MyPermissions

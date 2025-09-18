@@ -4,6 +4,7 @@ import de.manator.mypermissions.Main;
 import de.manator.mypermissions.groups.Group;
 import de.manator.mypermissions.groups.GroupHandler;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -91,6 +92,20 @@ public class PageBuilder {
         main.getPlayerHandler().getNegatedPermissions(playerName).forEach(perm -> negatedPermissions.append(perm).append("\n"));
         playerPage = playerPage.replace("<!player-permissions>", permissions);
         playerPage = playerPage.replace("<!player-negated-permissions>", negatedPermissions);
+
+        StringBuilder nameColors = new StringBuilder();
+        for(ChatColor color : ChatColor.values()) {
+            char c = color.getChar();
+            if((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || c == 'r') {
+                if(color.equals(main.getPlayerHandler().getPlayerNameColor(playerName))) {
+                    nameColors.append("<option value=\"").append(c).append("\" selected>").append(color.name()).append("</option>\n");
+                } else {
+                    nameColors.append("<option value=\"").append(c).append("\">").append(color.name()).append("</option>\n");
+                }
+            }
+        }
+
+        playerPage = playerPage.replace("<!name-colors>", nameColors.toString());
 
         webbase = webbase.replace("<!head-slot>", "<title>Player " + playerName + " - MyPermissions</title>");
         webbase = webbase.replace("<!main-slot>", playerPage);
@@ -184,8 +199,8 @@ public class PageBuilder {
         String webbase = readResource("/webbase-min.html");
         String managePluginPage = readResource("/manage-plugin-min.html");
 
-        managePluginPage = managePluginPage.replace("<!prefix-space>", main.getConfigFile().isPrefixSpaceEnabled() + "");
-        managePluginPage = managePluginPage.replace("<!suffix-space>", main.getConfigFile().isSuffixSpaceEnabled() + "");
+        managePluginPage = managePluginPage.replace("<!prefix-space>", main.getConfigFile().isPrefixSpaceEnabled() ? "checked" : "");
+        managePluginPage = managePluginPage.replace("<!suffix-space>", main.getConfigFile().isSuffixSpaceEnabled() ? "checked" : "");
 
         webbase = webbase.replace("<!head-slot>", "<title>Manage Plugin - MyPermissions</title>");
         webbase = webbase.replace("<!main-slot>", managePluginPage);
@@ -193,7 +208,6 @@ public class PageBuilder {
     }
 
     private static String readResource(String resourcePath) {
-        Bukkit.getLogger().info("Loading resource: " + resourcePath);
         try (InputStream in = PageBuilder.class.getResourceAsStream(resourcePath)) {
             if (in == null) {
                 Bukkit.getLogger().severe("Resource " + resourcePath + " not found!");

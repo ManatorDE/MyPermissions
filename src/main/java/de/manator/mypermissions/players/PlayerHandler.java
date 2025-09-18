@@ -2,12 +2,13 @@ package de.manator.mypermissions.players;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import de.manator.mypermissions.groups.Group;
 import de.manator.mypermissions.io.FileHandler;
@@ -82,6 +83,7 @@ public class PlayerHandler {
 				try {
 					cfg.createNewFile();
 					FileHandler.writeLine("ExcludeFromDefault: false", cfg);
+                    FileHandler.writeLine("NameColor: WHITE", cfg);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -339,7 +341,41 @@ public class PlayerHandler {
 		return false;
 	}
 
-    public void setPlayerNameColor(String player, ChatColor color) {
+    public boolean setPlayerNameColor(String name, ChatColor color) {
+        File player = new File(playersFolder.getAbsolutePath() + "/" + name);
+        File cfg = new File(player.getAbsolutePath() + "/config.yml");
+        LinkedList<String> lines = FileHandler.getLines(cfg);
+        for(int i = 0; i < lines.size(); i++) {
+            if(lines.get(i).startsWith("NameColor: ")) {
+                lines.set(i, "NameColor: " + color.name());
+                FileHandler.writeLines(lines, cfg);
+                return true;
+            }
+        }
+        AtomicBoolean contains = new AtomicBoolean(false);
+        lines.forEach(line -> {
+            if(line.startsWith("NameColor: ")) {
+                contains.set(true);
+            }
+        });
+        if(!contains.get()) {
+            lines.add("NameColor: " + color.name());
+            FileHandler.writeLines(lines, cfg);
+            return true;
+        }
+        return false;
+    }
 
+    public ChatColor getPlayerNameColor(String name) {
+        File player = new File(playersFolder.getAbsolutePath() + "/" + name);
+        File cfg = new File(player.getAbsolutePath() + "/config.yml");
+        AtomicReference<ChatColor> c = new AtomicReference<>(ChatColor.WHITE);
+        FileHandler.getLines(cfg).forEach(line -> {;
+            if(line.startsWith("NameColor: ")) {
+                String color = line.substring("NameColor: ".length());
+                c.set(ChatColor.valueOf(color));
+            }
+        });
+        return c.get();
     }
 }

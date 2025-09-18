@@ -62,12 +62,14 @@
                 --primary-color: #007bff;
                 --secondary-color: #6c757d;
                 --success-color: #28a745;
+                --success-color-dark: #218838;
                 --info-color: #17a2b8;
                 --warning-color: #ffc107;
                 --danger-color: #dc3545;
                 --light-color: #f8f9fa;
                 --very-light-color: #ffffff;
                 --dark-color: #343a40;
+                --border-color: #dee2e6;
             }
 
             html,
@@ -86,6 +88,9 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
+                position: sticky;
+                top: 0;
+                z-index: 1000;
             }
 
             nav {

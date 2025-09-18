@@ -116,7 +116,7 @@ public class PlayerUpdater implements Runnable {
                                 name += prefix.getPrefix();
                             }
                         }
-                        name += ChatColor.WHITE + p.getName();
+                        name += ph.getPlayerNameColor(p.getName()) + p.getName() + ChatColor.WHITE;
                         if (prefix.getSuffix() != null) {
                             t.setPrefix(prefix.getSuffix());
                             if(main.getConfigFile().isSuffixSpaceEnabled()) {

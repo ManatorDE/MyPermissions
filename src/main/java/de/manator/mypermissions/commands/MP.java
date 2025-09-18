@@ -107,8 +107,8 @@ public class MP implements CommandExecutor {
                     } else if(args.length == 3) {
                         if(args[0].equalsIgnoreCase("setnamecolor")) {
                             PlayerHandler ph = main.getPlayerHandler();
-                            if(args[2].length() == 2 && args[1].startsWith("2")) {
-                                char c = args[1].toLowerCase().charAt(1);
+                            if(args[2].length() == 2) {
+                                char c = args[2].toLowerCase().charAt(1);
                                 if((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || c == 'r') {
                                     ChatColor color = ChatColor.getByChar(c);
                                     ph.setPlayerNameColor(args[1], color);
