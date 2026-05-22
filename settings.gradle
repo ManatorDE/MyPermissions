@@ -1,0 +1,2 @@
+rootProject.name = 'MyPermissions'
+include 'mypermissions-core', 'mypermissions-webui', 'mypermissions-spigot', 'mypermissions-multiworld'
